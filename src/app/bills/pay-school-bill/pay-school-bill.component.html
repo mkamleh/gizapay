@@ -1,0 +1,1032 @@
+<!-- @format -->
+
+<mat-card id="sadad">
+  <mat-card-title>
+    <h5>{{ "bill_payment" | translate }}</h5>
+  </mat-card-title>
+  <mat-card-content class="sadad_card">
+    <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+      <form [formGroup]="payBillForm" id="payBillForm" #myForm="ngForm">
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <mat-select
+            placeholder="{{ 'Biller' | translate }}"
+            [formControl]="payBillForm.controls['biller']"
+            (selectionChange)="changeBiller($event)"
+          >
+            <mat-option>
+              <ngx-mat-select-search
+                ngModel
+                [formControl]="payBillForm.controls['searchForBiller']"
+                (ngModelChange)="filterBranchOptions($event)"
+                noEntriesFoundLabel="no matching billers found"
+                placeholderLabel="Search Billers"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let biller of billers" [value]="biller">
+              {{ biller.entityName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span *ngIf="isOffline">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              id="sadadInput"
+              matInput
+              placeholder="{{ 'Bill_Number' | translate }}"
+              type="text"
+              name="sadadBillNum"
+              required
+              [formControl]="payBillForm.controls['sadadBillNum']"
+            />
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['sadadBillNum'].hasError('required') &&
+                  payBillForm.controls['sadadBillNum'].touched) ||
+                (payBillForm.controls['sadadBillNum'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_sadadBillNum" | translate }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['sadadBillNum'].hasError('maxlength') &&
+                  payBillForm.controls['sadadBillNum'].touched) ||
+                (payBillForm.controls['sadadBillNum'].hasError('maxlength') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "sadad_desired_max" | translate }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['sadadBillNum'].hasError('minlength') &&
+                  payBillForm.controls['sadadBillNum'].touched) ||
+                (payBillForm.controls['sadadBillNum'].hasError('minlength') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "sadad_desired_min" | translate }}
+            </mat-error>
+
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['sadadBillNum'].hasError('pattern') &&
+                  payBillForm.controls['sadadBillNum'].touched) ||
+                (payBillForm.controls['sadadBillNum'].hasError('pattern') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "sadad_desired_pattern" | translate }}</mat-error
+            >
+          </mat-form-field>
+        </span>
+        <span *ngIf="isDSTV">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <mat-select
+              placeholder="{{ 'package' | translate }}"
+              [formControl]="payBillForm.controls['packageId']"
+              (selectionChange)="changePackage($event)"
+            >
+              <mat-option *ngFor="let package of packages" [value]="package.id">
+                {{ package.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['packageId'].hasError('required') &&
+                  payBillForm.controls['packageId'].touched) ||
+                (payBillForm.controls['packageId'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_packageId" | translate }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            *ngIf="isDSTVNewPackage"
+            class="ml-xs mr-xs"
+            style="width: 100%"
+          >
+            <mat-select
+              placeholder="{{ 'Period' | translate }}"
+              [formControl]="payBillForm.controls['invoicePeriod']"
+            >
+              <mat-option
+                *ngFor="let period of periodList"
+                [value]="period.code"
+              >
+                {{ period.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['invoicePeriod'].hasError('required') &&
+                  payBillForm.controls['invoicePeriod'].touched) ||
+                (payBillForm.controls['invoicePeriod'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_packageId" | translate }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              id="sadadInput"
+              matInput
+              placeholder="{{ 'smart_card_number' | translate }}"
+              type="text"
+              name="sadadBillNum"
+              required
+              [formControl]="payBillForm.controls['smartCardNumber']"
+            />
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['smartCardNumber'].hasError('required') &&
+                  payBillForm.controls['smartCardNumber'].touched) ||
+                (payBillForm.controls['smartCardNumber'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_subscription_number" | translate }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['smartCardNumber'].hasError('pattern') &&
+                  payBillForm.controls['smartCardNumber'].touched) ||
+                (payBillForm.controls['smartCardNumber'].hasError('pattern') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "Number Only" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </span>
+        <span *ngIf="isTelecom">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <mat-select
+              placeholder="{{ 'Payment_Type' | translate }}"
+              [formControl]="payBillForm.controls['telecomePaymentType']"
+            >
+              <mat-option
+                *ngFor="let paymentType of paymentTypeList"
+                [value]="paymentType.code"
+              >
+                {{ paymentType.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['telecomePaymentType'].hasError(
+                  'required'
+                ) &&
+                  payBillForm.controls['telecomePaymentType'].touched) ||
+                (payBillForm.controls['telecomePaymentType'].hasError(
+                  'required'
+                ) &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_payment_type" | translate }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              id="sadadInput"
+              matInput
+              placeholder="{{ 'telecom_subscription_number' | translate }}"
+              type="text"
+              name="sadadBillNum"
+              required
+              [formControl]="payBillForm.controls['telecomeSubscriptionNumber']"
+            />
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['telecomeSubscriptionNumber'].hasError(
+                  'required'
+                ) &&
+                  payBillForm.controls['telecomeSubscriptionNumber'].touched) ||
+                (payBillForm.controls['telecomeSubscriptionNumber'].hasError(
+                  'required'
+                ) &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_subscription_number" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </span>
+        <span *ngIf="isDerach">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <!-- <input
+              matInput
+              placeholder="{{ 'biller_id' | translate }}"
+              type="text"
+              required
+              [formControl]="payBillForm.controls['biller_id']"
+            /> -->
+            <mat-select
+              placeholder="{{ 'Biller' | translate }}"
+              formControlName="biller_id"
+            >
+              <mat-option
+                *ngFor="let provider of derachServiceProviders"
+                [value]="provider"
+              >
+                {{ provider.caption }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['biller_id'].hasError('required') &&
+                  payBillForm.controls['biller_id'].touched) ||
+                (payBillForm.controls['biller_id'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "required." | translate }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              matInput
+              placeholder="{{ 'bill_id' | translate }}"
+              type="text"
+              required
+              [formControl]="payBillForm.controls['bill_id']"
+            />
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['bill_id'].hasError('required') &&
+                  payBillForm.controls['bill_id'].touched) ||
+                (payBillForm.controls['bill_id'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "required." | translate }}
+            </mat-error>
+          </mat-form-field>
+        </span>
+        <span *ngIf="isSchool">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              matInput
+              placeholder="{{ 'subscriptionCode' | translate }}"
+              type="text"
+              required
+              [formControl]="payBillForm.controls['subscriptionCode']"
+            />
+            <mat-error
+              *ngIf="
+                (payBillForm.controls['subscriptionCode'].hasError(
+                  'required'
+                ) &&
+                  payBillForm.controls['subscriptionCode'].touched) ||
+                (payBillForm.controls['subscriptionCode'].hasError(
+                  'required'
+                ) &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "required." | translate }}
+            </mat-error>
+          </mat-form-field>
+        </span>
+        <button
+          type="submit"
+          id="billInfoSubmitButton"
+          class="btn grad-mal"
+          (click)="getBillInfo()"
+        >
+          {{ "get_bill_info" | translate }}
+        </button>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  id="billInfo"
+  *ngIf="
+    showBillInfo &&
+    !showOTPForm &&
+    !isSchool &&
+    !isDSTV &&
+    !isTelecom &&
+    !isDerach
+  "
+>
+  <mat-card-title>{{ "bill_info" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <table class="table table1">
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "biller_name" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.billerName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "service_type" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.serviceName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "bill_status" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.statusCaption | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "Bill_Number" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.sadadNo | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "bill_amount" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.amountDueRnd }} {{ billInfo.currency }} </b>
+        </td>
+      </tr>
+    </table>
+
+    <button
+      type="submit"
+      id="billInfoSubmitButton"
+      class="btn grad-mal"
+      (click)="payBillFees()"
+    >
+      {{ "Proceed" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+<mat-card id="schoolBill" *ngIf="showSchoolCard1">
+  <mat-card-title>{{ "pay-school-bills" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <h5 style="padding-bottom: 20px">
+      {{ "choose-bill-type-msg" | translate }}
+    </h5>
+    <button
+      type="submit"
+      class="btn grad-mal"
+      style="width: 26%"
+      (click)="schoolBillTypeSelection('single')"
+    >
+      {{ "single-bill" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn grad-mal"
+      style="width: 26%"
+      (click)="schoolBillTypeSelection('bulk')"
+    >
+      {{ "bulk-bill" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+<mat-card
+  id="schoolBill"
+  *ngIf="
+    showBillInfo &&
+    !showOTPForm &&
+    isSchool &&
+    !isOnline &&
+    showSingleSchoolBills
+  "
+>
+  <mat-card-title>{{ "bills" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">{{ "productName" | translate }}</th>
+          <th scope="col">{{ "Bill_Number" | translate }}</th>
+          <th scope="col">{{ "bill_amount" | translate }}</th>
+          <th scope="col">{{ "penalty-value" | translate }}</th>
+          <th scope="col">{{ "total-amount" | translate }}</th>
+          <th scope="col">{{ "description" | translate }}</th>
+          <th scope="col">{{ "status" | translate }}</th>
+          <th scope="col">{{ "Frequency" | translate }}</th>
+
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="schoolBills.length == 0">
+          <td colspan="6" style="color: red">{{ "no-bills" | translate }}</td>
+        </tr>
+        <tr *ngFor="let item of schoolBills">
+          <th>{{ item.productName }}</th>
+          <td>{{ item.invoiceNumber }}</td>
+          <td>{{ item.amount }} ETB</td>
+          <td>{{ item.penaltyValue }}ETB</td>
+          <td>{{ item.invoiceTotalAmount }}ETB</td>
+          <td>{{ item.description }}</td>
+          <td
+            [style.color]="
+              item.statusCode == '1'
+                ? 'green'
+                : item.statusCode == 'INVOICE_PAID'
+                ? 'red'
+                : null
+            "
+          >
+            {{ item.statusCaption }}
+          </td>
+          <td>{{ item.frequencyCaption }}</td>
+
+          <td style="width: 128px">
+            <button
+              id="billButton"
+              class="btn grad-mal"
+              type="submit"
+              [disabled]="item.statusCode == 'INVOICE_PAID'"
+              (click)="payBillFees_School(item.invoiceTotalAmount, item.id)"
+            >
+              {{ "Proceed" | translate }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
+
+<mat-card id="schoolBill" *ngIf="showSchoolProducts">
+  <mat-card-title>{{ "pay-school-bills" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <h5 style="padding-bottom: 20px">
+      {{ "choose-school-products-msg" | translate }}
+    </h5>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">{{ "productName" | translate }}</th>
+          <th scope="col">{{ "frequency" | translate }}</th>
+          <th scope="col">{{ "description" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="schoolProducts.length == 0">
+          <td colspan="3" style="color: red">{{ "no-data" | translate }}</td>
+        </tr>
+        <tr
+          *ngFor="let item of schoolProducts; let i = index"
+          (click)="rowSelected(item)"
+          [ngClass]="{ highlight: isExisted(item) }"
+        >
+          <td>{{ item.name }}</td>
+          <td>{{ item.frequencyCaption }}</td>
+          <td>{{ item.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button
+      type="submit"
+      class="btn grad-mal"
+      style="width: 90%"
+      (click)="getBulkSchoolBills()"
+    >
+      {{ "next" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+<mat-card id="schoolBill" *ngIf="showBulkSchoolBills">
+  <mat-card-title>{{ "bills" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <h5 style="padding-bottom: 20px">
+      {{ "bills-number" | translate }} {{ bulkSchoolBillsObj.numberOfInvoice }}
+    </h5>
+    <h5 style="padding-bottom: 20px">
+      {{ "total-amount-bills" | translate }}
+      {{ bulkSchoolBillsObj.totalInvoiceAmount }} ETB
+    </h5>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">{{ "productName" | translate }}</th>
+          <th scope="col">{{ "Bill_Number" | translate }}</th>
+          <th scope="col">{{ "bill_amount" | translate }}</th>
+          <th scope="col">{{ "penalty-value" | translate }}</th>
+          <th scope="col">{{ "total-amount" | translate }}</th>
+          <th scope="col">{{ "description" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="bulkSchoolBills.length == 0">
+          <td colspan="5" style="color: red">{{ "no-bills" | translate }}</td>
+        </tr>
+        <tr *ngFor="let item of bulkSchoolBills">
+          <th>{{ item.productName }}</th>
+          <td>{{ item.invoiceNumber }}</td>
+          <td>{{ item.amount }} ETB</td>
+          <td>{{ item.penaltyValue }}ETB</td>
+          <td>{{ item.invoiceTotalAmount }}ETB</td>
+          <td>{{ item.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button
+      type="submit"
+      class="btn grad-mal"
+      style="width: 90%"
+      (click)="enterPayerInfo()"
+    >
+      {{ "pay" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card id="sadad" *ngIf="showEnterPayerInfo">
+  <mat-card-title>
+    <h5>{{ "enter-payer-info" | translate }}</h5>
+  </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+      <form [formGroup]="form" #myForm="ngForm">
+        <mat-form-field class="ml-xs mr-xs" style="width: 90%">
+          <input
+            matInput
+            placeholder="{{ 'Full_name' | translate }}"
+            type="text"
+            formControlName="name"
+            required
+          />
+          <mat-error
+            *ngIf="
+              form.controls['name'].hasError('required') &&
+              form.controls['name'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['name'].hasError('minlength') &&
+              form.controls['name'].touched
+            "
+            class="mat-text-warn"
+            >{{ "fullName-minLength" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['name'].hasError('maxlength') &&
+              form.controls['name'].touched
+            "
+            class="mat-text-warn"
+            >{{ "fullName-maxlength" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['name'].hasError('pattern') &&
+              form.controls['name'].touched
+            "
+            class="mat-text-warn"
+            >{{ "fullName-pattern" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs" style="width: 90%">
+          <input
+            matInput
+            placeholder="{{ 'email' | translate }}"
+            [formControl]="form.controls['email']"
+            type="text"
+            required
+          />
+          <mat-error
+            *ngIf="
+              form.controls['email'].hasError('required') &&
+              form.controls['email'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "required." | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              form.controls['email'].hasError('minlength') &&
+              form.controls['email'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "email_min" | translate }}
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['email'].hasError('maxlength') &&
+              form.controls['email'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "email_max" | translate }}
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['email'].hasError('pattern') &&
+              form.controls['email'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "valid_email" | translate }}
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['email'].hasError('email') &&
+              form.controls['email'].touched
+            "
+          >
+            {{ "valid_email" | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs" style="width: 90%; direction: ltr">
+          <input
+            matInput
+            placeholder="{{ 'Mobile_number' | translate }}"
+            type="text"
+            formControlName="mobile"
+            required
+            maxlength="9"
+          />
+          <span matPrefix>+251 &nbsp;</span>
+          <mat-error
+            *ngIf="
+              form.controls['mobile'].hasError('required') &&
+              form.controls['mobile'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['mobile'].hasError('pattern') &&
+              form.controls['mobile'].touched
+            "
+            class="mat-text-warn"
+            >{{ "valid_phone" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['mobile'].hasError('minlength') &&
+              form.controls['mobile'].touched
+            "
+            class="mat-text-warn"
+            >{{ "phone_number_min" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              form.controls['mobile'].hasError('maxlength') &&
+              form.controls['mobile'].touched
+            "
+            class="mat-text-warn"
+            >{{ "phone_number_max" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+        <button
+          type="submit"
+          id="billInfoSubmitButton"
+          class="btn grad-mal"
+          (click)="payBillFees_School(bulkSchoolBillsObj.totalInvoiceAmount)"
+        >
+          {{ "confirm" | translate }}
+        </button>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  id="billInfo"
+  *ngIf="showBillInfo && !showOTPForm && isOnline && isDSTV"
+>
+  <mat-card-title>{{ "bill_info" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <table class="table table1">
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "biller_name" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ onlineBillerName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "customer_name" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.customerName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "Due Date" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.dueDate ? billInfo.dueDate : ("-" | titlecase) }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "bill_amount" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b>
+            <mat-form-field class="ml-xs mr-xs" style="width: 50%">
+              <input
+                matInput
+                placeholder="{{ 'money_amount' | translate }}"
+                type="text"
+                [(ngModel)]="dstvAmount"
+                required
+              />
+              <span matSuffix>&nbsp; ETB &nbsp;</span>
+            </mat-form-field>
+          </b>
+        </td>
+      </tr>
+    </table>
+
+    <button
+      type="submit"
+      id="billInfoSubmitButton"
+      class="btn grad-mal"
+      (click)="payBillFees()"
+    >
+      {{ "Proceed" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+<mat-card
+  id="billInfo"
+  *ngIf="showBillInfo && !showOTPForm && isOnline && isDerach"
+>
+  <mat-card-title>{{ "bill_info" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <table class="table table1">
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "biller_name" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ onlineBillerName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "customer_name" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.name }}</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "bill_id" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.bill_id }}</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "bill_amount" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.amount_due }} ETB</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "reason" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ billInfo.reason }}</b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          <b> {{ "description" | translate }}</b>
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b>{{ billInfo.bill_disc }}</b>
+        </td>
+      </tr>
+    </table>
+
+    <button
+      type="submit"
+      id="billInfoSubmitButton"
+      class="btn grad-mal"
+      (click)="payBillFees()"
+    >
+      {{ "Proceed" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  id="billInfo"
+  *ngIf="showBillInfo && !showOTPForm && isOnline && isTelecom"
+>
+  <mat-card-title>{{ "bill_info" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <table class="table table1">
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "biller_name" | translate }}
+        </td>
+        <td style="width: 50%; text-align: start">
+          <b> {{ onlineBillerName | titlecase }} </b>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; color: gray">
+          {{ "bill_amount" | translate }}
+        </td>
+        <td style="width: 100%; text-align: start">
+          <b> {{ billInfo.openAmount }} ETB </b>
+        </td>
+      </tr>
+    </table>
+
+    <button
+      type="submit"
+      id="billInfoSubmitButton"
+      class="btn grad-mal"
+      (click)="payBillFees()"
+    >
+      {{ "Proceed" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card id="billFees" *ngIf="showFees && !showOTPForm">
+  <mat-card-title>{{ "confirm" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card-content class="sadad_card">
+    <h5>
+      {{ paymentFees.sourceAmountWfees }}
+      {{ paymentFees.initiationOperationCurrencyCaption }}
+
+      {{ "total_amount_bill" | translate }}
+    </h5>
+    <button
+      type="submit"
+      id="billInfoSubmitButton"
+      class="btn grad-mal"
+      (click)="createOTP(myForm)"
+    >
+      {{ "Pay_Bill" | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<!-- <div class="warn" *ngIf="!showOTPForm">
+  <div id="back-end-validation" *ngIf="error">
+    <strong class="mat-text-warn">{{ error }}</strong>
+  </div>
+</div> -->
+
+<mat-card id="sadad" *ngIf="showOTPForm">
+  <mat-card-title>{{ "bill_payment" | translate }} </mat-card-title>
+  <div style="text-align: end">
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="showOTPForm" [dir]="layoutDir" style="padding: 1.5rem">
+    <form [formGroup]="payBillForm" (ngSubmit)="payBill(myForm)">
+      <h5>{{ "Please_enter_the_recived_code" | translate }}</h5>
+
+      <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+        <input
+          matInput
+          [formControl]="payBillForm.controls['otpCode']"
+          autocomplete="off"
+        />
+        <span matSuffix>
+          <i
+            class="fa fa-refresh"
+            style="cursor: pointer; font-size: x-large"
+            title="{{ 'resend-otp' | translate }}"
+            (click)="createOTP()"
+          ></i
+        ></span>
+      </mat-form-field>
+
+      <mat-error
+        *ngIf="
+          payBillForm.controls['otpCode'].hasError('required') &&
+          payBillForm.controls['otpCode'].touched
+        "
+        class="mat-text-warn"
+        >{{ "include_confirmOtp" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="
+          payBillForm.controls['otpCode'].hasError('minlength') &&
+          payBillForm.controls['otpCode'].touched
+        "
+        class="mat-text-warn"
+        >{{ "confirmOtp_min" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="
+          payBillForm.controls['otpCode'].hasError('maxlength') &&
+          payBillForm.controls['otpCode'].touched
+        "
+        class="mat-text-warn"
+        >{{ "confirmOtp_max" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="
+          payBillForm.controls['otpCode'].hasError('pattern') &&
+          payBillForm.controls['otpCode'].touched
+        "
+        class="mat-text-warn"
+        >{{ "confirmOtp_pattern" | translate }}
+      </mat-error>
+      <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+
+      <button
+        type="submit"
+        *ngIf="showOTPForm"
+        style="padding: 0.8rem; width: 24%; margin: 9px"
+        class="grad-mal"
+        id="paySubmitButton"
+      >
+        {{ "confirm" | translate }}
+      </button>
+      <button
+        style="padding: 0.8rem; width: 24%; margin: 9px"
+        class="grad-mal"
+        id="paySubmitButton"
+        (click)="cancelOTP()"
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </form>
+  </div>
+</mat-card>

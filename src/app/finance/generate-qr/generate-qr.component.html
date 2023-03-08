@@ -1,0 +1,190 @@
+<!-- @format -->
+<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="200" [showSpinner]="false"
+  [direction]="'leftToRightIncreased'" [color]="'#ffff'" [trickleSpeed]="100" [thick]="true" [ease]="'linear'">
+</ng-progress>
+<div id="QR">
+  <article class="card">
+    <div id="thumb">
+      <div [ngStyle]="
+          display
+            ? { transform: 'translateY(-250px)' }
+            : { 'background-color': 'white' }
+        " class="infos">
+        <div class="flagHead">
+          <h2 *ngIf="showTxnSection && !display" class="title">
+            {{ "enter_amount_qr" | translate }}
+          </h2>
+          <h2 *ngIf="showFeesSection" class="title">
+            {{ "confirm generate cashin QR" | translate }}
+          </h2>
+          <h2 *ngIf="showOtpSection" class="title">
+            {{ "enter_otp_qr" | translate }}
+          </h2>
+          <span class="" *ngIf="!display"></span>
+        </div>
+
+        <div *ngIf="showTxnSection" class="wallet">
+          <input *ngIf="!display" class="date" matInput
+            placeholder="{{ 'Amount' | translate }} | {{ 'etb' | translate }}" type="number" maxlength="7" min="1"
+            [(ngModel)]="qrcodename" />
+          <button *ngIf="!display" class="button" (click)="getFees()">
+            {{ "generate" | translate }}
+          </button>
+          <div style="text-align-last: end" class="col-md-12" *ngIf="display">
+            <i *ngIf="display" class="fa fa-close" style="font-size: 1.5rem" (click)="close()"></i>
+          </div>
+        </div>
+        <small *ngIf="showError" class="mat-text-warn">{{
+          "required" | translate
+          }}</small>
+        <small *ngIf="showError1" class="mat-text-warn">{{
+          "invalid" | translate
+          }}</small>
+        <div id="print-section" class="">
+          <!-- <div class="print-logo" *ngIf="qrStr && display">
+            <img src="assets\images\gizaPay.png" />
+          </div> -->
+          <div *ngIf="showFeesSection" class="flagHead">
+            <strong>
+              {{ "are_u_sure_generate_cashin_qr" | translate }}
+              {{ feesObject.sourceAmountWOfeesRnd }}
+              {{ "etb" | translate }} ??
+            </strong>
+          </div>
+          <div *ngIf="showFeesSection" class="row cash_in_btn">
+            <button (click)="transactionOtp()" class="grad-mal">
+              {{ "generate" | translate }}
+            </button>
+            <button class="grad-mal" (click)="close()" type="button">
+              {{ "cancel" | translate }}
+            </button>
+          </div>
+          <div *ngIf="showOtpSection" class="wallet">
+            <input class="date" matInput placeholder="{{ 'OTP' | translate }}" type="text" maxlength="6"
+              [(ngModel)]="otpValue" autocomplete="off" />
+            <i *ngIf="showOtpSection" class="fa fa-refresh" (click)="transactionOtp()"></i>
+          </div>
+          <small *ngIf="showErrorOtp" class="mat-text-warn">{{
+            "required" | translate
+            }}</small>
+          <small *ngIf="showError1Otp" class="mat-text-warn">{{
+            "invalid" | translate
+            }}</small>
+
+          <div *ngIf="showOtpSection" class="row cash_in_btn" style="margin-top: 38px">
+            <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+            <button (click)="generateQRCode()" class="grad-mal">
+              {{ "Proceed" | translate }}
+            </button>
+            <button (click)="close()" class="grad-mal">
+              {{ "cancel" | translate }}
+            </button>
+          </div>
+          <div #screen>
+            <div *ngIf="display && qrStr" style="text-align: start">
+              <img src="assets\images\gizaPay.png" style="width: 124px" />
+            </div>
+            <table id="table" class="table" *ngIf="!showOtpSection">
+              <td *ngIf="qrStr && display">
+                <ngx-qrcode class="zoom" *ngIf="qrStr && display" id="qrCodeImage" [qrc-element-type]="elementType"
+                  [qrc-value]="value">
+                </ngx-qrcode>
+              </td>
+
+              <td *ngIf="qrStr && display">
+                <div class="modal__content">
+                  <h5>
+                    <strong> {{ "qr_details" | translate }}</strong>
+                  </h5>
+                  <table>
+                    <tr>
+                      <td>
+                        {{ "brandName" | translate }}
+                      </td>
+                      <td>
+                        {{ qrStr.brandName }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{ "creation_date" | translate }}
+                      </td>
+                      <td>
+                        {{ qrStr.creationDate }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{ "expiry_date" | translate }}
+                      </td>
+                      <td>
+                        {{ qrStr.expDate }}
+                      </td>
+                    </tr>
+                    <!-- <tr>
+                    <td>
+                      {{ "Type" | translate }}
+                    </td>
+                    <td>{{ qrStr.type }}</td>
+                  </tr> -->
+                    <tr>
+                      <td>
+                        {{ "qr_amount" | translate }}
+                      </td>
+                      <td>{{ qrStr.amount }} {{ qrStr.curruncyCaption }}</td>
+                    </tr>
+                  </table>
+
+                  <!-- <ul class="form-list">
+                  <li class="form-list__row">
+                    <label>{{ "creation_date" | translate }}</label>
+                    {{ parseDate(qrStr.creationDate) }}
+                  </li>
+                  <li class="form-list__row">
+                    <label>{{ "expiry_date" | translate }}</label>
+                    {{ parseDate(qrStr.expDate) }}
+                  </li>
+                  <li class="form-list__row">
+                    <label>{{ "Type" | translate }}</label>
+                    {{ qrStr.type }}
+                  </li>
+                  <li class="form-list__row">
+                    <label>{{ "qr_amount" | translate }}</label>
+                    {{ qrStr.amount }}
+                  </li>
+                </ul> -->
+                </div>
+              </td>
+            </table>
+          </div>
+          <div id="printPageButton" class="download">
+            <a>
+              <button *ngIf="qrStr && display" (click)="downloadImage2()" type="button" class="button">
+                {{ "download_qr" | translate }}
+              </button></a>
+            <a>
+              <button *ngIf="qrStr && display" type="button" class="button" [useExistingCss]="true" cdkFocusInitial
+                printSectionId="print-section" ngxPrint>
+                {{ "print_qr" | translate }}
+              </button>
+            </a>
+            <!-- <a [href]="href1" print>
+            <button
+              *ngIf="display"
+              (click)="printImage()"
+              type="button"
+              class="button"
+            >
+              {{ "print_qr" | translate }}
+            </button></a
+          > -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+<div id="download">
+  <img #canvas />
+  <a #downloadLink></a>
+</div>

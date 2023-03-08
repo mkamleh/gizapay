@@ -1,0 +1,226 @@
+<h1 mat-dialog-title class="dialog-title">{{"debit"|translate}}</h1>
+<div>
+  <div id="dialog" *ngIf="!showFees && !showOTPForm">
+    <div style="font-size: x-large">
+      {{"branch_name"|translate}} : <strong> {{data.name}}</strong>
+    </div>
+    <div style="font-size: x-large">
+      {{"branch_code"|translate}} : <strong> {{data.code}}</strong>
+    </div>
+    <div mat-dialog-content style="padding: 22px">
+      <mat-form-field style="width: 100%">
+        <input
+          matInput
+          placeholder="{{ 'Amount' | translate }}"
+          required
+          [formControl]="form.controls['amount']"
+          type="number"
+        />
+        <span matSuffix> {{"etb"|translate}} </span>
+        <mat-error
+          *ngIf="
+      form.controls['amount'].hasError('required') &&
+      form.controls['amount'].touched
+      "
+          >{{ "required" | translate }} <br
+        /></mat-error>
+        <mat-error
+          *ngIf="
+        form.controls['amount'].hasError('min') &&
+        form.controls['amount'].touched
+      "
+          class="mat-text-warn"
+          >{{ "desired_amount_min" | translate }}
+        </mat-error>
+        <mat-error
+          *ngIf="
+        form.controls['amount'].hasError('max') &&
+        form.controls['amount'].touched
+      "
+          class="mat-text-warn"
+          >{{ "desired_amount_max" | translate }} <br
+        /></mat-error>
+        <mat-error
+          *ngIf="
+        form.controls['amount'].hasError('pattern') &&
+        form.controls['amount'].touched
+      "
+          class="mat-text-warn"
+          >{{ "desired_amount_pattern" | translate }} <br
+        /></mat-error>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button
+        style="background-color: #d7ae5f"
+        mat-button
+        cdkFocusInitial
+        (click)="getFees()"
+      >
+        {{"proceed"|translate}}
+      </button>
+      <button style="background-color: gainsboro" mat-button (click)="cancel()">
+        {{"cancel" |translate}}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showOTPForm" id="dialog">
+    <div
+      *ngIf="showAlert"
+      class="alert alert-danger"
+      style="text-align: center"
+      role="alert"
+    >
+      <strong>
+        {{ "Please wait" | translate }} {{ timeLeft2 }} {{ "seconds before
+        trying again" | translate }}
+      </strong>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="debit(selectedTransferedValue)">
+      <h5>{{ "Please_enter_the_recived_code" | translate }}</h5>
+
+      <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+        <input
+          matInput
+          [formControl]="form.controls['otpCode']"
+          autocomplete="off"
+        />
+        <span matSuffix>
+          <i
+            class="fa fa-refresh"
+            style="cursor: pointer; font-size: x-large"
+            title="{{ 'resend-otp' | translate }}"
+            (click)="getOTP()"
+          ></i
+        ></span>
+        <mat-error
+          *ngIf="
+          form.controls['otpCode'].hasError('required') &&
+          form.controls['otpCode'].touched
+        "
+          class="mat-text-warn"
+          >{{ "include_confirmOtp" | translate }}
+          <br />
+        </mat-error>
+        <mat-error
+          *ngIf="
+          form.controls['otpCode'].hasError('minlength') &&
+          form.controls['otpCode'].touched
+        "
+          class="mat-text-warn"
+          >{{ "confirmOtp_min" | translate }}
+          <br />
+        </mat-error>
+        <mat-error
+          *ngIf="
+          form.controls['otpCode'].hasError('maxlength') &&
+          form.controls['otpCode'].touched
+        "
+          class="mat-text-warn"
+          >{{ "confirmOtp_max" | translate }}
+          <br />
+        </mat-error>
+        <mat-error
+          *ngIf="
+          form.controls['otpCode'].hasError('pattern') &&
+          form.controls['otpCode'].touched
+        "
+          class="mat-text-warn"
+          >{{ "confirmOtp_pattern" | translate }}
+          <br />
+        </mat-error>
+      </mat-form-field>
+      <div style="text-align: center">
+        <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+      </div>
+      <div mat-dialog-actions>
+        <button
+          type="submit"
+          *ngIf="showOTPForm"
+          [disabled]="disableButton"
+          style="background-color: #d7ae5f"
+          mat-button
+        >
+          {{ "confirm" | translate }}
+        </button>
+        <button
+          (click)="cancelOTP()"
+          style="background-color: gainsboro"
+          mat-button
+        >
+          {{ "cancel" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div id="dialog" *ngIf="!showOTPForm && showFees">
+    <div
+      *ngIf="showAlert"
+      class="alert alert-danger"
+      style="text-align: center"
+      role="alert"
+    >
+      <strong>
+        {{ "Please wait" | translate }} {{ timeLeft2 }} {{ "seconds before
+        trying again" | translate }}
+      </strong>
+    </div>
+    <div *ngIf="transferFees">
+      <div>
+        <p style="margin-bottom: 0rem">
+          {{ "transfered_amount" | translate }}: {{
+          transferFees.destinationAmount }} {{ "ETB" | translate }}
+        </p>
+        <br />
+        <p style="margin-bottom: 0rem">
+          {{ "Transaction-fee-is" | translate }} {{ transferFees.calcFees |
+          number }} {{ "ETB" | translate }} {{
+          "how-would-you-like-to-pay-this-fee?" | translate }}
+        </p>
+      </div>
+      <br />
+      <mat-radio-group
+        [(ngModel)]="selectedTransferedValue"
+        aria-label="Select an option"
+      >
+        <mat-radio-button [value]="1">
+          {{ "fee_from_recipient_wallet" | translate }}
+          <strong>
+            {{ transferFees.destinationAmountWOfees }} {{ "ETB" | translate }}
+          </strong>
+        </mat-radio-button>
+        <mat-radio-button [value]="2">
+          {{ "fee_from_wallet" | translate }}
+          <strong>
+            {{ transferFees.sourceAmountWfees }} {{ "ETB" | translate }}
+          </strong>
+          {{ "fee_from_wallet_recived_amount" | translate }}
+          <strong>
+            {{ transferFees.destinationAmount }} {{ "ETB" | translate }}
+          </strong>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="modal-footer" style="place-content: center">
+      <button
+        style="background-color: #d7ae5f"
+        mat-button
+        (click)="getOTP(selectedTransferedValue)"
+        type="button"
+        [disabled]="disableButton"
+      >
+        {{ "confirm" | translate }}
+      </button>
+      <button
+        type="button"
+        style="background-color: gainsboro"
+        mat-button
+        (click)="cancel()"
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

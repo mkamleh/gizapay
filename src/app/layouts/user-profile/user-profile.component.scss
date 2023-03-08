@@ -1,0 +1,30 @@
+/** @format */
+#profile {
+  // font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#profile td,
+#customers th {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  font-weight: 500;
+}
+
+#profile tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#profile tr:hover {
+  background-color: #ddd;
+}
+
+#profile th {
+  padding: 12px;
+  text-align: left;
+  background-image: linear-gradient(to right, #f2d593, #f09f00) !important;
+  color: black;
+  width: 20%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}

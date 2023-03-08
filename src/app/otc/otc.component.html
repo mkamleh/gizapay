@@ -1,0 +1,438 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div id="cashOut">
+  <form [dir]="layoutDir" [formGroup]="otcForm">
+    <article class="card">
+      <div id="thumb">
+        <div
+          [ngStyle]="
+            showInfo
+              ? { transform: 'translateY(-280px)' }
+              : { 'background-color': 'white' }
+          "
+          class="infos"
+        >
+          <div class="flagHead">
+            <h2 class="title">
+              {{ "Enter_transaction_num" | translate }}
+            </h2>
+            <span class=""></span>
+          </div>
+          <div class="wallet">
+            <input
+              class="date"
+              matInput
+              placeholder="{{ 'please_fill' | translate }}"
+              type="text"
+              formControlName="refNumber"
+            />
+
+            <i
+              class="fa fa-search"
+              *ngIf="!showInfo"
+              (click)="getTransactionInfo()"
+            ></i>
+            <i
+              class="fa fa-close"
+              *ngIf="showInfo"
+              (click)="showInfo = false"
+            ></i>
+            <!-- <button (click)="getWalletInfo()">info</button> -->
+          </div>
+          <small
+            *ngIf="
+              otcForm.controls['refNumber'].hasError('required') &&
+              otcForm.controls['refNumber'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }}</small
+          >
+          <small
+            *ngIf="
+              otcForm.controls['refNumber'].hasError('pattern') &&
+              otcForm.controls['refNumber'].touched
+            "
+            class="mat-text-warn"
+            >{{ "only_num" | translate }}</small
+          >
+          <small
+            *ngIf="
+              otcForm.controls['refNumber'].hasError('minlength') &&
+              otcForm.controls['refNumber'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "ref_min" | translate }}
+          </small>
+          <small
+            *ngIf="
+              otcForm.controls['refNumber'].hasError('maxlength') &&
+              otcForm.controls['refNumber'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "ref_max" | translate }}
+          </small>
+          <div *ngIf="showInfo" class="">
+            <table class="table">
+              <tr class="title">
+                <th>{{ "sender_info" | translate }}</th>
+                <td></td>
+                <th>{{ "reserve_info" | translate }}</th>
+                <td></td>
+              </tr>
+              <tr>
+                <th>{{ "full_name" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderName }}
+                </td>
+                <th>{{ "full_name" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveName }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ "ID_Number" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderIdNumber }}
+                </td>
+                <th>{{ "ID_Number" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveIdNumber }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ "Mobile_number" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderMobile }}
+                </td>
+
+                <th>{{ "Mobile_number" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveMobile }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ "id_type" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderIdTypeCaption }}
+                </td>
+                <th>{{ "id_type" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveIdTypeCaption }}
+                </td>
+              </tr>
+              <!-- <tr>
+                <th>{{ "email" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderEmail }}
+                </td>
+                <th>{{ "email" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveEmail }}
+                </td>
+              </tr> -->
+              <tr>
+                <th>{{ "sender_amount" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.senderAmount }}
+                  {{ transactionInfoObj.senderCuruncy }}
+                </td>
+                <th>{{ "reserve_amount" | translate }}</th>
+                <td>
+                  {{ transactionInfoObj.reserveAmount }}
+                  {{ transactionInfoObj.reserveCuruncy }}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <h3 class="details">event details</h3>
+        </div>
+      </div>
+    </article>
+
+    <article
+      [ngStyle]="!showInfo ? { display: 'none' } : { display: 'block' }"
+      class="card1"
+    >
+      <div class="thumb">
+        <div class="infos">
+          <div class="">
+            <h5 class="title">
+              {{ "transaction_recipient_info" | translate }}
+            </h5>
+            <table class="table">
+              <tr>
+                <th>
+                  {{ "full_name" | translate }}
+                </th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    formControlName="fullName"
+                  />
+                  <small
+                    *ngIf="
+                      otcForm.controls['fullName'].hasError('required') &&
+                      otcForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "required" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['fullName'].hasError('pattern') &&
+                      otcForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "invalid1" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['fullName'].hasError('minlength') &&
+                      otcForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "fullname_min" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['fullName'].hasError('maxlength') &&
+                      otcForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "fullname_max" | translate }}</small
+                  >
+                </td>
+                <th>{{ "id_num" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    formControlName="idNum"
+                  />
+                  <small
+                    *ngIf="
+                      otcForm.controls['idNum'].hasError('required') &&
+                      otcForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "required" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['idNum'].hasError('pattern') &&
+                      otcForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "invalid1" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['idNum'].hasError('minlength') &&
+                      otcForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "id_min" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      otcForm.controls['idNum'].hasError('maxlength') &&
+                      otcForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "id_max" | translate }}</small
+                  >
+                </td>
+              </tr>
+
+              <tr>
+                <th>
+                  {{ "id_issue_date" | translate }}
+                </th>
+                <td class="dates">
+                  <input
+                    [max]="minDate"
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="{{ 'please_fill' | translate }}"
+                    formControlName="idIssueDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </td>
+                <small
+                  *ngIf="
+                    otcForm.controls['idIssueDate'].hasError('required') &&
+                    otcForm.controls['idIssueDate'].touched
+                  "
+                  class="mat-text-warn"
+                  >{{ "required" | translate }}</small
+                >
+                <th>{{ "id_expiry_date" | translate }}</th>
+                <td class="dates">
+                  <input
+                    [min]="minDate"
+                    matInput
+                    [matDatepicker]="picker1"
+                    placeholder="{{ 'please_fill' | translate }}"
+                    formControlName="idExpairyDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </td>
+                <small
+                  *ngIf="
+                    otcForm.controls['idExpairyDate'].hasError('required') &&
+                    otcForm.controls['idExpairyDate'].touched
+                  "
+                  class="mat-text-warn"
+                  >{{ "required" | translate }}</small
+                >
+              </tr>
+              <tr>
+                <th>
+                  {{ "id_type" | translate }}
+                </th>
+                <td>
+                  <mat-select
+                    placeholder="{{ 'please_fill' | translate }}"
+                    formControlName="idType"
+                    class="date"
+                  >
+                    <mat-option [value]="type" *ngFor="let type of idTypes">{{
+                      type.caption
+                    }}</mat-option>
+                  </mat-select>
+                  <small
+                    *ngIf="
+                      otcForm.controls['idType'].hasError('required') &&
+                      otcForm.controls['idType'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "required" | translate }}</small
+                  >
+                </td>
+                <ng-container *ngIf="otcForm.controls['idType'].value">
+                  <th
+                    *ngIf="otcForm.controls['idType'].value.identityTypeId == 3"
+                  >
+                    {{ "id_country" | translate }}
+                  </th>
+                  <td
+                    *ngIf="otcForm.controls['idType'].value.identityTypeId == 3"
+                  >
+                    <mat-select
+                      placeholder="{{ 'please_fill' | translate }}"
+                      formControlName="idCountry"
+                      class="date"
+                    >
+                      <mat-option
+                        [value]="country"
+                        [disabled]="
+                          otcForm.controls['idType'].value.identityTypeId != 3
+                        "
+                        *ngFor="let country of countries"
+                        >{{ country.caption }}</mat-option
+                      >
+                    </mat-select>
+                    <small
+                      *ngIf="
+                        otcForm.controls['idCountry'].hasError('required') &&
+                        otcForm.controls['idCountry'].touched
+                      "
+                      class="mat-text-warn"
+                      >{{ "required" | translate }}</small
+                    >
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="otcForm.controls['idType'].value">
+                  <th
+                    *ngIf="otcForm.controls['idType'].value.identityTypeId != 3"
+                  ></th>
+                  <td
+                    *ngIf="otcForm.controls['idType'].value.identityTypeId != 3"
+                  ></td>
+                </ng-container>
+              </tr>
+              <tr></tr>
+            </table>
+
+            <div id="btn1" class="cash_in_btn">
+              <button
+                [ngClass]="!this.otcForm.valid ? 'disabled' : 'grad-mal'"
+                [disabled]="!this.otcForm.valid"
+                (click)="confirmRecivedTransaction()"
+              >
+                {{ "confirm" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <!-- <article class="card1">
+      <div class="thumb">
+        <div class="infos">
+          <div class="">
+            <h5 class="title">
+              {{ "transaction_amount" | translate }}
+            </h5>
+            <table class="table">
+              <tr>
+                <th>{{ "sender_amount" | translate }}</th>
+                <td *ngIf="transactionInfoObj">
+                  {{ transactionInfoObj.senderAmount }}
+                  {{ transactionInfoObj.senderCuruncy }}
+                </td>
+                <th>{{ "reserve_amount" | translate }}</th>
+                <td *ngIf="transactionInfoObj">
+                  {{ transactionInfoObj.reserveAmount }}
+                  {{ transactionInfoObj.reserveCuruncy }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </article> -->
+  </form>
+  <div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }}</strong>
+    {{ errorMsg }}
+  </div>
+</div>
+<!-- <small *ngIf="error" class="mat-text-warn">{{ error }}</small> -->
+
+<!-- <div class="cash_in_btn">
+  <button (click)="openDialog()" class="grad-mal">
+    {{ "cash_in" | translate }}
+  </button>
+</div> -->

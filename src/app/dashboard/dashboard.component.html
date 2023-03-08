@@ -1,0 +1,156 @@
+<!-- @format -->
+<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="200" [showSpinner]="false" [direction]="'leftToRightIncreased'" [color]="'#ffff'" [trickleSpeed]="100" [thick]="true" [ease]="'linear'">
+</ng-progress>
+
+<div style="margin: 13px; margin-top: 0px; font-weight: 400">
+    <span> {{ greeting | translate }}</span>
+    <span> {{ "Mr/Ms" | translate }}</span>
+    <span> {{ firstName | titlecase }} {{ lastName | titlecase }}</span
+  >, <span> {{ "Welcome to BoA Agent Banking Service." | translate }} </span>
+</div>
+
+<div class="row" fxLayout="row wrap">
+    <div class='col-6 ' style="padding-inline-end: 0px">
+        <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100" class="m-gap p-gap" style="text-align: start">
+            <mat-card style="
+          background-color: unset !important;
+          box-shadow: unset !important;
+          float: right;
+          z-index: 999999;
+        ">
+                <button mat-raised-button class="grad-mal" (click)="walletToCBS()">
+          <mat-icon>sync_alt </mat-icon>
+          {{ "walletToCBS" | translate }}
+        </button>
+            </mat-card>
+            <mat-card>
+                <mat-card-title>
+                    <h5>{{ "Agent Wallet Information" | translate }}</h5>
+                </mat-card-title>
+                <div class="card-wheather">
+                    <div class="temp align-self-center">
+                        {{ "wallet_balance" | translate }}
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <!-- <th>{{ "currentBalance" | translate }}</th> -->
+                                <th>{{ "availableBalance" | translate }}</th>
+                                <!-- <th>{{ "reservedBalance" | translate }}</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- <td>
+                  {{ wallet.currentBalanceRnd }}
+                  {{ wallet.operationCurrencyCaption }}
+                </td> -->
+                                <td>
+                                    {{ WalletBalance }} {{ETB}}
+                                </td>
+                                <!-- <td>
+                  {{ wallet.reservedBalanceRnd }}
+                  {{ wallet.operationCurrencyCaption }}
+                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div  class="col-6" style="padding-inline-start: 0px">
+        <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100" class="m-gap p-gap" style="text-align: start">
+            <mat-card style="
+          background-color: unset !important;
+          box-shadow: unset !important;
+          float: right;
+          z-index: 999999;
+          ">
+                <button mat-raised-button class="grad-mal"  (click)="commission_walletToCBS()">
+          <mat-icon>sync_alt </mat-icon>
+          {{ "walletToCBS" | translate }}
+        </button>
+            </mat-card>
+            <mat-card>
+                <mat-card-title>
+                    <h5>{{ "commission-wallet" | translate }}</h5>
+                </mat-card-title>
+                <div class="card-wheather">
+                    <div class="temp align-self-center">
+                        {{ "wallet_balance" | translate }}
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <!-- <th>{{ "currentBalance" | translate }}</th> -->
+                                <th>{{ "availableBalance" | translate }}</th>
+                                <!-- <th>{{ "reservedBalance" | translate }}</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- <td>
+                  {{ commissionWallet.currentBalanceRnd }}
+                  {{ commissionWallet.operationCurrencyCaption }}
+                </td> -->
+                                <td>
+                                    {{ commissionWalletBalance }} {{ ETB }}
+                                </td>
+                                <!-- <td>
+                  {{ commissionWallet.reservedBalanceRnd }}
+                  {{ commissionWallet.operationCurrencyCaption }}
+                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<!-- <button (click)="showToasterS('operation done successfull')">success</button>
+<button (click)="showToasterE('something went wrong')">error</button> -->
+<div *ngIf="rows" fxLayout="row wrap" class="table-font-size">
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="m-gap p-gap">
+        <mat-card>
+            <mat-card-title>
+                <h5>{{ "My_last_10_transactions" | translate }}</h5>
+            </mat-card-title>
+            <mat-form-field style="width: 96%; margin: 0 20px" class="mb-1">
+                <input matInput placeholder="{{ 'search_hint' | translate }}" required (keyup)="updateFilter($event)" />
+            </mat-form-field>
+            <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" [rows]="rows">
+                <ngx-datatable-column name="{{ 'Source Wallet' | translate }}" prop="{{ 'sourceWalletCode' }}">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="{{ 'Destination Wallet' | translate }}" prop="{{ 'destinationWalletCode' }}">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="{{ 'internalReferance' | translate }}" prop="{{ 'internalReferance'  }}">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="{{ 'externalReference' | translate }}" prop="{{ 'externalReference' }}">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="{{ 'transactionTypeCode' | translate }}" prop="{{ 'transactionTypeCaption' }}">
+                </ngx-datatable-column>
+                <ngx-datatable-column [flexGrow]="1" name="{{ 'Amount' | translate }}">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <p *ngIf="row.flow == 'OUT'" style="color: red">
+                            -{{ row.amount }} ETB
+                        </p>
+                        <p *ngIf="row.flow == 'IN'" style="color: green">
+                            +{{ row.amount }} ETB
+                        </p>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="{{ 'Status' | translate }}" prop="{{ 'statusCaption'  }}">
+                </ngx-datatable-column>
+
+                <ngx-datatable-column style="direction: ltr" name="{{ 'date' | translate }}" prop="{{ 'date' }}">
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </mat-card>
+    </div>
+</div>
+<div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }}</strong> {{ errorMsg }}
+</div>

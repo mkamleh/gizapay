@@ -1,0 +1,141 @@
+<mat-card id="sadad">
+  <mat-card-title>
+    {{ "change_security_question" | translate }}
+  </mat-card-title>
+  <mat-card-content *ngIf="!selectNewQuestion">
+    <div
+      *ngIf="!noSecurityQuestions"
+      class="alert alert-primary"
+      style="text-align: center"
+    >
+      <strong>
+        {{
+          "Please select the security question you want to change then answer it correctly"
+            | translate
+        }}</strong
+      >
+    </div>
+    <div
+      *ngIf="noSecurityQuestions"
+      class="alert alert-warning"
+      style="text-align: center"
+    >
+      <strong>
+        {{
+          "There is no security questions for this user." | translate
+        }}</strong
+      >
+    </div>
+
+    <div class="col-md-12" style="padding: 15px">
+      <mat-form-field style="width: 100%">
+        <mat-label>{{ "select-securityQuestion" | translate }}</mat-label>
+        <mat-select
+          class="mt-1"
+          [formControl]="form.controls['securityQuestionsId']"
+          [disabled]="noSecurityQuestions"
+        >
+          <mat-option
+            [value]="question"
+            *ngFor="let question of questionsArray"
+            >{{ question.caption }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            form.controls['securityQuestionsId'].hasError('required') &&
+            form.controls['securityQuestionsId'].touched
+          "
+          class="mat-text-warn"
+          >{{ "required." | translate }} <br
+        /></mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%">
+        <input
+          matInput
+          placeholder="{{ 'answer-here' | translate }}"
+          [formControl]="form.controls['answer']"
+          [readonly]="noSecurityQuestions"
+        />
+        <mat-error
+          *ngIf="
+            form.controls['answer'].hasError('required') &&
+            form.controls['answer'].touched &&
+            !noSecurityQuestions
+          "
+          class="mat-text-warn"
+          >{{ "required." | translate }} <br
+        /></mat-error>
+      </mat-form-field>
+
+      <button
+        (click)="validateSecurityQuestion()"
+        class="btn grad-mal"
+        mat-button
+        btn
+        [disabled]="noSecurityQuestions"
+      >
+        {{ "Change" | translate }}
+      </button>
+    </div>
+  </mat-card-content>
+  <mat-card-content *ngIf="selectNewQuestion">
+    <div class="alert alert-primary" style="text-align: center">
+      <strong>
+        {{
+          "Please select a new security question then answer it" | translate
+        }}</strong
+      >
+    </div>
+
+    <div class="col-md-12" style="padding: 15px">
+      <mat-form-field style="width: 100%">
+        <mat-label>{{ "select-securityQuestion" | translate }}</mat-label>
+        <mat-select
+          class="mt-1"
+          [formControl]="changeForm.controls['securityQuestionsId']"
+        >
+          <mat-option
+            [value]="question"
+            *ngFor="let question of newQuestionsArray"
+            >{{ question.caption }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            changeForm.controls['securityQuestionsId'].hasError('required') &&
+            changeForm.controls['securityQuestionsId'].touched
+          "
+          class="mat-text-warn"
+          >{{ "required." | translate }} <br
+        /></mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%">
+        <input
+          matInput
+          placeholder="{{ 'answer-here' | translate }}"
+          [formControl]="changeForm.controls['answer']"
+        />
+        <mat-error
+          *ngIf="
+            changeForm.controls['answer'].hasError('required') &&
+            changeForm.controls['answer'].touched
+          "
+          class="mat-text-warn"
+          >{{ "required." | translate }} <br
+        /></mat-error>
+      </mat-form-field>
+
+      <button
+        (click)="changeSecurityQuestion()"
+        class="btn grad-mal"
+        mat-button
+        btn
+      >
+        {{ "Confirm" | translate }}
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

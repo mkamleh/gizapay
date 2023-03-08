@@ -1,0 +1,281 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<mat-card id="sadad">
+  <mat-card-title>
+    <h5>{{ "load_money" | translate }}</h5>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div *ngIf="!modal" style="padding-top: 0px">
+      <div>
+        <div class="alert alert-primary" *ngIf="!T24Account">
+          <strong style="font-weight: 800"> {{"Important!"|translate}} </strong>
+          {{"Link_your_Wallet"|translate}}
+          <a href="#" class="alert-link" [routerLink]="['../link-t24-account']">
+            {{"Link"|translate}} </a
+          >.
+        </div>
+        <div *ngIf="T24Account" class="alert alert-secondary">
+          <strong style="font-weight: 800">
+            {{"t24AccountNum"|translate}}
+          </strong>
+          {{T24Account}}
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <form
+            [formGroup]="loadMoneyForm"
+            #myForm="ngForm"
+            style="width: 100%; padding: 1.2rem; display: flex"
+          >
+            <div *ngIf="!showConfirm">
+              <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+                <input
+                  matInput
+                  placeholder="{{ 'Amount' | translate }}"
+                  required="required"
+                  [formControl]="loadMoneyForm.controls['amount']"
+                  type="number"
+                />
+              </mat-form-field>
+              <div style="margin: auto; font-weight: 400">
+                {{ "etb" | translate }}
+              </div>
+            </div>
+            <div class="warn">
+              <small
+                *ngIf="
+            loadMoneyForm.controls['amount'].hasError('required') &&
+            loadMoneyForm.controls['amount'].touched
+            "
+                class="mat-text-warn"
+                >{{ "desired_amount" | translate }} <br
+              /></small>
+              <small
+                *ngIf="
+            loadMoneyForm.controls['amount'].hasError('min') &&
+            loadMoneyForm.controls['amount'].touched
+            "
+                class="mat-text-warn"
+                >{{ "invalid" | translate }}
+                <br />
+              </small>
+              <small
+                *ngIf="
+            loadMoneyForm.controls['amount'].hasError('max') &&
+            loadMoneyForm.controls['amount'].touched
+            "
+                class="mat-text-warn"
+                >{{ "invalid" | translate }} <br
+              /></small>
+              <small
+                *ngIf="
+            loadMoneyForm.controls['amount'].hasError('pattern') &&
+            loadMoneyForm.controls['amount'].touched
+            "
+                class="mat-text-warn"
+                >{{ "invalid" | translate }} <br
+              /></small>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: start;
+              "
+              *ngIf="showConfirm && !showOtp"
+            >
+              <strong>
+                {{"are_u_sure3"|translate}}
+                {{loadMoneyForm.controls['amount'].value}} {{ "etb"|translate}}
+                ??
+              </strong>
+
+              <div style="display: flex">
+                <button
+                  *ngIf="!showOtp"
+                  style="padding: 0.8rem"
+                  (click)="load()"
+                  type="button"
+                  id="loadMoneySubmitButton"
+                  class="btn grad-mal"
+                  [disabled]="!T24Account"
+                  [disabled]="disableLoadMoney"
+                >
+                  {{ "load" | translate }}
+                </button>
+
+                <button
+                  style="padding: 0.8rem"
+                  (click)="cancelLoadMoney()"
+                  type="button"
+                  id="loadMoneySubmitButton"
+                  class="btn grad-red"
+                >
+                  {{ "cancel" | translate }}
+                </button>
+              </div>
+            </div>
+            <div *ngIf="showOtp">
+              <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+                <input
+                  matInput
+                  placeholder="{{ 'Please_enter_the_recived_code' | translate }}"
+                  [formControl]="loadMoneyForm.controls['otp']"
+                  type="text"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+              <i class="fa fa-refresh" (click)="getTransactionOtp()"></i>
+            </div>
+            <div class="warn">
+              <small
+                *ngIf="
+            loadMoneyForm.controls['otp'].hasError('required') &&
+            loadMoneyForm.controls['otp'].touched
+            "
+                class="mat-text-warn"
+                >{{ "required" | translate }} <br
+              /></small>
+
+              <small
+                *ngIf="
+                      loadMoneyForm.controls['otp'].hasError('pattern') &&
+                      loadMoneyForm.controls['otp'].touched
+                    "
+                class="mat-text-warn"
+                >{{ "only_num" | translate }}</small
+              >
+              <small
+                *ngIf="
+                      loadMoneyForm.controls['otp'].hasError('minlength') &&
+                      loadMoneyForm.controls['otp'].touched
+                    "
+                class="mat-text-warn"
+              >
+                {{ "valid_confirmOtp" | translate }}
+              </small>
+              <small
+                *ngIf="
+                      loadMoneyForm.controls['otp'].hasError('maxlength') &&
+                      loadMoneyForm.controls['otp'].touched
+                    "
+                class="mat-text-warn"
+              >
+                {{ "valid_confirmOtp" | translate }}
+              </small>
+            </div>
+            <p *ngIf="showOtp">{{ "time_left" | translate }} {{ timeLeft }}</p>
+          </form>
+        </div>
+        <!-- <button
+          *ngIf="!showOtp && !showConfirm"
+          style="padding: 0.8rem;"
+          (click)="load()"
+          type="button"
+          id="loadMoneySubmitButton"
+          class="btn grad-mal"
+          [disabled]="!T24Account"
+        >
+          {{ "load" | translate }}
+        </button> -->
+        <button
+          *ngIf="showOtp"
+          style="padding: 0.8rem"
+          (click)="loadMoney()"
+          type="button"
+          id="loadMoneySubmitButton"
+          class="btn grad-mal"
+          [disabled]="!T24Account"
+        >
+          {{ "Proceed" | translate }}
+        </button>
+        <button
+          *ngIf="!showConfirm"
+          style="padding: 0.8rem"
+          (click)="showConfirmDiv()"
+          type="button"
+          id="loadMoneySubmitButton"
+          class="btn grad-mal"
+          [disabled]="!loadMoneyForm.valid"
+        >
+          {{ "Proceed" | translate }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="modal">
+      <h5 style="padding-bottom: 28px">
+        <strong
+          >{{ transferFees.destinationAmountWOfees }} {{
+          transferFees.initiationOperationCurrencyCaption }} {{
+          "total_amount_load_money" | translate }}
+        </strong>
+      </h5>
+      <button
+        style="padding: 0.8rem"
+        class="grad-mal"
+        id="paySubmitButton"
+        (click)="load()"
+      >
+        {{ "confirm" | translate }}
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+<div class="alert alert-danger" *ngIf="showErrorMsg">
+  <strong>{{"Please Note!" | translate}}</strong>
+  {{ errorMsg }}
+</div>
+<!-- <div id="modal" *ngIf="modal">
+      <div *ngIf="transferFees" class="modal-body">
+        <div>
+          <h5>
+            {{ "transfered_amount" | translate }}: {{
+            transferFees.destinationAmount }}
+          </h5>
+          <br />
+          <h5>
+            {{ "fees" | translate }} : {{ transferFees.calcFees | number }}
+          </h5>
+        </div>
+        <br />
+        <mat-radio-group
+          [(ngModel)]="selectedTransferedValue"
+          aria-label="Select an option"
+        >
+          <mat-radio-button [value]="2">
+            {{ "Deduct_fees_from_your_wallet" | translate }}
+            <strong> {{ transferFees.sourceAmountWfees }}</strong>
+          </mat-radio-button>
+          <mat-radio-button [value]="1">
+            {{ "Deduct_fees_from_recipient_wallet" | translate }}
+            <strong> {{ transferFees.destinationAmountWOfees }} </strong>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn grad-mal"
+          (click)="load(selectedTransferedValue)"
+        >
+          {{ "confirm" | translate }}
+        </button>
+        <button type="button" class="btn grad-mal" (click)="cancel()">
+          {{ "cancel" | translate }}
+        </button>
+      </div>
+    </div> -->

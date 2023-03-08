@@ -1,0 +1,54 @@
+.white-icon {
+  color: #1a1711;
+}
+.white-icon svg {
+  fill: white;
+}
+.grad-mal {
+  background: linear-gradient(58deg, #ebca88, #f1ac1e);
+}
+#logo {
+  width: 5rem;
+  margin: -10px;
+}
+
+:host /deep/ #lang-selector .mt-1 .mat-select-value-text {
+  color: #1a1711 !important;
+}
+:host /deep/ #lang-selector .mt-1 .mat-select-arrow {
+  color: #1a1711 !important;
+}
+
+:host
+  /deep/
+  #lang-selector
+  .mat-form-field-appearance-legacy
+  .mat-form-field-underline {
+  background: transparent;
+}
+
+:host
+  /deep/
+  #lang-selector
+  .mat-select:focus:not(.mat-select-disabled).mat-primary
+  .mat-select-underline {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  #settingsBtn {
+    display: none;
+  }
+}
+a.disabled {
+  pointer-events: none;
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}
+
+.branding {
+  background-color: #1a17118c;
+}
+
+
+

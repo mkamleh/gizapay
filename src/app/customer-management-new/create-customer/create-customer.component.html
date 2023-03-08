@@ -1,0 +1,863 @@
+<div style="text-align: -webkit-center" id="customerNewForm">
+  <mat-horizontal-stepper #stepper style="width: 70%">
+    <mat-step [stepControl]="personalForm">
+      <ng-template matStepLabel>{{ "personal" | translate }}</ng-template>
+      <mat-card class="margin" style="text-align: start">
+        <mat-card-title> {{ "personal" | translate }} </mat-card-title>
+        <mat-card-content>
+          <div class="row" [formGroup]="personalForm">
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'firstName' | translate }} "
+                  formControlName="firstName"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['firstName'].hasError('required') &&
+                    personalForm.controls['firstName'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['firstName'].hasError('pattern') &&
+                    personalForm.controls['firstName'].touched
+                  "
+                >
+                  {{ "firstName_pattern" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['firstName'].hasError('minlength') &&
+                    personalForm.controls['firstName'].touched
+                  "
+                >
+                  {{ "firstName_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['firstName'].hasError('maxlength') &&
+                    personalForm.controls['firstName'].touched
+                  "
+                >
+                  {{ "firstName_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'secondName' | translate }} "
+                  formControlName="secondName"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['secondName'].hasError('required') &&
+                    personalForm.controls['secondName'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['secondName'].hasError('pattern') &&
+                    personalForm.controls['secondName'].touched
+                  "
+                >
+                  {{ "secondName_pattern" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['secondName'].hasError('minlength') &&
+                    personalForm.controls['secondName'].touched
+                  "
+                >
+                  {{ "secondName_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['secondName'].hasError('maxlength') &&
+                    personalForm.controls['secondName'].touched
+                  "
+                >
+                  {{ "secondName_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'lastName' | translate }} "
+                  formControlName="lastName"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['lastName'].hasError('required') &&
+                    personalForm.controls['lastName'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['lastName'].hasError('pattern') &&
+                    personalForm.controls['lastName'].touched
+                  "
+                >
+                  {{ "lastname_pattern" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['lastName'].hasError('minlength') &&
+                    personalForm.controls['lastName'].touched
+                  "
+                >
+                  {{ "lastname_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['lastName'].hasError('maxlength') &&
+                    personalForm.controls['lastName'].touched
+                  "
+                >
+                  {{ "lastname_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'motherName' | translate }} "
+                  formControlName="motherName"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['motherName'].hasError('required') &&
+                    personalForm.controls['motherName'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['motherName'].hasError('pattern') &&
+                    personalForm.controls['motherName'].touched
+                  "
+                >
+                  {{ "motherName_pattern" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['motherName'].hasError('minlength') &&
+                    personalForm.controls['motherName'].touched
+                  "
+                >
+                  {{ "motherName_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['motherName'].hasError('maxlength') &&
+                    personalForm.controls['motherName'].touched
+                  "
+                >
+                  {{ "motherName_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  [max]="minBirthDate"
+                  [matDatepicker]="picker"
+                  placeholder=" {{ 'birth_date' | translate }} "
+                  formControlName="birthDate"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['birthDate'].hasError('required') &&
+                    personalForm.controls['birthDate'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" style="padding-top: 10px">
+              <strong style="color: #656262; padding: 10px; font-weight: 300"
+                >{{ "Gender" | translate }} *
+              </strong>
+              <mat-radio-group
+                formControlName="gender"
+                aria-label="Select an option"
+                required
+              >
+                <mat-radio-button value="M">{{
+                  "male" | translate
+                }}</mat-radio-button>
+                <mat-radio-button value="F">{{
+                  "female" | translate
+                }}</mat-radio-button> </mat-radio-group
+              ><mat-error
+                style="
+                  font-size: x-small;
+                  margin-inline-start: 10px;
+                  font-weight: bolder;
+                "
+                *ngIf="
+                  personalForm.controls['gender'].hasError('required') &&
+                  personalForm.controls['gender'].touched
+                "
+              >
+                {{ "required" | translate }}</mat-error
+              >
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <mat-select
+                  matInput
+                  placeholder=" {{ 'id_type' | translate }} "
+                  formControlName="idType"
+                  required
+                >
+                  <mat-option [value]="type" *ngFor="let type of idTypes">{{
+                    type.caption
+                  }}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['idType'].hasError('required') &&
+                    personalForm.controls['idType'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'id_num' | translate }} "
+                  formControlName="idNumber"
+                  value=""
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['idNumber'].hasError('required') &&
+                    personalForm.controls['idNumber'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['idNumber'].hasError('pattern') &&
+                    personalForm.controls['idNumber'].touched
+                  "
+                >
+                  {{ "invalid1" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['idNumber'].hasError('minlength') &&
+                    personalForm.controls['idNumber'].touched
+                  "
+                >
+                  {{ "id_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['idNumber'].hasError('maxlength') &&
+                    personalForm.controls['idNumber'].touched
+                  "
+                >
+                  {{ "id_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  [max]="today"
+                  [matDatepicker]="picker1"
+                  placeholder=" {{ 'id_issue_date' | translate }} "
+                  formControlName="identityIssueDate"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['identityIssueDate'].hasError(
+                      'required'
+                    ) && personalForm.controls['identityIssueDate'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  [min]="today"
+                  readonly
+                  [matDatepicker]="picker2"
+                  placeholder=" {{ 'id_expiry_date' | translate }} "
+                  formControlName="identityExpiryDate"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    personalForm.controls['identityExpiryDate'].hasError(
+                      'required'
+                    ) && personalForm.controls['identityExpiryDate'].touched
+                  "
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+          <div style="text-align-last: end">
+            <button btn mat-button class="next" (click)="completeStep1()">
+              {{ "Next" | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-step>
+
+    <mat-step [stepControl]="addressForm">
+      <ng-template matStepLabel>{{ "address" | translate }}</ng-template>
+      <mat-card class="margin" style="text-align: start">
+        <mat-card-title> {{ "address" | translate }} </mat-card-title>
+        <mat-card-content [formGroup]="addressForm">
+          <div class="row">
+            <div
+              [ngClass]="{
+                'col-md-6': showOtherRegion,
+                ' col-md-12': !showOtherRegion
+              }"
+            >
+              <mat-form-field style="width: 100%">
+                <mat-select
+                  placeholder="{{ 'Region' | translate }}"
+                  [formControl]="addressForm.controls['regionId']"
+                  required
+                  (selectionChange)="getCities($event.value)"
+                  (ngModelChange)="regionChange($event)"
+                >
+                  <mat-option
+                    *ngFor="let region of regions"
+                    [value]="region.regionId"
+                  >
+                    {{ region.caption }}
+                  </mat-option> </mat-select
+                ><mat-error
+                  *ngIf="
+                    addressForm.controls['regionId'].hasError('required') &&
+                    addressForm.controls['regionId'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="showOtherRegion">
+              <mat-form-field style="width: 100%">
+                <input
+                  matInput
+                  placeholder="{{ 'Region' | translate }}"
+                  [formControl]="addressForm.controls['regionOther']"
+                  type="text"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    addressForm.controls['regionOther'].hasError('required') &&
+                    addressForm.controls['regionOther'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div
+              [ngClass]="{
+                'col-md-6': showOtherCity,
+                ' col-md-12': !showOtherCity
+              }"
+            >
+              <mat-form-field style="width: 100%">
+                <mat-select
+                  placeholder="{{ 'City' | translate }}"
+                  [formControl]="addressForm.controls['cityId']"
+                  required
+                  (selectionChange)="getSubcity($event.value)"
+                  (ngModelChange)="cityChange($event)"
+                >
+                  <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                    {{ city.caption }}
+                  </mat-option> </mat-select
+                ><mat-error
+                  *ngIf="
+                    addressForm.controls['cityId'].hasError('required') &&
+                    addressForm.controls['cityId'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="showOtherCity">
+              <mat-form-field style="width: 100%">
+                <input
+                  matInput
+                  placeholder="{{ 'City' | translate }}"
+                  [formControl]="addressForm.controls['cityOther']"
+                  type="text"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    addressForm.controls['cityOther'].hasError('required') &&
+                    addressForm.controls['cityOther'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div
+              [ngClass]="{
+                'col-md-6': showOtherSubCity,
+                ' col-md-12': !showOtherSubCity
+              }"
+            >
+              <mat-form-field style="width: 100%">
+                <mat-select
+                  placeholder="{{ 'Subcity' | translate }}"
+                  [formControl]="addressForm.controls['subcityId']"
+                  required
+                  (ngModelChange)="subCityChange($event)"
+                >
+                  <mat-option
+                    *ngFor="let Subcity of subcities"
+                    [value]="Subcity.subCityId"
+                  >
+                    {{ Subcity.caption }}
+                  </mat-option> </mat-select
+                ><mat-error
+                  *ngIf="
+                    addressForm.controls['subcityId'].hasError('required') &&
+                    addressForm.controls['subcityId'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="showOtherSubCity">
+              <mat-form-field style="width: 100%">
+                <input
+                  matInput
+                  placeholder="{{ 'Subcity' | translate }}"
+                  [formControl]="addressForm.controls['subCityOther']"
+                  type="text"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    addressForm.controls['subCityOther'].hasError('required') &&
+                    addressForm.controls['subCityOther'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'woreda' | translate }} "
+                  formControlName="woreda"
+                  value=""
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    addressForm.controls['woreda'].hasError('required') &&
+                    addressForm.controls['woreda'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'houseNo' | translate }} "
+                  formControlName="houseNo"
+                  value=""
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    addressForm.controls['houseNo'].hasError('required') &&
+                    addressForm.controls['houseNo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+          <div style="text-align-last: end">
+            <button
+              class="next"
+              style="float: left"
+              mat-button
+              matStepperPrevious
+            >
+              {{ "Back" | translate }}
+            </button>
+
+            <button class="next" mat-button (click)="completeStep2()">
+              {{ "next" | translate }}
+            </button>
+          </div>
+        </mat-card-content></mat-card
+      >
+    </mat-step>
+
+    <mat-step [stepControl]="accountForm">
+      <ng-template matStepLabel>{{ "account" | translate }}</ng-template>
+      <mat-card class="margin" style="text-align: start">
+        <mat-card-title> {{ "account" | translate }} </mat-card-title>
+        <mat-card-content [formGroup]="accountForm">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field dir="ltr" class="ml-xs mr-xs" style="width: 95%">
+                <span matPrefix>+251 &nbsp;</span>
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'Mobile_number' | translate }} "
+                  formControlName="mobileNo"
+                  value=""
+                  maxlength="10"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['mobileNo'].hasError('required') &&
+                    accountForm.controls['mobileNo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['mobileNo'].hasError('pattern') &&
+                    accountForm.controls['mobileNo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "wallet_code_only" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['mobileNo'].hasError('minlength') &&
+                    accountForm.controls['mobileNo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "walletnumber_min" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['mobileNo'].hasError('maxlength') &&
+                    accountForm.controls['mobileNo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "walletnumber_max" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="email"
+                  placeholder=" {{ 'email' | translate }} "
+                  formControlName="email"
+                  value=""
+                />
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['email'].hasError('required') &&
+                    accountForm.controls['email'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['email'].hasError('minlength') &&
+                    accountForm.controls['email'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "valid_email" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['email'].hasError('maxlength') &&
+                    accountForm.controls['email'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "valid_email" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 't24AccountNum' | translate }} "
+                  formControlName="t24AccountNum"
+                  value=""
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-md-4">
+              <input
+                id="file1"
+                #file1
+                type="file"
+                name="photo"
+                (change)="onFileSelect($event, 'attachmentOne', 'fileName1')"
+                placeholder=" {{ 'upload-customer-picture' | translate }}"
+                accept=".doc,.docx,.pdf,image/*"
+              />
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'upload-customer-picture' | translate }}"
+                  [value]="fileName1"
+                  readonly
+                />
+
+                <i
+                  matSuffix
+                  class="fa fa-paperclip"
+                  (click)="
+                    file1.click(); onFileUpload('attachmentOne', 'fileName1')
+                  "
+                ></i>
+                <i
+                  matSuffix
+                  class="fa fa-trash"
+                  (click)="deleteFile('attachmentOne', 'fileName1')"
+                  title="{{ 'delete-attachment' | translate }}"
+                ></i>
+              </mat-form-field>
+              <mat-error
+                style="
+                  font-size: x-small;
+                  margin-inline-start: 10px;
+                  font-weight: bolder;
+                "
+                *ngIf="showFileValidation"
+              >
+                {{ "required" | translate }}</mat-error
+              >
+            </div>
+            <div class="col-md-4">
+              <input
+                id="file2"
+                #file2
+                type="file"
+                name="photo"
+                (change)="onFileSelect($event, 'attachmentTwo', 'fileName2')"
+                placeholder=" {{ 'upload-identity-document' | translate }}"
+                accept=".doc,.docx,.pdf,image/*"
+              />
+
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'upload-identity-document' | translate }}"
+                  [value]="fileName2"
+                  readonly
+                />
+                <i
+                  matSuffix
+                  class="fa fa-paperclip"
+                  (click)="
+                    file2.click(); onFileUpload('attachmentTwo', 'fileName2')
+                  "
+                ></i>
+
+                <i
+                  matSuffix
+                  class="fa fa-trash"
+                  (click)="deleteFile('attachmentTwo', 'fileName2')"
+                  title="{{ 'delete-attachment' | translate }}"
+                ></i>
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['attachmentTwo'].hasError(
+                      'required'
+                    ) && accountForm.controls['attachmentTwo'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <input
+                id="file3"
+                #file3
+                type="file"
+                name="photo"
+                (change)="onFileSelect($event, 'attachmentThree', 'fileName3')"
+                placeholder=" {{ 'business-licence' | translate }}"
+                accept=".doc,.docx,.pdf,image/*"
+              />
+              <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+                <input
+                  matInput
+                  type="text"
+                  placeholder=" {{ 'business-licence' | translate }}"
+                  [value]="fileName3"
+                  readonly
+                />
+
+                <i
+                  matSuffix
+                  class="fa fa-paperclip"
+                  (click)="
+                    file3.click(); onFileUpload('attachmentThree', 'fileName3')
+                  "
+                ></i>
+                <i
+                  matSuffix
+                  class="fa fa-trash"
+                  (click)="deleteFile('attachmentThree', 'fileName3')"
+                  title="{{ 'delete-attachment' | translate }}"
+                ></i>
+                <mat-error
+                  *ngIf="
+                    accountForm.controls['attachmentThree'].hasError(
+                      'required'
+                    ) && accountForm.controls['attachmentThree'].touched
+                  "
+                  class="mat-text-warn"
+                >
+                  {{ "required" | translate }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+          <div style="text-align-last: end">
+            <button
+              class="next"
+              style="float: left"
+              mat-button
+              matStepperPrevious
+            >
+              {{ "Back" | translate }}
+            </button>
+
+            <button
+              *ngIf="!isUpdate"
+              class="next"
+              mat-button
+              (click)="completeStep3()"
+            >
+              {{ "Done?" | translate }}
+            </button>
+            <button
+              *ngIf="isUpdate"
+              class="next"
+              mat-button
+              (click)="updateCustomer()"
+            >
+              {{ "save-changes" | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
+<ngx-loading
+  [show]="loading"
+  [config]="{
+    backdropBorderRadius: '3px'
+  }"
+></ngx-loading>

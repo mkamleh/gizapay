@@ -1,0 +1,448 @@
+<mat-card id="sadad">
+  <mat-card-title>
+    <h5>{{ "b2p-transfer" | translate }}</h5>
+  </mat-card-title>
+
+  <mat-card-content>
+    <!--search beneficiary start-->
+    <div *ngIf="!showOTPForm_LucyPay && !modal && !lucyPayMsg">
+      <div id="serchBeneficiary" fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field
+          [formGroup]="walletForm"
+          #myForm="ngForm"
+          class="ml-xs mr-xs"
+          style="width: 100%; direction: ltr"
+        >
+          <input
+            id="sadadInput"
+            matInput
+            placeholder="{{ 'Enter wallet_code or IBAN' | translate }}"
+            type="text"
+            formControlName="wallet"
+            required="required"
+            maxlength="10"
+          />
+          <span matPrefix>+251 &nbsp;</span>
+          <mat-error
+            id="error"
+            *ngIf="
+              walletForm.controls['wallet'].hasError('required') &&
+              walletForm.controls['wallet'].touched
+            "
+            class="mat-text-warn"
+            >{{ "wallet_required" | translate }} <br />
+          </mat-error>
+
+          <mat-error
+            id="error"
+            *ngIf="
+              walletForm.controls['wallet'].hasError('minlength') &&
+              walletForm.controls['wallet'].touched
+            "
+            class="mat-text-warn"
+            >{{ "wallet_min" | translate }} <br />
+          </mat-error>
+
+          <mat-error
+            id="error"
+            *ngIf="
+              walletForm.controls['wallet'].hasError('maxlength') &&
+              walletForm.controls['wallet'].touched
+            "
+            class="mat-text-warn"
+            >{{ "wallet_max" | translate }} <br />
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              walletForm.controls['wallet'].hasError('pattern') &&
+              walletForm.controls['wallet'].touched
+            "
+            class="mat-text-warn"
+            >{{ "wallet_invalid" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+
+        <button
+          (click)="searchBenf()"
+          style="padding: 0.8rem; width: 24%; margin: 9px"
+          class="grad-mal"
+          id="paySubmitButton"
+        >
+          {{ "search" | translate }}
+        </button>
+      </div>
+
+      <div *ngIf="isBenfExist" style="padding-top: 50px">
+        <table [formGroup]="amountForm" #myForm2="ngForm">
+          <thead>
+            <tr style="background-color: #f1ac1e; color: white">
+              <th>{{ "Full_name" | translate }}</th>
+              <th>
+                {{ "Mobile_number" | translate }}
+              </th>
+              <th>{{ "Wallet" | translate }}</th>
+              <!-- <th>{{ "money_amount" | translate }}</th>
+              <th>{{ "description" | translate }}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span>{{
+                  beneficiary.customerProfileResource.fullNameEN | titlecase
+                }}</span>
+              </td>
+              <td>
+                <span>{{ beneficiary.customerProfileResource.mobileNo }}</span>
+              </td>
+              <td>
+                <span>{{ beneficiary.walletResource.code }}</span>
+              </td>
+              <!-- <td>
+                <mat-form-field style="width: 100%;">
+                  <input
+                    matInput
+                    placeholder="{{ 'money_amount' | translate }}"
+                    type="text"
+                    formControlName="amount"
+                    required="required"
+                  />
+                  <span matSuffix>&nbsp; ETB &nbsp;</span>
+                  <mat-error
+                    *ngIf="
+                      amountForm.controls['amount'].hasError('required') &&
+                      amountForm.controls['amount'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "desired_amount" | translate }} <br
+                  /></mat-error>
+                  <mat-error
+                    *ngIf="
+                      amountForm.controls['amount'].hasError('min') &&
+                      amountForm.controls['amount'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "desired_amount_min" | translate }}
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      amountForm.controls['amount'].hasError('max') &&
+                      amountForm.controls['amount'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "desired_amount_max" | translate }} <br
+                  /></mat-error>
+                  <mat-error
+                    *ngIf="
+                      amountForm.controls['amount'].hasError('pattern') &&
+                      amountForm.controls['amount'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "desired_amount_pattern" | translate }} <br
+                  /></mat-error>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field style="width: 100%;">
+                  <textarea
+                    matInput
+                    placeholder="{{ 'description' | translate }}"
+                    type="text"
+                    formControlName="description"
+                  >
+                  </textarea>
+                </mat-form-field>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+        <mat-form-field style="width: 100%; padding-top: 40px">
+          <input
+            matInput
+            placeholder="{{ 'money_amount' | translate }}"
+            type="text"
+            [formControl]="amountForm.controls['amount']"
+            required="required"
+          />
+          <span matSuffix>&nbsp; ETB &nbsp;</span>
+          <mat-error
+            *ngIf="
+              amountForm.controls['amount'].hasError('required') &&
+              amountForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['amount'].hasError('min') &&
+              amountForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_min" | translate }}
+          </mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['amount'].hasError('max') &&
+              amountForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_max" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['amount'].hasError('pattern') &&
+              amountForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_pattern" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 100%">
+          <textarea
+            matInput
+            placeholder="{{ 'description' | translate }}"
+            type="text"
+            [formControl]="amountForm.controls['description']"
+          >
+          </textarea>
+        </mat-form-field>
+        <button
+          (click)="showLucyPayMsg()"
+          style="padding: 0.8rem; margin-top: 50px"
+          type="button"
+          id="loadMoneySubmitButton"
+          class="btn grad-mal"
+        >
+          {{ "send" | translate }}
+        </button>
+      </div>
+
+      <!--search beneficiary end-->
+
+      <!-- transfer confirmation modal start-->
+    </div>
+    <div id="LucyPaymodal" *ngIf="!showOTPForm_LucyPay && modal && !lucyPayMsg">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <div *ngIf="transferFees" class="modal-body">
+        <div>
+          <h5>
+            {{ "transfered_amount" | translate }}:
+            {{ transferFees.destinationAmount }}
+            {{ "ETB" | translate }}
+          </h5>
+          <br />
+          <h5>
+            {{ "Transaction-fee-is" | translate }}
+            {{ transferFees.calcFees | number }}
+            {{ "ETB" | translate }}
+            {{ "how-would-you-like-to-pay-this-fee?" | translate }}
+          </h5>
+        </div>
+        <br />
+        <mat-radio-group
+          [(ngModel)]="selectedTransferedValue"
+          aria-label="Select an option"
+        >
+          <mat-radio-button [value]="1">
+            {{ "fee_from_recipient_wallet" | translate }}
+            <strong>
+              {{ transferFees.destinationAmountWOfees }}
+              {{ "ETB" | translate }}
+            </strong>
+          </mat-radio-button>
+          <mat-radio-button [value]="2">
+            {{ "fee_from_wallet" | translate }}
+            <strong>
+              {{ transferFees.sourceAmountWfees }} {{ "ETB" | translate }}
+            </strong>
+            {{ "fee_from_wallet_recived_amount" | translate }}
+            <strong>
+              {{ transferFees.destinationAmount }} {{ "ETB" | translate }}
+            </strong>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="modal-footer">
+        <button
+          (click)="createOTP_lucyPay(selectedTransferedValue, myForm, myForm2)"
+          type="button"
+          style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+          class="btn grad-mal"
+          [disabled]="disableButton"
+        >
+          {{ "confirm" | translate }}
+        </button>
+        <button
+          (click)="this.showFees = false; this.modal = false"
+          type="button"
+          style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+          class="btn grad-mal"
+        >
+          {{ "cancel" | translate }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="showOTPForm_LucyPay" [dir]="layoutDir">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <form
+        autocomplete="off"
+        [formGroup]="amountForm"
+        (ngSubmit)="
+          transferModalClose(selectedTransferedValue, myForm, myForm2)
+        "
+      >
+        <h5>{{ "Please_enter_the_recived_code" | translate }}</h5>
+
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <input
+            matInput
+            [formControl]="amountForm.controls['otpCode']"
+            autocomplete="off"
+          />
+          <span matSuffix>
+            <i
+              class="fa fa-refresh"
+              style="cursor: pointer; font-size: x-large"
+              title="{{ 'resend-otp' | translate }}"
+              (click)="
+                createOTP_lucyPay(selectedTransferedValue, myForm, myForm2)
+              "
+            ></i
+          ></span>
+          <mat-error
+            *ngIf="
+              amountForm.controls['otpCode'].hasError('required') &&
+              amountForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_confirmOtp" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['otpCode'].hasError('minlength') &&
+              amountForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_min" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['otpCode'].hasError('maxlength') &&
+              amountForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_max" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              amountForm.controls['otpCode'].hasError('pattern') &&
+              amountForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_pattern" | translate }}
+            <br />
+          </mat-error>
+        </mat-form-field>
+
+        <div style="text-align: center">
+          <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            type="submit"
+            *ngIf="showOTPForm_LucyPay"
+            class="btn grad-mal"
+            [disabled]="disableButton"
+          >
+            {{ "confirm" | translate }}
+          </button>
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            class="btn grad-mal"
+            (click)="cancelOTP_lucyPay()"
+          >
+            {{ "cancel" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="lucyPayMsg" [dir]="layoutDir" id="LucyPaymodal">
+      <form [formGroup]="amountForm">
+        <h5>
+          <strong style="font-family: monospace">
+            {{ "lucyPayMsg1" | translate }}
+            <b style="direction: ltr">
+              {{ lucyPayAmount | number: "1.2-2" }}
+              {{ "ETB" | translate }} </b
+            >{{ "lucyPayMsg2" | translate }}
+            <!-- <b style="direction: ltr"> {{ LucyPaywalletNumber }} </b>? -->
+          </strong>
+        </h5>
+        <table class="table table1">
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "Full_name" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              <b>
+                {{ beneficiary.customerProfileResource.fullNameEN | titlecase }}
+              </b>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "Wallet" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              {{ LucyPaywalletNumber }}
+            </td>
+          </tr>
+        </table>
+        <div style="text-align: center">
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            type="submit"
+            class="btn grad-mal"
+            (click)="confirmTransfer(amountForm)"
+          >
+            {{ "confirm" | translate }}
+          </button>
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            class="btn grad-mal"
+            (click)="lucyPayMsg = false"
+          >
+            {{ "cancel" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

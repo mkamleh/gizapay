@@ -1,0 +1,598 @@
+<mat-card id="sadad" *ngIf="!showAddBeneficiary">
+  <mat-card-title>
+    <h5>{{ "transfer-to-cbs" | translate }}</h5>
+  </mat-card-title>
+  <div
+    *ngIf="!showAddBeneficiary && !modalBank && !showOTPForm_BOA && !BoaMsg"
+    style="padding-top: 22px; text-align: end; padding-inline-end: 22px"
+  >
+    <button
+      *ngIf="!showAddBeneficiary && !modalBank"
+      (click)="this.showAddBeneficiary = !this.showAddBeneficiary"
+      class="addBeneButton"
+    >
+      {{ "Add_beneficiary" | translate }}
+      <span> <i class="fa fa-user-plus"></i> </span>
+    </button>
+  </div>
+
+  <mat-card-content>
+    <div
+      *ngIf="!showOTPForm_BOA && !modalBank && !BoaMsg"
+      fxLayout="row"
+      fxLayoutAlign="center"
+      style="padding: 0px"
+    >
+      <form
+        [formGroup]="bankForm"
+        #myForm3="ngForm"
+        style="width: 100%; padding: 1.2rem"
+      >
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <mat-label>{{ "select_beneficiary" | translate }}</mat-label>
+          <mat-select
+            (selectionChange)="selectBeneficiary($event.value)"
+            formControlName="addedBeneficiary"
+            required="required"
+          >
+            <mat-option [value]="1">
+              {{ "boa-account-number" | translate }}
+            </mat-option>
+            <mat-option
+              [value]="beneficiary"
+              *ngFor="let beneficiary of beneficiaries"
+              >{{ beneficiary.fullName }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              bankForm.controls['addedBeneficiary'].hasError('required') &&
+              bankForm.controls['addedBeneficiary'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+
+        <span *ngIf="sendToBankAccount">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              matInput
+              placeholder="{{ 'boa-account' | translate }}"
+              formControlName="boaAccount"
+              maxlength="15"
+              required="required"
+            />
+            <mat-error
+              *ngIf="
+                bankForm.controls['boaAccount'].hasError('required') &&
+                bankForm.controls['boaAccount'].touched
+              "
+              class="mat-text-warn"
+              >{{ "required" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                bankForm.controls['boaAccount'].hasError('pattern') &&
+                bankForm.controls['boaAccount'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_pattern" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                bankForm.controls['boaAccount'].hasError('minlength') &&
+                bankForm.controls['boaAccount'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_min" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                bankForm.controls['boaAccount'].hasError('maxlength') &&
+                bankForm.controls['boaAccount'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_max" | translate }} <br
+            /></mat-error>
+          </mat-form-field>
+        </span>
+
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <input
+            matInput
+            placeholder="{{ 'money_amount' | translate }}"
+            type="text"
+            formControlName="amount"
+            required="required"
+          />
+          <span matSuffix>&nbsp; ETB &nbsp;</span>
+          <mat-error
+            *ngIf="
+              bankForm.controls['amount'].hasError('required') &&
+              bankForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['amount'].hasError('min') &&
+              bankForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_min" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['amount'].hasError('max') &&
+              bankForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_max" | translate }} <br
+          /></mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['amount'].hasError('pattern') &&
+              bankForm.controls['amount'].touched
+            "
+            class="mat-text-warn"
+            >{{ "desired_amount_pattern" | translate }} <br
+          /></mat-error>
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <textarea
+            matInput
+            placeholder="{{ 'description' | translate }}"
+            type="text"
+            formControlName="description"
+          >
+          </textarea>
+        </mat-form-field>
+
+        <div style="text-align: -webkit-center">
+          <button
+            style="padding: 0.8rem"
+            type="button"
+            id="loadMoneySubmitButton"
+            class="btn grad-mal"
+            (click)="showBoaMsg()"
+          >
+            {{ "send" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="modalBank" *ngIf="!showOTPForm_BOA && modalBank && !BoaMsg">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <div *ngIf="transferFees" class="modal-body">
+        <div>
+          <h5>
+            {{ "transfered_amount" | translate }}:
+            {{ transferFees.destinationAmount }}
+            {{ "ETB" | translate }}
+          </h5>
+          <br />
+          <h5>
+            {{ "Transaction-fee-is" | translate }}
+            {{ transferFees.calcFees | number }}
+            {{ "ETB" | translate }}
+            {{ "how-would-you-like-to-pay-this-fee?" | translate }}
+          </h5>
+        </div>
+        <br />
+        <mat-radio-group
+          [(ngModel)]="selectedTransferedValue"
+          aria-label="Select an option"
+        >
+          <mat-radio-button [value]="1">
+            {{ "fee_from_recipient_wallet" | translate }}
+            <strong>
+              {{ transferFees.destinationAmountWOfees }}
+              {{ "ETB" | translate }}
+            </strong>
+          </mat-radio-button>
+          <mat-radio-button [value]="2">
+            {{ "fee_from_wallet" | translate }}
+            <strong>
+              {{ transferFees.sourceAmountWfees }} {{ "ETB" | translate }}
+            </strong>
+            {{ "fee_from_wallet_recived_amount" | translate }}
+            <strong>
+              {{ transferFees.destinationAmount }} {{ "ETB" | translate }}
+            </strong>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="modal-footer">
+        <button
+          (click)="createOTP_BOA(selectedTransferedValue, myForm3)"
+          type="button"
+          class="btn grad-mal"
+          style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+          [disabled]="disableButton"
+        >
+          {{ "confirm" | translate }}
+        </button>
+        <button
+          (click)="
+            this.showFeesBank = false;
+            this.isBenfExist = false;
+            this.modalBank = false
+          "
+          type="button"
+          class="btn grad-mal"
+          style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+        >
+          {{ "cancel" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="showOTPForm_BOA" [dir]="layoutDir">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <form
+        [formGroup]="bankForm"
+        (ngSubmit)="transferModalCloseBank(selectedTransferedValue, myForm3)"
+      >
+        <h5>{{ "Please_enter_the_recived_code" | translate }}</h5>
+
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <input
+            matInput
+            [formControl]="bankForm.controls['otpCode']"
+            autocomplete="off"
+          />
+          <span matSuffix>
+            <i
+              class="fa fa-refresh"
+              style="cursor: pointer; font-size: x-large"
+              title="{{ 'resend-otp' | translate }}"
+              (click)="createOTP_BOA(selectedTransferedValue, myForm3)"
+            ></i
+          ></span>
+          <mat-error
+            *ngIf="
+              bankForm.controls['otpCode'].hasError('required') &&
+              bankForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_confirmOtp" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['otpCode'].hasError('minlength') &&
+              bankForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_min" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['otpCode'].hasError('maxlength') &&
+              bankForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_max" | translate }}
+            <br />
+          </mat-error>
+          <mat-error
+            *ngIf="
+              bankForm.controls['otpCode'].hasError('pattern') &&
+              bankForm.controls['otpCode'].touched
+            "
+            class="mat-text-warn"
+            >{{ "confirmOtp_pattern" | translate }}
+            <br />
+          </mat-error>
+        </mat-form-field>
+
+        <div style="text-align: center">
+          <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            type="submit"
+            *ngIf="showOTPForm_BOA"
+            class="btn grad-mal"
+            [disabled]="disableButton"
+          >
+            {{ "confirm" | translate }}
+          </button>
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            class="btn grad-mal"
+            (click)="cancelOTP_BOA()"
+          >
+            {{ "cancel" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="BoaMsg" [dir]="layoutDir" id="LucyPaymodal">
+      <form>
+        <h5>
+          <strong style="font-family: monospace">
+            {{ "BoaMsg1" | translate }}
+            <b style="direction: ltr">
+              {{ boaAmount | number: "1.2-2" }} {{ "ETB" | translate }} </b
+            >{{ "BoaMsg2" | translate }}
+            <!-- <b style="direction: ltr"> {{ boaAccountNumber }} </b>? -->
+          </strong>
+        </h5>
+
+        <table class="table table1" *ngIf="sendToBankAccount">
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "Full_name" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              <b> {{ otherBankAccountFullName | titlecase }} </b>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "account_number" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              {{ otherBoaAccountNumber }}
+            </td>
+          </tr>
+        </table>
+
+        <table class="table table1" *ngIf="!sendToBankAccount">
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "Full_name" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              <b> {{ fullName | titlecase }} </b>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 50%; color: gray">
+              {{ "account_number" | translate }}
+            </td>
+            <td style="width: 50%; text-align: start">
+              {{ boaAccountNumber }}
+            </td>
+          </tr>
+        </table>
+        <div style="text-align: center">
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            type="submit"
+            class="btn grad-mal"
+            (click)="confirmTransferBOA(bankForm)"
+          >
+            {{ "confirm" | translate }}
+          </button>
+          <button
+            style="margin-left: 0.25rem; margin-top: 15px; border-radius: 20px"
+            class="btn grad-mal"
+            (click)="BoaMsg = false"
+          >
+            {{ "cancel" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card id="sadad" *ngIf="!showOTPForm_BOA && !BoaMsg && showAddBeneficiary">
+  <mat-card-title>
+    <h5>{{ "Add_beneficiary" | translate }}</h5>
+  </mat-card-title>
+  <mat-card-content>
+    <!-- add benegiciary start -->
+    <form
+      [formGroup]="addBeneForm"
+      #addBene="ngForm"
+      id="addBtn"
+      style="width: 100%; padding: 1.2rem"
+    >
+      <ng-container *ngIf="showAddBeneficiary">
+        <div style="padding: unset">
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              matInput
+              placeholder="{{ 'account_number' | translate }}"
+              type="text"
+              maxlength="15"
+              formControlName="addedBeneficiaryIban"
+              required="required"
+            />
+            <mat-error
+              *ngIf="
+                addBeneForm.controls['addedBeneficiaryIban'].hasError(
+                  'required'
+                ) && addBeneForm.controls['addedBeneficiaryIban'].touched
+              "
+              class="mat-text-warn"
+              >{{ "required_account_number" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                addBeneForm.controls['addedBeneficiaryIban'].hasError(
+                  'maxlength'
+                ) && addBeneForm.controls['addedBeneficiaryIban'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_max" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                addBeneForm.controls['addedBeneficiaryIban'].hasError(
+                  'minlength'
+                ) && addBeneForm.controls['addedBeneficiaryIban'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_min" | translate }} <br
+            /></mat-error>
+            <mat-error
+              *ngIf="
+                addBeneForm.controls['addedBeneficiaryIban'].hasError(
+                  'pattern'
+                ) && addBeneForm.controls['addedBeneficiaryIban'].touched
+              "
+              class="mat-text-warn"
+              >{{ "accountNo_pattern" | translate }} <br
+            /></mat-error>
+          </mat-form-field>
+
+          <div class="col-md-12" style="text-align: center">
+            <!-- <button (click)="addBeneficiary(addBene)" class="mr-1 grad-mal">
+            {{ "add" | translate }}
+          </button> -->
+            <button
+              (click)="inquireBeneficiary()"
+              type="button"
+              class="btn grad-mal"
+              style="
+                margin-left: 0.25rem;
+                margin-top: 15px;
+                border-radius: 20px;
+              "
+            >
+              {{ "inquire" | translate }}
+            </button>
+            <button
+              (click)="cancelBeneficiary()"
+              type="button"
+              class="btn grad-mal"
+              style="
+                margin-left: 0.25rem;
+                margin-top: 15px;
+                border-radius: 20px;
+              "
+            >
+              {{ "close" | translate }}
+            </button>
+          </div>
+
+          <div *ngIf="inquire" class="col-md-12">
+            <hr />
+            <table
+              class="shop-table table-responsive"
+              cellspacing="0"
+              style="display: table"
+            >
+              <thead style="background: #f1ac1e; color: white">
+                <tr>
+                  <th class="product">{{ "Full_name" | translate }}</th>
+                  <th class="product">
+                    {{ "account_number" | translate }}
+                  </th>
+                  <th class="product"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="product-name">
+                    <span>{{ inquiredBeneficiary.fullName | titlecase }}</span>
+                  </td>
+                  <td class="product-name">
+                    <span>{{ inquiredBeneficiary.boaAccountNumber }}</span>
+                  </td>
+                  <td class="product-name">
+                    <span>
+                      <button
+                        (click)="addBeneficiary(addBene)"
+                        class="grad-mal"
+                        id="paySubmitButton"
+                        style="margin: 0px !important"
+                      >
+                        {{ "add" | translate }}
+                      </button></span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-12" style="padding-top: 27px">
+            <h5 style="text-align-last: start; color: grey">
+              {{ "beneficiaries" | translate }}
+            </h5>
+            <hr style="margin-top: 0px" />
+
+            <table
+              class="shop-table table-responsive"
+              cellspacing="0"
+              style="display: table"
+            >
+              <thead style="background: #f1ac1e; color: white">
+                <tr>
+                  <th class="product">{{ "Full_name" | translate }}</th>
+                  <th class="product">
+                    {{ "account_number" | translate }}
+                  </th>
+                  <th class="product-remove">{{ "Delete" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let beneficiary of beneficiaries">
+                <!-- Existing transfer requests -->
+                <tr *ngIf="beneficiaries.length == 0">
+                  {{
+                    "no-data" | translate
+                  }}
+                </tr>
+                <tr>
+                  <td class="product-name">
+                    <span>{{ beneficiary.fullName | titlecase }}</span>
+                  </td>
+                  <td class="product-name">
+                    <span>{{ beneficiary.boaAccountNumber }}</span>
+                  </td>
+                  <td class="product-subtotal" data-title="Total">
+                    <mat-icon
+                      color="warn"
+                      matTooltip="Delete"
+                      matTooltipPosition="below"
+                      matTooltipDisabled="false"
+                      matTooltipShowDelay="0"
+                      matTooltipHideDelay="1000"
+                      class="reject"
+                      (click)="deleteBeneficiary(beneficiary.id)"
+                      >clear</mat-icon
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+
+    <!-- add benegiciary end -->
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,158 @@
+<!-- @format -->
+
+<!-- <h2 mat-dialog-title>Print Receipt</h2> -->
+<mat-dialog-content [dir]="layoutDir" id="print-section" class="mat-typography">
+  <div class="container inv my-5 py-5">
+    <div class="row">
+      <div class="col-lg-6"></div>
+      <div class="col-lg-6">
+        <h1 style="text-align: start" class="font-weight-lighter py-1 px-3">
+          {{"Receipt" | translate}}
+        </h1>
+      </div>
+    </div>
+    <div style="text-align: start" [dir]="layoutDir" class="row my-3">
+      <div class="col-lg-6">
+        <p class="mb-0">{{"Receipt_To" | translate}}</p>
+        <h5 class="mb-0">
+          <b>{{"Mr./Ms." | translate}}{{data.idFullName}}</b>
+        </h5>
+        <p class="mb-0">{{"For_deposite" | translate}}</p>
+        <p class="mb-0"><b>{{"Mr./Ms." | translate}}{{data.holderName}}</b></p>
+        <!-- <p class="mb-0">nmalviya@gmail.com</p> -->
+      </div>
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-lg-12">
+            <table>
+              <tbody>
+                <tr>
+                  <td>{{"transaction_no" | translate}}</td>
+                  <td class="px-3">:</td>
+                  <td>{{data.transactionNo}}</td>
+                </tr>
+                <tr>
+                  <td>{{"Date"|translate}}</td>
+                  <td class="px-3">:</td>
+                  <td>{{today | date:'dd-MM-yyyy hh:mm:ss'}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{"wallet_code" | translate}}</td>
+                  <td class="px-3">:</td>
+                  <td>{{data.destinationWalletCode}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">{{"transaction_no" | translate}}</th>
+              <th scope="col">{{"PROCCESS_DESCREPTION" | translate}}</th>
+              <!-- <th scope="col">QTY</th> -->
+              <!-- <th scope="col">PRICE</th> -->
+              <th scope="col" colspan="3"></th>
+              <th scope="col">{{"total1" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.transactionNo}}</td>
+              <td>
+                <b>{{"Cash_in_transaction" |translate}}</b>
+                <!-- <p>
+                  Design a stunning brochure in minutes with Canva.
+                </p> -->
+              </td>
+              <!-- <td>1</td> -->
+              <!-- <td>{{data.destinationAmountRnd}}</td> -->
+              <td colspan="3"></td>
+              <td>
+                {{data.destinationAmountRnd}}
+                {{data.initiationOperationCurrencyCaption}}
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td colspan="3"></td>
+              <td><b>{{"SUB_Total"|translate}}</b></td>
+              <td>
+                <b
+                  >{{data.destinationAmountRnd}}
+                  {{data.initiationOperationCurrencyCaption}}</b
+                >
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td colspan="3"></td>
+              <td><b>{{"fees" | translate}}</b></td>
+              <td>
+                <b
+                  >{{data.calcFeesRnd}}
+                  {{data.initiationOperationCurrencyCaption}}</b
+                >
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td colspan="3"></td>
+              <!-- <td><b>{{"vat" | translate}}</b></td> -->
+              <!-- <td>
+                <b>{{data.vat}} {{data.initiationOperationCurrencyCaption}}</b>
+              </td> -->
+            </tr>
+
+            <tr style="background: #e6e4e7; color: #89692f">
+              <td colspan="3"></td>
+              <td></td>
+              <td><b>{{"GRAND_TOTAL" | translate}}</b></td>
+              <td>
+                <b
+                  >{{data.destinationAmountRnd}}
+                  {{data.initiationOperationCurrencyCaption}}</b
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-lg-6 text-center">
+        <h3 class="signature">{{"Employee_signature"|translate}}</h3>
+      </div>
+      <div class="col-lg-6 text-center">
+        <h3 class="signature">{{"Customer_signature"|translate}}</h3>
+        <!-- <p>Account Manager</p> -->
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div style="text-align: start" class="col-lg-6">
+        <h5 class="ml-5">{{"Terms_and_Conditions"|translate}}</h5>
+        <p class="ml-5">{{"This_document" | translate}}</p>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions [dir]="layoutDir" align="end">
+  <button mat-button mat-dialog-close>{{"cancel" | translate}}</button>
+  <button
+    [useExistingCss]="true"
+    mat-button
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    printSectionId="print-section"
+    ngxPrint
+  >
+    {{"Print"|translate}}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,41 @@
+::ng-deep .ngx-datatable.material .datatable-header {
+  color: #3c4e62 !important;
+  border-bottom: ridge #efac13 !important;
+  border-top: ridge #efac13 !important;
+  height: 60px !important;
+  width: 100%;
+}
+.button2 {
+  height: fit-content;
+  // background-color: #ebae32;
+  // color: white;
+  border-radius: 20px;
+  width: fit-content;
+  padding: 9px;
+  font-size: 14px;
+}
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+.mat-form-field {
+  display: inline-block;
+  position: relative;
+  text-align: start;
+  width: 90%;
+  // padding: inherit;
+}
+.mat-form-field-appearance-legacy .mat-form-field-label {
+  font-size: 12px !important;
+}
+.delete-icon {
+  color: red;
+}
+
+.reset-icon {
+  color: blue;
+}
+
+.edit-icon {
+  color: green;
+}

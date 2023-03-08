@@ -1,0 +1,26 @@
+/**
+ * /*---------------
+ * 3.1 Material Variables
+ * ---------------
+ *
+ * @format
+ */
+
+@import "~@angular/material/theming";
+$primary: mat-palette($mat-amber);
+// $accent: mat-palette($mat-amber, A200, A100, A400);
+$accent: mat-palette($mat-green);
+$warn: mat-palette($mat-red);
+$theme: mat-light-theme($primary, $accent, $warn);
+$background: map-get($theme, background);
+$foreground: map-get($theme, foreground);
+$primary_green: lightgreen;
+
+@include mat-core();
+
+$dark-primary: mat-palette($mat-blue-grey);
+$dark-accent: mat-palette($mat-amber, A200, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-background: map-get($dark-theme, background);
+$dark-foreground: map-get($dark-theme, foreground);

@@ -1,0 +1,67 @@
+<div fxLayout="row wrap">
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="m-gap">
+    <mat-card>
+      <mat-card-title>
+        <h5 class="mt-0">{{ "otc_report" | translate }}</h5>
+      </mat-card-title>
+      <div [formGroup]="form" class="row" style="margin: 4px">
+        <mat-form-field style="width: 100%" class="col-md-3">
+          <input matInput placeholder="{{ 'Amount' | translate }}" [formControl]="form.controls['amount']"
+            type="number" />
+          <span matSuffix>&nbsp; ETB &nbsp;</span>
+
+          <mat-error *ngIf="
+              form.controls['amount'].hasError('min') &&
+              form.controls['amount'].touched
+            " class="mat-text-warn">{{ "invalid" | translate }}
+            <br />
+          </mat-error> 
+          <mat-error *ngIf="
+              form.controls['amount'].hasError('max') &&
+              form.controls['amount'].touched
+            " class="mat-text-warn">{{ "invalid" | translate }} <br /></mat-error>
+          <mat-error *ngIf="
+              form.controls['amount'].hasError('pattern') &&
+              form.controls['amount'].touched
+            " class="mat-text-warn">{{ "invalid" | translate }} <br /></mat-error>
+        </mat-form-field> 
+        <mat-form-field [color]="'accent'" class="col-md-3">
+          <input matInput [matDatepicker]="picker1" placeholder="{{ 'dateFrom' | translate }}"
+            formControlName="dateFrom" />
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field [color]="'accent'" class="col-md-3">
+          <input matInput [matDatepicker]="picker2" placeholder="{{ 'dateTo' | translate }}" formControlName="dateTo" />
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+        <button title="{{ 'search' | translate }}" (click)="getBranchTransactions(page)" mat-icon-button mat-sm-button
+          class="search-button">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+      <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+        [externalPaging]="true" [rowHeight]="'auto'" [count]="count" [offset]="offset" [limit]="10" [rows]="rows"
+        (page)="onPage($event)">
+        <ngx-datatable-column name="{{ 'sender-name' | translate }}" prop="{{ 'senderName' }}">
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ 'receiver-name' | translate }}" prop="{{ 'receiverName' }}">
+        </ngx-datatable-column>
+       
+       
+        <ngx-datatable-column style="direction: ltr" name="{{ 'Internal_Referance' | translate }}"
+          prop="{{ 'internalReferance' }}">
+        </ngx-datatable-column>
+        <ngx-datatable-column style="direction: ltr" name="{{ 'Amount' | translate }}" prop="{{ 'amount' }}">
+        </ngx-datatable-column>
+       
+        <ngx-datatable-column name="{{ 'Status_Caption' | translate }}" prop="{{ 'statusCaption' }}">
+        </ngx-datatable-column>
+        <ngx-datatable-column style="direction: ltr" name="{{ 'Date' | translate }}" prop="{{ 'date' }}">
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-card>
+  </div>
+</div>

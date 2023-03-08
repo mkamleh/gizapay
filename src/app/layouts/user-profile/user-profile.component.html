@@ -1,0 +1,69 @@
+<!-- <mat-card id="sadad" [dir]="layoutDir">
+  <mat-card-title>{{ "Profile User" | translate }} </mat-card-title>
+
+  <mat-card-content class="sadad_card">
+    <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+      <table id="profile">
+        <tr>
+          <th>{{ "Brand Name" }}</th>
+          <td>{{ masterUser.brandName }}</td>
+        </tr>
+        <tr>
+          <th>{{ "Brand Name" }}</th>
+          <td>{{ masterUser.brandName }}</td>
+        </tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="warn">
+  <div id="back-end-validation" *ngIf="error">
+    <strong class="mat-text-warn">{{ error }}</strong>
+  </div>
+</div> -->
+
+<div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+  <table id="profile">
+    <tr>
+      <th>{{ "Agent Name" | translate }}</th>
+      <td>{{ masterUser.agentName }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Mobile Number" | translate }}</th>
+      <td>{{ masterUser.mobileNo }}</td>
+    </tr>
+    <!-- <tr>
+      <th>{{ "Company Name" }}</th>
+      <td>{{ masterUser.companyName }}</td>
+    </tr> -->
+    <!-- <tr>
+      <th>{{ "Representive Name" }}</th>
+      <td>{{ masterUser.nameRepresentative }}</td>
+    </tr> -->
+    <tr>
+      <th>{{ "Bank Account Number" | translate }}</th>
+      <td>{{ masterUser.agentCBSAcctNo }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Business Address" | translate }}</th>
+      <td>{{ masterUser.businessAddress }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Business Number" | translate }}</th>
+      <td>{{ masterUser.businessNo }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Owner Name" | translate }}</th>
+      <td>{{ masterUser.ownerContactName }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Owner Email" | translate }}</th>
+      <td>{{ masterUser.ownerContactEmail }}</td>
+    </tr>
+    <tr>
+      <th>{{ "Owner Mobile" | translate }}</th>
+      <td>{{ masterUser.ownerContactMobile }}</td>
+    </tr>
+  </table>
+</div>

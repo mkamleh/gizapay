@@ -1,0 +1,690 @@
+<!-- @format -->
+
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#f1ac1e'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div id="back">
+  <div class="container" id="container">
+    <div class="alert alert-danger" *ngIf="showErrorMsg">
+      <strong>Please Note! </strong>
+      {{ errorMsg }}
+    </div>
+    <form
+      autocomplete="off"
+      [formGroup]="OTPform"
+      id="OTPform"
+      (ngSubmit)="otpCheck()"
+    >
+      <ngx-smart-modal
+        [dir]="layoutDir"
+        #myModal
+        identifier="myModal"
+        [closable]="false"
+      >
+        <!-- <h1>OTP</h1> -->
+        <div class="modal-header grad-mal">
+          <h4 class="modal-title">{{ "OTP" | translate }}</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="myModal.close()"
+          >
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p>{{ "recived_code" | translate }}</p>
+
+          <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+            <input
+              autocomplete="off"
+              value=""
+              matInput
+              placeholder="{{ 'Confirm_code' | translate }}"
+              type="text"
+              name="otpText"
+              [formControl]="OTPform.controls['confirmOtp']"
+            />
+          </mat-form-field>
+
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].hasError('required') &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_confirmOtp" | translate }}</small
+          >
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].errors?.confirmOtp &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+            >{{ "valid_confirmOtp" | translate }}</small
+          >
+
+          <p>{{ timeLeft }} {{ "Seconds_Left" | translate }}</p>
+        </div>
+
+        <div class="modal-footer" style="text-align: end">
+          <a
+            (click)="otpCheck()"
+            mdbBtn
+            color="warning"
+            outline="true"
+            class="waves-effect"
+            mdbWavesEffect
+            >{{ "Confirm" | translate }}</a
+          >
+        </div>
+      </ngx-smart-modal>
+    </form>
+
+    <div class="form-container sign-up-container">
+      <div id="signup-form">
+        <form
+          autocomplete="off"
+          [dir]="layoutDir"
+          [formGroup]="signupForm"
+          id="signupForm"
+        >
+          <h1>{{ "Create_Account" | translate }}</h1>
+
+          <input
+            matInput
+            placeholder="{{ 'User_Name' | translate }}"
+            type="text"
+            name="userName"
+            required
+            autocomplete="off"
+            [formControl]="signupForm.controls['userName']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['userName'].hasError('required') &&
+              signupForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_username" | translate }}
+          </small>
+          <small
+            *ngIf="
+              signupForm.controls['userName'].hasError('minlength') &&
+              signupForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "user_name_min" | translate }}
+          </small>
+          <small
+            *ngIf="
+              signupForm.controls['userName'].hasError('maxlength') &&
+              signupForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "user_name_max" | translate }}
+          </small>
+          <small
+            class="mat-text-warn"
+            *ngIf="
+              signupForm.controls['userName'].hasError('hasArabic') &&
+              signupForm.controls['userName'].touched
+            "
+          >
+            {{ "username_has_arabic" | translate }}
+          </small>
+
+          <div>
+            <international-phone-number
+              class="mystyle"
+              id="international-phone-number"
+              [formControl]="signupForm.controls['phone']"
+              placeholder="Phone Number"
+              [defaultCountry]="'sa'"
+              [required]="true"
+              name="phone"
+            ></international-phone-number>
+          </div>
+
+          <small
+            *ngIf="
+              signupForm.controls['phone'].hasError('required') &&
+              signupForm.controls['phone'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_phone" | translate }}</small
+          >
+          <small
+            *ngIf="
+              !signupForm.controls['phone'].hasError('required') &&
+              signupForm.controls['phone'].hasError('phoneEmptyError') &&
+              signupForm.controls['phone'].touched
+            "
+            class="mat-text-warn"
+            >{{ "valid_phone" | translate }}</small
+          >
+
+          <input
+            matInput
+            placeholder="{{ 'brandName' | translate }}"
+            type="text"
+            name="brandName"
+            required
+            [formControl]="signupForm.controls['brandName']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['brandName'].hasError('required') &&
+              signupForm.controls['brandName'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_brandName" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['brandName'].hasError('minlength') &&
+              signupForm.controls['brandName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "brand_name_min" | translate }}
+          </small>
+          <small
+            *ngIf="
+              signupForm.controls['brandName'].hasError('maxlength') &&
+              signupForm.controls['brandName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "brand_name_max" | translate }}
+          </small>
+          <input
+            matInput
+            placeholder="{{ 'CRN' | translate }}"
+            type="text"
+            name="CRN"
+            required
+            [formControl]="signupForm.controls['CRN']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['CRN'].hasError('required') &&
+              signupForm.controls['CRN'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_CRN" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['CRN'].hasError('minlength') &&
+              signupForm.controls['CRN'].touched
+            "
+            class="mat-text-warn"
+            >{{ "crn_min_max" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['CRN'].hasError('maxlength') &&
+              signupForm.controls['CRN'].touched
+            "
+            class="mat-text-warn"
+            >{{ "crn_min_max" | translate }}</small
+          >
+
+          <small
+            *ngIf="
+              signupForm.controls['CRN'].hasError('pattern') &&
+              signupForm.controls['CRN'].touched
+            "
+            class="mat-text-warn"
+            >{{ "crn_number_only" | translate }}</small
+          >
+
+          <mat-select
+            class="mat-select"
+            placeholder="{{ 'city' | translate }}"
+            [formControl]="signupForm.controls['city']"
+            [required]="isRequired"
+            (selectionChange)="districtCall($event.value)"
+          >
+            <mat-option *ngFor="let city of cities" [value]="city.cityId">
+              {{ city.caption }}
+            </mat-option>
+          </mat-select>
+          <small
+            *ngIf="
+              signupForm.controls['city'].hasError('required') &&
+              signupForm.controls['city'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }}</small
+          >
+          <mat-select
+            class="mat-select"
+            placeholder="{{ 'district' | translate }}"
+            [formControl]="signupForm.controls['district']"
+            [required]="isRequired"
+          >
+            <mat-option
+              *ngFor="let district of districts"
+              [value]="district.districtId"
+            >
+              {{ district.caption }}
+            </mat-option>
+          </mat-select>
+          <small
+            *ngIf="
+              signupForm.controls['district'].hasError('required') &&
+              signupForm.controls['district'].touched
+            "
+            class="mat-text-warn"
+            >{{ "required" | translate }}</small
+          >
+          <input
+            matInput
+            placeholder="{{ 'E_Mail' | translate }}"
+            type="email"
+            name="email"
+            required
+            [formControl]="signupForm.controls['email']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['email'].hasError('required') &&
+              signupForm.controls['email'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_email" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['email'].hasError('hasArabic') &&
+              signupForm.controls['email'].touched
+            "
+            class="mat-text-warn"
+            >{{ "email_has_arabic" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['email'].errors?.email &&
+              signupForm.controls['email'].touched
+            "
+            class="mat-text-warn"
+            >{{ "valid_email" | translate }}</small
+          >
+          <input
+            matInput
+            placeholder="{{ 'password' | translate }}"
+            type="password"
+            name="password"
+            [formControl]="signupForm.controls['password']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['password'].hasError('required') &&
+              signupForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_password" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['password'].hasError('minlength') &&
+              signupForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "password_min" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['password'].hasError('maxlength') &&
+              signupForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "password_max" | translate }}</small
+          >
+
+          <input
+            matInput
+            placeholder="{{ 'confirm_password' | translate }}"
+            type="password"
+            name="cPassword"
+            required
+            [formControl]="signupForm.controls['confirmPassword']"
+          />
+          <small
+            *ngIf="
+              signupForm.controls['confirmPassword'].hasError('required') &&
+              signupForm.controls['confirmPassword'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_confirm_password" | translate }}</small
+          >
+          <small
+            *ngIf="
+              signupForm.controls['confirmPassword'].errors?.equalTo &&
+              signupForm.controls['confirmPassword'].touched
+            "
+            class="mat-text-warn"
+            >{{ "not_matched" | translate }}</small
+          >
+          <button type="button" class="grad-mal" (click)="register()">
+            {{ "Create_Account" | translate }}
+          </button>
+        </form>
+      </div>
+    </div>
+    <div [dir]="layoutDir" class="form-container sign-in-container">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <h1>{{ "Sign_in" | translate }}</h1>
+        <ng-container *ngIf="!showOTPfield">
+          <input
+            required
+            [formControl]="loginForm.controls['userName']"
+            type="text"
+            autocomplete="off"
+            type="text"
+            maxlength="40"
+            name="userName"
+            placeholder="{{ 'User_Name' | translate }}"
+          />
+          <small
+            *ngIf="
+              loginForm.controls['userName'].hasError('required') &&
+              loginForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_username" | translate }}
+          </small>
+          <small
+            *ngIf="
+              loginForm.controls['userName'].hasError('minlength') &&
+              loginForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "user_name_min" | translate }}
+          </small>
+          <small
+            *ngIf="
+              loginForm.controls['userName'].hasError('maxlength') &&
+              loginForm.controls['userName'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "user_name_max" | translate }}
+          </small>
+          <small
+            class="mat-text-warn"
+            *ngIf="
+              loginForm.controls['userName'].hasError('hasArabic') &&
+              loginForm.controls['userName'].touched
+            "
+          >
+            {{ "username_has_arabic" | translate }}
+          </small>
+
+          <input
+            required
+            autocomplete="off"
+            type="password"
+            name="password"
+            [formControl]="loginForm.controls['password']"
+            type="password"
+            placeholder="{{ 'password' | translate }}"
+          />
+          <small
+            *ngIf="
+              loginForm.controls['password'].hasError('required') &&
+              loginForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_password" | translate }}</small
+          >
+          <small
+            *ngIf="
+              loginForm.controls['password'].hasError('minlength') &&
+              loginForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "password_min" | translate }}</small
+          >
+          <small
+            *ngIf="
+              loginForm.controls['password'].hasError('maxlength') &&
+              loginForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "password_max" | translate }}</small
+          >
+          <small
+            *ngIf="
+              loginForm.controls['password'].hasError('pattern') &&
+              loginForm.controls['password'].touched
+            "
+            class="mat-text-warn"
+            >{{ "only_num" | translate }}</small
+          >
+        </ng-container>
+        <div id="otp" *ngIf="showOTPfield">
+          <div id="otp1">
+            <input
+              autocomplete="off"
+              matInput
+              placeholder="{{ 'Please_enter_the_recived_code' | translate }}"
+              type="text"
+              name="otpText"
+              [formControl]="OTPform.controls['confirmOtp']"
+            />
+            <i class="fa fa-refresh" (click)="getOTP()"></i>
+          </div>
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].hasError('required') &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+            >{{ "include_confirmOtp" | translate }}</small
+          >
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].hasError('pattern') &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+            >{{ "only_num" | translate }}</small
+          >
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].hasError('minlength') &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "valid_confirmOtp" | translate }}
+          </small>
+          <small
+            *ngIf="
+              OTPform.controls['confirmOtp'].hasError('maxlength') &&
+              OTPform.controls['confirmOtp'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "valid_confirmOtp" | translate }}
+          </small>
+        </div>
+
+        <p *ngIf="showOTPfield">{{ "time_left" | translate }} {{ timeLeft }}</p>
+        <div *ngIf="showRecaptcha && !showOTPfield">
+          <div
+            id="xxx"
+            #myDiv
+            style="
+              width: 157px;
+              float: left;
+              border: 1px solid #eee;
+              border-radius: 5px;
+              background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1a69z_8Sgi1w2uJlFYhftvA0Lkn3hpKkibQ&amp;usqp=CAU');
+            "
+          ></div>
+          <input
+            [formControl]="recaptchaform.controls['reCaptcha']"
+            type="text"
+            placeholder="Captcha"
+            id="cpatchaTextBox"
+            style="width: 126px; float: right"
+            autocomplete="off"
+          />
+          <input
+            [formControl]="recaptchaform.controls['codeCaptcha']"
+            type="hidden"
+          />
+          <!-- <re-captcha
+            *ngIf="!showOTPfield"
+            class="g-recaptcha"
+            style="margin-top: 30px; align-self: center"
+            name="reCaptcha"
+            siteKey="6LcdcbMUAAAAAPcw3-6gdoDr0KEsh19rfhabVxcL"
+            ngDefaultControl
+            (resolved)="resolved($event)"
+            [formControl]="recaptchaform.controls['reCaptcha']"
+          >
+          </re-captcha> -->
+          <small
+            *ngIf="
+              recaptchaform.controls['reCaptcha'].hasError('required') &&
+              recaptchaform.controls['reCaptcha'].touched
+            "
+            class="mat-text-warn"
+            >{{ "reCaptcha_required" | translate }}</small
+          >
+        </div>
+        <!-- <a>{{
+          "forgot_password" | translate
+        }}</a> -->
+        <a
+          *ngIf="!showOTPfield"
+          [routerLink]="['/authentication/forgot-password']"
+          >{{ "forgot_password" | translate }}</a
+        >
+        <button
+          type="button"
+          (click)="getOTP()"
+          *ngIf="!showOTPfield"
+          class="grad-mal"
+        >
+          {{ "Sign_in" | translate }}
+        </button>
+        <button *ngIf="showOTPfield" class="grad-mal">
+          {{ "Sign_in" | translate }}
+        </button>
+      </form>
+    </div>
+    <audio
+      id="sound1"
+      src="assets/sound/Swoosh 1-SoundBible.com-231145780.mp3"
+      preload="auto"
+    ></audio>
+
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>{{ "welcome_back" | translate }}</h1>
+          <p>{{ "to_keep_connected" | translate }}</p>
+          <button class="ghost" id="signIn">
+            {{ "Sign_in" | translate }}
+          </button>
+          <!-- <mat-form-field
+            style=" width: 65px;margin-left: 11px;margin-right: 11px; margin-top: -14px;"
+            [formGroup]="langForm"
+          >
+            <mat-select
+              style="font-weight: 300;margin-bottom: -6px;"
+              formControlName="langControl"
+              class="mt-1"
+              (ngModelChange)="changeLang()"
+              [compareWith]="compareFn"
+            >
+              <mat-option [value]="lang" *ngFor="let lang of languages">{{
+                lang.name
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>{{ "Agent" | translate }}</h1>
+          <!-- <p>{{ "enter_personal_data" | translate }}</p> -->
+          <!-- <button class="ghost " id="signUp">
+            {{ "Create_Account" | translate }}
+          </button> -->
+          <!-- <div style="text-align: end;"> -->
+          <mat-form-field
+            style="
+              width: 65px;
+              margin-left: 11px;
+              margin-right: 11px;
+              margin-top: -14px;
+            "
+            [formGroup]="langForm"
+          >
+            <mat-select
+              style="font-weight: 300; margin-bottom: -6px"
+              formControlName="langControl"
+              class="mt-1"
+              (ngModelChange)="changeLang()"
+              [compareWith]="compareFn"
+            >
+              <mat-option [value]="lang" *ngFor="let lang of languages">{{
+                lang["name"]
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="back-end-validation" *ngIf="error">
+    <strong id="back-end-error" class="mat-text-warn">{{ error }}</strong>
+  </div>
+</div>
+
+<!-- <ngx-ui-loader
+  [fgsColor]="demoService.config.fgsColor"
+  [fgsPosition]="demoService.config.fgsPosition"
+  [fgsSize]="demoService.config.fgsSize"
+  [fgsType]="demoService.config.fgsType"
+  [bgsColor]="demoService.config.bgsColor"
+  [bgsOpacity]="demoService.config.bgsOpacity"
+  [bgsPosition]="demoService.config.bgsPosition"
+  [bgsSize]="demoService.config.bgsSize"
+  [bgsType]="demoService.config.bgsType"
+  [gap]="demoService.config.gap"
+  [logoPosition]="demoService.config.logoPosition"
+  [logoSize]="demoService.config.logoSize"
+  [logoUrl]="demoService.config.logoUrl"
+  [overlayColor]="demoService.config.overlayColor"
+  [pbColor]="demoService.config.pbColor"
+  [pbDirection]="demoService.config.pbDirection"
+  [pbThickness]="demoService.config.pbThickness"
+  [hasProgressBar]="demoService.config.hasProgressBar"
+  [text]="demoService.config.text"
+  [textColor]="demoService.config.textColor"
+  [textPosition]="demoService.config.textPosition"
+></ngx-ui-loader>
+
+<div ngxUiLoaderBlurred [blur]="demoService.config.blur"></div> -->

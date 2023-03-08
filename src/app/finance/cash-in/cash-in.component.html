@@ -1,0 +1,568 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div id="cashIn">
+  <form [dir]="layoutDir" [formGroup]="cashInForm">
+    <article class="card">
+      <div id="thumb">
+        <div
+          [ngStyle]="
+            showInfo
+              ? { transform: 'translateY(-280px)' }
+              : { 'background-color': 'white' }
+          "
+          class="infos"
+        >
+          <div class="flagHead">
+            <h2 class="title">
+              {{ "Enter_wallet_code" | translate }}
+            </h2>
+            <span class=""></span>
+          </div>
+
+          <div class="wallet">
+            <span matPrefix>+251 &nbsp;</span>
+            <input
+              class="date"
+              matInput
+              placeholder="{{ 'please_fill' | translate }}"
+              type="text"
+              formControlName="walletCode"
+              minlength="9"
+              maxlength="10"
+            />
+            <i
+              class="fa fa-search"
+              *ngIf="!showInfo"
+              (click)="getWalletInfo()"
+            ></i>
+            <i
+              class="fa fa-close"
+              *ngIf="showInfo"
+              (click)="showInfo = false"
+            ></i>
+            <!-- <button (click)="getWalletInfo()">info</button> -->
+          </div>
+          <small
+            *ngIf="
+              cashInForm.controls['walletCode'].hasError('required') &&
+              cashInForm.controls['walletCode'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "required" | translate }}</small
+          >
+          <small
+            *ngIf="
+              cashInForm.controls['walletCode'].hasError('pattern') &&
+              cashInForm.controls['walletCode'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "wallet_code_only" | translate }}</small
+          >
+          <small
+            *ngIf="
+              cashInForm.controls['walletCode'].hasError('minlength') &&
+              cashInForm.controls['walletCode'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "walletnumber_min" | translate }}</small
+          >
+          <small
+            *ngIf="
+              cashInForm.controls['walletCode'].hasError('maxlength') &&
+              cashInForm.controls['walletCode'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "walletnumber_max" | translate }}</small
+          >
+
+          <div *ngIf="wallet" class="">
+            <table class="table">
+              <tr>
+                <th>{{ "full_name" | translate }}</th>
+                <td>
+                  {{ wallet.holderName }}
+                </td>
+                <th>{{ "currentBalance" | translate }}</th>
+                <td>
+                  {{ wallet.currentBalanceRnd }}
+                  {{ wallet.operationCurrencyCaption }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ "iban" | translate }}</th>
+                <td>
+                  {{ wallet.iban }}
+                </td>
+
+                <th>{{ "availableBalance" | translate }}</th>
+                <td>
+                  {{ wallet.availableBalanceRnd }}
+                  {{ wallet.operationCurrencyCaption }}
+                </td>
+              </tr>
+              <tr>
+                <th>{{ "Mobile_number" | translate }}</th>
+                <td>
+                  {{ wallet.mobileNumber }}
+                </td>
+                <th>{{ "reservedBalance" | translate }}</th>
+                <td>
+                  {{ wallet.reservedBalanceRnd }}
+                  {{ wallet.operationCurrencyCaption }}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <h3 class="details">event details</h3>
+        </div>
+      </div>
+    </article>
+
+    <article
+      *ngIf="!showConfirm || showConfirm"
+      [ngStyle]="!showInfo ? { display: 'none' } : { display: 'block' }"
+      class="card1"
+    >
+      <div class="thumb">
+        <div class="infos">
+          <div class="">
+            <h5 class="title">
+              {{ "Deposit_id" | translate }}
+            </h5>
+            <table class="table">
+              <tr>
+                <th>
+                  {{ "full_name" | translate }}
+                </th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    maxlength="60"
+                    formControlName="fullName"
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['fullName'].hasError('required') &&
+                      cashInForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['fullName'].hasError('pattern') &&
+                      cashInForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "invalid1" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['fullName'].hasError('minlength') &&
+                      cashInForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "fullname_min" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['fullName'].hasError('maxlength') &&
+                      cashInForm.controls['fullName'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "fullname_max" | translate }}</small
+                  >
+                </td>
+                <th>{{ "id_num" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    maxlength="10"
+                    formControlName="idNum"
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idNum'].hasError('required') &&
+                      cashInForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idNum'].hasError('pattern') &&
+                      cashInForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "invalid1" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idNum'].hasError('minlength') &&
+                      cashInForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "id_min" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idNum'].hasError('maxlength') &&
+                      cashInForm.controls['idNum'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "id_max" | translate }}</small
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  {{ "id_type" | translate }}
+                </th>
+                <td>
+                  <mat-select
+                    placeholder="{{ 'please_fill' | translate }}"
+                    formControlName="idType"
+                    class="date"
+                  >
+                    <mat-option [value]="type" *ngFor="let type of idTypes">{{
+                      type.caption
+                    }}</mat-option>
+                  </mat-select>
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idType'].hasError('required') &&
+                      cashInForm.controls['idType'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+                </td>
+                <th>{{ "id_expiry_date" | translate }}</th>
+                <td class="dates">
+                  <div id="dates">
+                    <input
+                      [min]="minDate"
+                      matInput
+                      [matDatepicker]="picker1"
+                      placeholder="{{ 'please_fill' | translate }}"
+                      formControlName="idExpairyDate"
+                      data-date-format="yyyy-MM-dd"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </div>
+                  <small
+                    *ngIf="
+                      cashInForm.controls['idExpairyDate'].hasError(
+                        'required'
+                      ) && cashInForm.controls['idExpairyDate'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+                </td>
+              </tr>
+              <ng-container *ngIf="cashInForm.controls['idType'].value">
+                <tr
+                  *ngIf="
+                    cashInForm.controls['idType'].value.identityTypeId == 3
+                  "
+                >
+                  <th>
+                    {{ "id_country" | translate }}
+                  </th>
+                  <td>
+                    <mat-select
+                      placeholder="{{ 'please_fill' | translate }}"
+                      formControlName="idCountry"
+                      class="date"
+                    >
+                      <mat-option
+                        [value]="country"
+                        [disabled]="
+                          cashInForm.controls['idType'].value.identityTypeId !=
+                          3
+                        "
+                        *ngFor="let country of countries"
+                        >{{ country.caption }}</mat-option
+                      >
+                    </mat-select>
+                    <small
+                      *ngIf="
+                        cashInForm.controls['idCountry'].hasError('required') &&
+                        cashInForm.controls['idCountry'].touched
+                      "
+                      class="mat-text-warn"
+                    >
+                      {{ "required" | translate }}</small
+                    >
+                  </td>
+                  <th>
+                    <!-- {{ "id_issue_date" | translate }} -->
+                  </th>
+                  <td class="dates">
+                    <!-- <input
+                    [max]="minDate"
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="{{ 'please_fill' | translate }}"
+                    formControlName="idIssueDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker> -->
+                  </td>
+                  <!-- <small
+                  *ngIf="
+                    cashInForm.controls['idIssueDate'].hasError('required') &&
+                    cashInForm.controls['idIssueDate'].touched
+                  "
+                  class="mat-text-warn"
+                  > {{ "required" | translate }}</small
+                > -->
+                </tr>
+              </ng-container>
+              <!-- <tr>
+                <th>{{ "Mobile_number" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    formControlName="walletCode"
+                   
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['walletCode'].hasError('required') &&
+                      cashInForm.controls['walletCode'].touched
+                    "
+                    class="mat-text-warn"
+                    > {{ "required" | translate }}</small
+                  >
+                </td>
+                <th>{{ "email" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    formControlName="walletCode"
+                   
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['walletCode'].hasError('required') &&
+                      cashInForm.controls['walletCode'].touched
+                    "
+                    class="mat-text-warn"
+                    > {{ "required" | translate }}</small
+                  >
+                </td>
+              </tr> -->
+            </table>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article
+      [ngStyle]="!showInfo ? { display: 'none' } : { display: 'block' }"
+      class="card1"
+    >
+      <div class="thumb">
+        <div class="infos">
+          <div class="">
+            <h5 class="title">
+              {{ "Deposit_amount" | translate }}
+            </h5>
+            <table *ngIf="!showConfirm" class="table">
+              <tr>
+                <th>{{ "Amount" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{ 'please_fill' | translate }}"
+                    type="text"
+                    maxlength="7"
+                    formControlName="moneyAmount"
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['moneyAmount'].hasError('required') &&
+                      cashInForm.controls['moneyAmount'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['moneyAmount'].hasError('max') &&
+                      cashInForm.controls['moneyAmount'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "invalid" | translate }} <br
+                  /></small>
+                  <small
+                    *ngIf="
+                      cashInForm.controls['moneyAmount'].hasError('pattern') &&
+                      cashInForm.controls['moneyAmount'].touched
+                    "
+                    class="mat-text-warn"
+                    >{{ "invalid" | translate }} <br
+                  /></small>
+                </td>
+                <td>{{ "etb" | translate }}</td>
+              </tr>
+              <tr *ngIf="showOtp">
+                <th>{{ "OTP" | translate }}</th>
+                <td>
+                  <input
+                    class="date"
+                    matInput
+                    placeholder="{{
+                      'Please_enter_the_recived_code' | translate
+                    }}"
+                    type="text"
+                    formControlName="otp"
+                    autocomplete="off"
+                  />
+                  <small
+                    *ngIf="
+                      cashInForm.controls['otp'].hasError('required') &&
+                      cashInForm.controls['otp'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "required" | translate }}</small
+                  >
+
+                  <small
+                    *ngIf="
+                      cashInForm.controls['otp'].hasError('pattern') &&
+                      cashInForm.controls['otp'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "only_num" | translate }}</small
+                  >
+                  <small
+                    *ngIf="
+                      cashInForm.controls['otp'].hasError('minlength') &&
+                      cashInForm.controls['otp'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "valid_confirmOtp" | translate }}
+                  </small>
+                  <small
+                    *ngIf="
+                      cashInForm.controls['otp'].hasError('maxlength') &&
+                      cashInForm.controls['otp'].touched
+                    "
+                    class="mat-text-warn"
+                  >
+                    {{ "valid_confirmOtp" | translate }}
+                  </small>
+                </td>
+                <td>
+                  <i class="fa fa-refresh" (click)="getTransactionOtp()"></i>
+                </td>
+              </tr>
+            </table>
+            <div *ngIf="showConfirm" class="get-info">
+              <strong>
+                {{ "are_u_sure5" | translate }}
+                {{ feesObject.sourceAmountWOfeesRnd }}
+                {{ "etb" | translate }} ??
+              </strong>
+            </div>
+            <div *ngIf="showConfirm" class="cash_in_btn">
+              <button (click)="cashInOtp()" class="grad-mal">
+                {{ "cash_in" | translate }}
+              </button>
+              <br />
+              <button class="grad-mal" (click)="cancelPayMoney()" type="button">
+                {{ "cancel" | translate }}
+              </button>
+            </div>
+            <div class="cash_in_btn">
+              <p *ngIf="showOtp">
+                {{ "time_left" | translate }} {{ timeLeft }}
+              </p>
+              <button
+                *ngIf="!showConfirm && !showOtp"
+                (click)="showConfirmDiv()"
+                class="grad-mal"
+              >
+                {{ "Proceed" | translate }}
+              </button>
+              <button
+                *ngIf="!showConfirm && showOtp"
+                (click)="cashIn()"
+                class="grad-mal"
+              >
+                {{ "cash_in" | translate }}
+              </button>
+              <!-- <button
+                (click)="cashIn()"
+                class="grad-mal"
+                printSectionId="print-section"
+                ngxPrint
+              >
+                {{ "cash_in" | translate }}
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </form>
+  <div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }}</strong>
+    {{ errorMsg }}
+  </div>
+</div>
+<!-- <small *ngIf="error" class="mat-text-warn">{{ error }}</small> -->

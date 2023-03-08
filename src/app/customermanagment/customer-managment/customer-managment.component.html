@@ -1,0 +1,157 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div class="wrapper">
+  <!-- <div class="search-bar">
+    <mat-radio-group [(ngModel)]="walletType">
+      <mat-radio-button [value]="1">Customer</mat-radio-button>
+      <mat-radio-button [value]="2">Agent</mat-radio-button>
+      <mat-radio-button [value]="3">Merchant</mat-radio-button>
+    </mat-radio-group>
+  </div> -->
+  <label for="search">
+    {{ "Enter_wallet_code" | translate }}
+  </label>
+  <div class="search-bar">
+    <span style="position: absolute; top: 1rem; left: 2rem" matPrefix
+      >+251 &nbsp;</span
+    >
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="walletCode"
+      value=""
+      maxlength="10"
+    />
+
+    <i class="fa fa-search" (click)="getWalletInfo()"></i>
+  </div>
+
+  <div
+    [ngStyle]="{ display: this.showInfo ? 'block' : 'none' }"
+    class="profile-card js-profile-card"
+    *ngIf="accountInfo"
+  >
+    <div
+      class="profile-card__img"
+      style="width: 100px; height: 100px; margin-top: 30px; margin-bottom: 20px"
+    >
+      <!-- <img [src]="accountInfo.attachmentOne" alt="profile card" /> -->
+      <img
+        src="{{
+          this.authService.loggedInUser
+            ? (
+                this.authService.loggedInUser.agentProfileResource.image
+                  ? this.authService.loggedInUser.agentProfileResource
+                      .accountResource.image
+                  : null
+              )
+              ? this.authService.loggedInUser.agentProfileResource
+                  .accountResource.image
+              : defaultImage
+            : null
+        }}"
+        alt="profile card"
+      />
+    </div>
+
+    <div class="profile-card__cnt js-profile-cnt">
+      <div *ngIf="accountInfo.firstName" class="profile-card__name">
+        {{ accountInfo.firstName }}
+      </div>
+      <div class="profile-card-loc" *ngIf="accountInfo.t24accountNum">
+        <span class="profile-card-loc__icon">
+          <svg class="icon"><use xlink:href="#icon-location"></use></svg>
+        </span>
+
+        <span class="profile-card-loc__txt">
+          "{{ "t24AccountNum" | translate }}" :
+          {{ accountInfo.t24AccountNum }}
+        </span>
+      </div>
+      <div class="profile-card__txt">
+        {{ accountInfo.walletResource.code
+        }}<strong>
+          | {{ accountInfo.statusId == 1 ? "INACTIVE" : "ACTIVE" }}</strong
+        >
+      </div>
+
+      <div class="profile-card-inf">
+        <!-- <div class="profile-card-inf__item">
+          <div class="profile-card-inf__title">
+            {{ accountInfo.mobileNumber }}
+          </div>
+        
+        </div> -->
+        <div *ngIf="accountInfo.identityNo" class="profile-card-inf__item">
+          <div class="profile-card-inf__title">{{ "id_num" | translate }}#</div>
+          <div class="profile-card-inf__txt">
+            {{ accountInfo.identityNo }}
+          </div>
+        </div>
+
+        <div *ngIf="accountInfo.walletLevelId" class="profile-card-inf__item">
+          <div class="profile-card-inf__title">
+            {{ accountInfo.walletLevelId }}
+          </div>
+          <div class="profile-card-inf__txt">
+            {{ "user_level" | translate }}#
+          </div>
+        </div>
+        <div
+          *ngIf="accountInfo.walletResource.iban"
+          class="profile-card-inf__item"
+        >
+          <div class="profile-card-inf__title">
+            {{ accountInfo.walletResource.iban }}
+          </div>
+          <div class="profile-card-inf__txt">{{ "IBAN" | translate }}#</div>
+        </div>
+      </div>
+
+      <div class="profile-card-ctr">
+        <button
+          (click)="resetPassword()"
+          class="profile-card__button button--blue js-message-btn"
+        >
+          {{ "Reset Password" | translate }}
+        </button>
+        <!-- <button
+          (click)="goToUpgrade()"
+          class="profile-card__button button--blue js-message-btn"
+        >
+          {{ "upgrade" | translate }}
+        </button> -->
+        <button
+          *ngIf="accountInfo.statusId == 1"
+          (click)="changeStatus()"
+          class="profile-card__button button--orange"
+        >
+          {{ "Unblock" | translate }}
+        </button>
+        <button
+          *ngIf="accountInfo.statusId == 2"
+          (click)="changeStatus()"
+          class="profile-card__button button--orange"
+        >
+          {{ "block" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }} </strong>
+    {{ errorMsg }}
+  </div>
+</div>

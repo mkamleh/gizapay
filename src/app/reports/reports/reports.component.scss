@@ -1,0 +1,114 @@
+/** @format */
+
+:host /deep/ {
+  .ngx-datatable
+    .datatable-header
+    .datatable-header-cell
+    .datatable-header-cell-template-wrap {
+    height: inherit;
+    text-align: center;
+  }
+
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
+    width: auto;
+  }
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell
+    .datatable-body-cell-label {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.container {
+  padding: 3rem 0rem;
+  padding-bottom: 0;
+}
+
+//wheather
+.card-wheather {
+  height: 220px;
+  color: #fff;
+}
+
+.city {
+  font-size: 26px;
+}
+
+.date {
+  font-size: 20px;
+  line-height: 40px;
+}
+
+.sun {
+  height: 70px;
+}
+
+.grad-blue {
+  background: linear-gradient(58deg, #f44336, #673ab7);
+  color: #fff;
+}
+.grad-mal {
+  background: linear-gradient(58deg, #ebca88, #f1ac1e);
+  color: #fff;
+}
+
+.grad-green {
+  background: linear-gradient(58deg, #009688, #673ab7);
+  color: #fff;
+}
+
+.grad-red {
+  background: linear-gradient(58deg, #f44336, #673ab7);
+  color: #fff;
+}
+.card-wheather {
+  padding: 2rem;
+}
+.temp {
+  font-size: 30px;
+  display: inline-block;
+}
+
+table {
+  color: white;
+}
+.mat-card .mat-card-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  line-height: 1;
+  font-size: 1rem;
+  // background: linear-gradient(to right, #fde7be, #f1ac1e);
+  background: linear-gradient(to left, #f1ac1e, #dbb15f);
+  font-weight: normal;
+  padding: 1rem;
+  text-align: start;
+  color: black;
+}
+.ngx-datatable.material {
+  .datatable-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    direction: ltr;
+  }
+}
+.p-gap {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  text-align: start;
+}
+.ngx-datatable.material
+  .datatable-body
+  .datatable-body-row
+  .datatable-body-cell {
+  width: auto;
+  direction: ltr;
+}
+.search-button {
+  margin: 13px;
+  background: #f1ac1e;
+}

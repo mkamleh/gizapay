@@ -1,0 +1,40 @@
+#otc {
+  .mat-card {
+    margin-bottom: 13px;
+  }
+  .mat-card .mat-card-title {
+    border: none !important;
+    border-bottom: ridge #efac13 !important;
+    background-color: white !important;
+    background-image: none !important;
+    padding: 8px;
+    padding-top: 15px;
+  }
+}
+.next {
+  margin-top: 10px;
+  margin-inline-start: 10px;
+  font-weight: bold;
+  color: black;
+  background: transparent;
+  background-color: #efac13;
+}
+::ng-deep body.swal2-height-auto {
+  height: 0% !important;
+}
+#card_1 {
+  max-width: 540px;
+  .mat-card-content > :last-child:not(.mat-card-footer),
+  .mat-card > :last-child:not(.mat-card-footer) {
+    // margin-bottom: 0;
+    text-align: center;
+    padding: 1.2rem;
+  }
+}
+#submitButton {
+  color: black;
+  width: 100%;
+  border-radius: 20px;
+  padding: 5px;
+  border: none;
+}

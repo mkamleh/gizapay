@@ -1,0 +1,193 @@
+<mat-card>
+  <mat-card-title>
+    {{ "customers-list" | translate }}
+  </mat-card-title>
+  <hr />
+  <div class="mb-2"></div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row" [formGroup]="form">
+        <mat-form-field class="col-md-4">
+          <input
+            matInput
+            type="text"
+            placeholder=" {{ 'Mobile_number' | translate }} "
+            formControlName="mobileNo"
+            value=""
+            maxlength="10"
+          />
+          <span matPrefix>+251 &nbsp;</span>
+
+          <mat-error
+            *ngIf="
+              form.controls['mobileNo'].hasError('required') &&
+              form.controls['mobileNo'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              form.controls['mobileNo'].hasError('pattern') &&
+              form.controls['mobileNo'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "wallet_code_only" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              form.controls['mobileNo'].hasError('minlength') &&
+              form.controls['mobileNo'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "walletnumber_min" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              form.controls['mobileNo'].hasError('maxlength') &&
+              form.controls['mobileNo'].touched
+            "
+            class="mat-text-warn"
+          >
+            {{ "walletnumber_max" | translate }}</mat-error
+          >
+        </mat-form-field>
+
+        <button class="button2 grad-mal" (click)="getAllCustomers(0)">
+          {{ "Search" | translate }}
+        </button>
+      </div>
+      <!-- <mat-form-field style="width: 96%; margin: 0 20px" class="mb-1">
+      <input
+        matInput
+        placeholder="{{ 'customer_search_hint' | translate }}"
+        required
+        (keyup)="updateFilter($event)"
+      />
+    </mat-form-field> -->
+      <ngx-datatable
+        class="material"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [externalPaging]="true"
+        [rowHeight]="'auto'"
+        [count]="count"
+        [offset]="offset"
+        [limit]="10"
+        [rows]="rows"
+        (page)="onPage($event)"
+      >
+        <ngx-datatable-column
+          name="{{ 'Full_name' | translate }}"
+          prop="{{ 'fullName' }}"
+        >
+        </ngx-datatable-column>
+        <!-- <ngx-datatable-column
+        name="{{ 'address' | translate }}"
+        prop="{{ 'address' }}"
+      >
+      </ngx-datatable-column> -->
+        <ngx-datatable-column
+          name="{{ 'Mobile_number' | translate }}"
+          prop="{{ 'phoneNo' }}"
+        >
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'email' | translate }}"
+          prop="{{ 'email' }}"
+        >
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'Status' | translate }}"
+          prop="{{ 'statusCode' }}"
+        >
+      </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'user_level' | translate }}"
+          prop="{{ 'walletLevel' }}"
+        >
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column [flexGrow]="1">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+             <button
+              *ngIf="row.statusCode === 'ACTIVE'"
+              (click)="activate(row.accountId)"
+              mat-icon-button
+              mat-sm-button
+              color="accent"
+              class="mr-1"
+              title="{{ 'deactivate' | translate }}"
+            >
+              <mat-icon>power_settings_new </mat-icon>
+            </button> -->
+        <!-- <button
+              *ngIf="row.statusCode === 'INACTIVE'"
+              (click)="activate(row.accountId)"
+              mat-icon-button
+              mat-sm-button
+              color="warn"
+              class="mr-1"
+              title="{{ 'activate' | translate }}"
+            >
+              <mat-icon>power_settings_new </mat-icon>
+            </button> -->
+        <!-- <button
+              *ngIf="row.statusCode === 'PENDING'"
+              title="{{ 'approve' | translate }}"
+              mat-icon-button
+              mat-sm-button
+              class="mr-1"
+              style="color: green"
+              (click)="approve(row.accountId)"
+            >
+              <mat-icon style="cursor: pointer; font-size: 37px"
+                >check
+              </mat-icon>
+            </button> -->
+        <!-- <button
+              (click)="resetPass(row.accountId)"
+              mat-icon-button
+              mat-sm-button
+              color="primary_green"
+              class="reset-icon"
+              title="{{ 'resetPass' | translate }}"
+              [disabled]="row.statusCode === 'PENDING'"
+            >
+              <mat-icon>settings_backup_restore</mat-icon>
+            </button> 
+          </ng-template>
+        </ngx-datatable-column> -->
+        <ngx-datatable-column [flexGrow]="1" name="{{ 'Edit' | translate }}">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <button
+              (click)="selectToUpdate(row.accountId)"
+              mat-icon-button
+              mat-sm-button
+              color="accent"
+              class="mr-1"
+              title="{{ 'Edit' | translate }}"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <!-- <button
+            (click)="deleteUser(row.accountId)"
+            mat-icon-button
+            mat-sm-button
+            color="primary_green"
+            class="mr-1"
+            title="{{ 'delete' | translate }}"
+          >
+            <mat-icon>delete</mat-icon>
+          </button> -->
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable></mat-card-content
+    >
+  </mat-card>
+</mat-card>

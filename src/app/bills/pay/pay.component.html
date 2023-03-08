@@ -1,0 +1,313 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div [dir]="layoutDir" class="modal" id="modal">
+  <div class="modal__container">
+    <div class="modal__featured">
+      <div class="modal__circle"></div>
+      <!-- <img src="../../../assets/images/image.jpg" class="modal__product" /> -->
+    </div>
+    <div class="modal__content">
+      <h3>{{ "Your_payment_details" | translate }}</h3>
+
+      <form [formGroup]="payBillForm" style="width: 355px">
+        <ul *ngIf="!showConfirm && !showFees && !showOtp" class="form-list">
+          <li class="form-list__row">
+            <label>{{ "billNo" | translate }}</label>
+            <div class="get-info">
+              <input formControlName="billNo" type="text" name="" />
+              <button
+                [disabled]="!payBillForm.controls['billNo'].value"
+                (click)="getBillInfo()"
+                type="submit"
+                class="button"
+              >
+                {{ "inquire" | translate }}
+              </button>
+            </div>
+            <small
+              *ngIf="
+                payBillForm.controls['billNo'].hasError('required') &&
+                payBillForm.controls['billNo'].touched
+              "
+              class="mat-text-warn"
+              >{{ "required" | translate }}</small
+            >
+
+            <small
+              *ngIf="
+                payBillForm.controls['billNo'].hasError('pattern') &&
+                payBillForm.controls['billNo'].touched
+              "
+              class="mat-text-warn"
+              >{{ "only_num" | translate }}</small
+            >
+            <small
+              *ngIf="
+                payBillForm.controls['billNo'].hasError('minlength') &&
+                payBillForm.controls['billNo'].touched
+              "
+              class="mat-text-warn"
+            >
+              {{ "billNo_min" | translate }}
+            </small>
+            <small
+              *ngIf="
+                payBillForm.controls['billNo'].hasError('maxlength') &&
+                payBillForm.controls['billNo'].touched
+              "
+              class="mat-text-warn"
+            >
+              {{ "billNo_max" | translate }}
+            </small>
+          </li>
+        </ul>
+        <ul *ngIf="showFees && !showConfirm && !showOtp" class="form-list">
+          <li class="form-list__row">
+            <div
+              *ngIf="showAlert"
+              class="alert alert-danger"
+              style="text-align: center"
+              role="alert"
+            >
+              <strong>
+                {{ "Please wait" | translate }}
+                {{ timeLeft2 }}
+                {{ "seconds before trying again" | translate }}
+              </strong>
+            </div>
+          </li>
+          <li>
+            <div *ngIf="paymentFees" class="modal-body">
+              <p style="font-family: monospace">
+                {{ paymentFees.sourceAmountWOfeesRnd }}
+                {{ paymentFees.initiationOperationCurrencyCaption }}
+
+                {{ "total_amount_bill" | translate }}
+              </p>
+              <!-- <div style="font-family: monospace">
+                <p>
+                  {{ "transfered_amount" | translate }}:
+                  {{ paymentFees.sourceAmountWfees }}
+                  {{ "ETB" | translate }}
+                </p>
+                <p>
+                  {{ "Transaction-fee-is" | translate }}
+                  {{ paymentFees.calcFees | number }}
+                  {{ "ETB" | translate }}
+                  {{ "how-would-you-like-to-pay-this-fee?" | translate }}
+                </p>
+              </div>
+              <br />
+              <mat-radio-group
+                [(ngModel)]="selectedTransferedValue"
+                aria-label="Select an option"
+                [ngModelOptions]="{ standalone: true }"
+              >
+                <mat-radio-button [value]="1">
+                  {{ "fee_from_recipient_wallet" | translate }}
+                  <strong>
+                    {{ paymentFees.destinationAmountWOfees }}
+                    {{ "ETB" | translate }}
+                  </strong>
+                </mat-radio-button>
+                <mat-radio-button [value]="2">
+                  {{ "fee_from_wallet" | translate }}
+                  <strong>
+                    {{ paymentFees.sourceAmountWfees }} {{ "ETB" | translate }}
+                  </strong>
+                  {{ "fee_from_wallet_recived_amount" | translate }}
+                  <strong>
+                    {{ paymentFees.destinationAmount }} {{ "ETB" | translate }}
+                  </strong>
+                </mat-radio-button>
+              </mat-radio-group> -->
+            </div>
+          </li>
+          <li class="form-list__row">
+            <div class="get-info">
+              <button
+                [disabled]="disabled"
+                (click)="getTransactionOtp()"
+                type="button"
+                class="button2"
+              >
+                {{ "proceed" | translate }}
+              </button>
+              <button
+                style="background-color: #b9a191"
+                (click)="cancelPayMoney()"
+                type="button"
+                class="button2"
+              >
+                {{ "cancel" | translate }}
+              </button>
+            </div>
+          </li>
+        </ul>
+        <!-- <ul *ngIf="showConfirm && !showOtp" class="form-list">
+          <li class="form-list__row">
+            <div class="get-info">
+              <strong>
+                {{ "are_u_sure4" | translate }}
+                {{ billInfo.amountDueRnd }} {{ billInfo.currencyCaption }} ??
+              </strong>
+            </div>
+          </li>
+          <li class="form-list__row">
+            <div class="get-info">
+              <button
+                [disabled]="disabled"
+                (click)="getTransactionOtp(selectedTransferedValue)"
+                type="button"
+                class="button2"
+              >
+                {{ "Pay_Now" | translate }}
+              </button>
+              <button
+                style="background-color: #b9a191"
+                (click)="cancelPayMoney()"
+                type="button"
+                class="button2"
+              >
+                {{ "cancel" | translate }}
+              </button>
+            </div>
+          </li>
+        </ul> -->
+        <ul *ngIf="showOtp" class="form-list">
+          <div
+            *ngIf="showAlert"
+            class="alert alert-danger"
+            style="text-align: center"
+            role="alert"
+          >
+            <strong>
+              {{ "Please wait" | translate }}
+              {{ timeLeft2 }}
+              {{ "seconds before trying again" | translate }}
+            </strong>
+          </div>
+          <li class="form-list__row">
+            <div class="get-info">
+              <input
+                matInput
+                placeholder="{{ 'Please_enter_the_recived_code' | translate }}"
+                [formControl]="payBillForm.controls['otp']"
+                type="text"
+                autocomplete="off"
+              />
+              <i class="fa fa-refresh" (click)="getTransactionOtp()"></i>
+            </div>
+            <div class="warn">
+              <small
+                *ngIf="
+                  payBillForm.controls['otp'].hasError('required') &&
+                  payBillForm.controls['otp'].touched
+                "
+                class="mat-text-warn"
+                >{{ "required" | translate }} <br
+              /></small>
+
+              <small
+                *ngIf="
+                  payBillForm.controls['otp'].hasError('pattern') &&
+                  payBillForm.controls['otp'].touched
+                "
+                class="mat-text-warn"
+                >{{ "only_num" | translate }}</small
+              >
+              <small
+                *ngIf="
+                  payBillForm.controls['otp'].hasError('minlength') &&
+                  payBillForm.controls['otp'].touched
+                "
+                class="mat-text-warn"
+              >
+                {{ "valid_confirmOtp" | translate }}
+              </small>
+              <small
+                *ngIf="
+                  payBillForm.controls['otp'].hasError('maxlength') &&
+                  payBillForm.controls['otp'].touched
+                "
+                class="mat-text-warn"
+              >
+                {{ "valid_confirmOtp" | translate }}
+              </small>
+            </div>
+            <p *ngIf="showOtp">{{ "time_left" | translate }} {{ timeLeft }}</p>
+          </li>
+          <li class="form-list__row">
+            <div class="get-info">
+              <button
+                [disabled]="disabled"
+                (click)="payBill()"
+                type="button"
+                class="button2"
+              >
+                {{ "confirm" | translate }}
+              </button>
+              <button
+                style="background-color: #b9a191"
+                (click)="cancelPayMoney()"
+                type="button"
+                class="button2"
+              >
+                {{ "cancel" | translate }}
+              </button>
+            </div>
+          </li>
+        </ul>
+        <ul *ngIf="showBillInfo" class="form-list">
+          <li class="form-list__row">
+            <label
+              >{{ "category" | translate }} / {{ "biller" | translate }}</label
+            >
+            {{ billInfo.billerCategoryCaption }} / {{ billInfo.billerName }}
+          </li>
+
+          <li class="form-list__row">
+            <label>{{ "billNo" | translate }}</label>
+            {{ billInfo.sadadNo }}
+          </li>
+          <li class="form-list__row">
+            <label>{{ "amountDue" | translate }}</label>
+            {{ billInfo.amountDueRnd }} {{ billInfo.currencyCaption }}
+          </li>
+          <li class="form-list__row">
+            <label>{{ "status" | translate }}</label>
+            {{ billInfo.statusCaption }}
+          </li>
+          <li id="form-list__row1">
+            <button
+              [disabled]="disabled"
+              (click)="payBillFees()"
+              type="button"
+              class="button1"
+            >
+              {{ "Proceed" | translate }}
+            </button>
+          </li>
+        </ul>
+      </form>
+    </div>
+    <!-- END: .modal__content -->
+  </div>
+  <!-- END: .modal__container -->
+  <div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }}</strong>
+    {{ errorMsg }}
+  </div>
+</div>

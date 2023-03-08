@@ -1,0 +1,71 @@
+.mat-card-title {
+  background: white !important;
+  border: 0px !important;
+  border-bottom: ridge #f09f00 !important;
+  font-size: 1.3rem !important;
+}
+.mar-card {
+  text-align: start !important;
+}
+.mat-radio-button {
+  padding-inline-end: 10px;
+}
+.next {
+  font-weight: bold;
+  color: white;
+  background: transparent;
+  background-color: #d7ae5f;
+}
+#file1,
+#file2,
+#file3 {
+  visibility: hidden;
+  width: 0;
+  padding: 0;
+}
+
+.fa-paperclip {
+  cursor: pointer;
+  font-size: 22px;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+#customerNewForm {
+  ::ng-deep .mat-horizontal-stepper-header-container {
+    background-color: #d7ae5f !important;
+  }
+  ::ng-deep .mat-horizontal-content-container {
+    background-color: #d7ae5f !important;
+  }
+  ::ng-deep .mat-horizontal-stepper-content {
+    box-shadow: 8px 8px 8px #888888 !important;
+  }
+  ::ng-deep .mat-step-header .mat-step-icon {
+    background-color: #a18b60;
+    color: white;
+  }
+
+  ::ng-deep .mat-step-header .mat-step-icon-selected,
+  .mat-step-header .mat-step-icon-state-done,
+  .mat-step-header .mat-step-icon-state-edit {
+    background-color: white;
+    color: black;
+  }
+}
+::ng-deep body.swal2-height-auto {
+  height: 0% !important;
+}
+.fa-trash {
+  margin-inline-start: 6px;
+  color: red;
+  cursor: pointer;
+  font-size: 22px;
+}
+.loading-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding: 0px;
+}

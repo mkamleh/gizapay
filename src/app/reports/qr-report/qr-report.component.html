@@ -1,0 +1,103 @@
+<!-- @format -->
+<ng-progress
+  [positionUsing]="'marginLeft'"
+  [minimum]="0.15"
+  [maximum]="1"
+  [speed]="200"
+  [showSpinner]="false"
+  [direction]="'leftToRightIncreased'"
+  [color]="'#ffff'"
+  [trickleSpeed]="100"
+  [thick]="true"
+  [ease]="'linear'"
+>
+</ng-progress>
+<div class="container" *ngIf="rows" fxLayout="row wrap">
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="m-gap p-gap">
+    <mat-card>
+      <mat-card-title
+        ><h5 class="mt-0">{{ "QR_report" | translate }}</h5>
+      </mat-card-title>
+      <!-- <mat-label style="text-align: start; display: block;" for="search">{{
+        "qr_search_hint" | translate
+      }}</mat-label> -->
+
+      <mat-form-field style="width: 96%; margin: 0 20px" class="mb-1">
+        <input
+          matInput
+          placeholder="{{ 'qr_search_hint' | translate }}"
+          required
+          (keyup)="updateFilter($event)"
+        />
+      </mat-form-field>
+      <ngx-datatable
+        class="material"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [externalPaging]="true"
+        [rowHeight]="'auto'"
+        [count]="count"
+        [offset]="offset"
+        [limit]="10"
+        [rows]="rows"
+        (page)="onPage($event)"
+      >
+        <ngx-datatable-column
+          name="{{ 'qr_code' | translate }}"
+          prop="{{ 'code' }}"
+        >
+          <ng-template
+            #qrcodeTemplate
+            let-row="row"
+            let-value="value"
+            ngx-datatable-cell-template
+          >
+            <ngx-qrcode
+              class="zoom"
+              id="qrCodeImage"
+              [qrc-element-type]="elementType"
+              [qrc-value]="value"
+            >
+            </ngx-qrcode>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          name="{{ 'creation_date' | translate }}"
+          prop="{{ 'creationDate' }}"
+        >
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'expiry_date' | translate }}"
+          prop="{{ 'expDate' }}"
+        >
+        </ngx-datatable-column>
+        <!-- <ngx-datatable-column
+          name="{{ 'brandName' | translate }}"
+          prop="{{ 'brandName' }}"
+        >
+        </ngx-datatable-column> -->
+        <ngx-datatable-column
+          name="{{ 'amount' | translate }}"
+          prop="{{ 'amount' }}"
+        >
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'Type' | translate }}"
+          prop="{{ 'type' }}"
+        >
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'status' | translate }}"
+          prop="{{ 'statusCaption' }}"
+        >
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-card>
+  </div>
+  <div class="alert alert-danger" *ngIf="showErrorMsg">
+    <strong>{{ "Please Note!" | translate }}</strong>
+    {{ errorMsg }}
+  </div>
+</div>

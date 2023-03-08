@@ -1,0 +1,174 @@
+<!-- @format -->
+
+<!-- <h2 mat-dialog-title>Print Receipt</h2> -->
+<mat-dialog-content [dir]="layoutDir" id="print-section" class="mat-typography">
+  <div class="container">
+    <div class="row">
+      <div
+        class="receipt-main col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3"
+      >
+        <div class="logo">
+          <div class="receipt-header">
+            <div class="">
+              <div class="receipt-left">
+                <img
+                  class="img-responsive"
+                  alt="iamgurdeeposahan"
+                  src="assets\images\gizaPay.png"
+                  style="width: 71px; border-radius: 43px"
+                />
+              </div>
+            </div>
+            <div class="stext-right">
+              <div [dir]="layoutDir" class="receipt-right1">
+                <h5>{{"Contact_info" | translate}}</h5>
+                <!-- <h5>{{"boa" | translate}}</h5> -->
+                <p><i class="fa fa-phone"></i> +251 11 554 6730</p>
+                <p>
+                  <i class="fa fa-envelope-o"></i> gizepay@bankofabyssinia.com
+                </p>
+                <p>
+                  <i class="fa fa-location-arrow"></i>
+                  {{"ethiopia" | translate}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="">
+          <div class="receipt-header receipt-header-mid">
+            <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+              <div class="receipt-right">
+                <h1 style="color: rgb(140, 140, 140)">
+                  {{"Receipt" | translate}}
+                </h1>
+                <h5>
+                  {{"Mr./Ms." | translate}} {{data.reserveName}}
+                  <!-- <small> |   Lucky Number : 156</small> -->
+                </h5>
+                <p>
+                  <b>{{"ID_Number" | translate}} :</b> {{data.reserveIdNumber}}
+                </p>
+                <p><b>{{"email" | translate}} :</b> {{data.reserveEmail}}</p>
+                <p>
+                  <b>{{"Mobile_number" | translate}} :</b>
+                  {{data.reserveMobile}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>{{"PROCCESS_DESCREPTION"|translate}}</th>
+                <th>{{"amount"|translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr>
+                <td class="col-md-9">
+                  {{"transaction_no"|translate}}{{data.refNumber}}
+                </td>
+                <td class="col-md-3">
+                  {{data.senderAmount}} {{data.initiationOperationCurrencyCaption}}
+                </td>
+              </tr> -->
+
+              <tr>
+                <td class="text-right">
+                  <p>
+                    <strong>{{"reserve_amount"|translate}} </strong>
+                  </p>
+                  <p>
+                    <strong>{{"fees" | translate}} </strong>
+                  </p>
+                  <!-- <p>
+                    <strong>{{"vat" | translate}} </strong>
+                  </p> -->
+                  <p>
+                    <strong>{{"SUB_Total"|translate}} </strong>
+                  </p>
+                </td>
+                <td>
+                  <p>
+                    <strong
+                      >{{data.reserveAmountRnd}}
+                      {{data.initiationOperationCurrencyCaption}}</strong
+                    >
+                  </p>
+                  <p>
+                    <strong
+                      >{{data.calcFeesRnd}}
+                      {{data.initiationOperationCurrencyCaption}}</strong
+                    >
+                  </p>
+                  <!-- <p>
+                    <strong
+                      >{{data.vat}}
+                      {{data.initiationOperationCurrencyCaption}}</strong
+                    >
+                  </p> -->
+                  <p>
+                    <strong
+                      >{{data.senderAmountRnd}}
+                      {{data.initiationOperationCurrencyCaption}}</strong
+                    >
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">
+                  <h5><strong>{{"GRAND_TOTAL" | translate}} </strong></h5>
+                </td>
+                <td class="text-left text-danger">
+                  <h2>
+                    <strong
+                      >{{data.senderAmountRnd}}
+                      {{data.initiationOperationCurrencyCaption}}</strong
+                    >
+                  </h2>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="receipt-header1 receipt-header-mid receipt-footer">
+          <div class="receipt-right">
+            <h5>{{"Employee_signature" | translate}}</h5>
+          </div>
+
+          <div class="receipt-right">
+            <h5>{{"Customer_signature" | translate}}</h5>
+          </div>
+        </div>
+        <br />
+        <div class="receipt-header receipt-header-mid receipt-footer">
+          <div class="receipt-right">
+            <h5 style="color: rgb(140, 140, 140)">
+              {{"thank_you" | translate}}
+            </h5>
+            <p><b>{{"Date"|translate}} :</b> {{today | date:'dd-MM-yyyy'}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions [dir]="layoutDir" align="end">
+  <button mat-button mat-dialog-close>{{"cancel" | translate}}</button>
+  <button
+    [useExistingCss]="true"
+    mat-button
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    printSectionId="print-section"
+    ngxPrint
+  >
+    {{"Print"|translate}}
+  </button>
+</mat-dialog-actions>

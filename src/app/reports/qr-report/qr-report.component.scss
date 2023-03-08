@@ -1,0 +1,41 @@
+/** @format */
+
+:host /deep/ {
+  .ngx-datatable
+    .datatable-header
+    .datatable-header-cell
+    .datatable-header-cell-template-wrap {
+    height: inherit;
+    text-align: center;
+  }
+
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
+    width: auto;
+  }
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell
+    .datatable-body-cell-label {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.container {
+  padding: 3rem 0rem;
+}
+.mat-card .mat-card-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  line-height: 1;
+  font-size: 1rem;
+  // background: linear-gradient(to right, #fde7be, #f1ac1e);
+  background: linear-gradient(to left, #f1ac1e, #dbb15f);
+  font-weight: normal;
+  padding: 1rem;
+  text-align: start;
+}

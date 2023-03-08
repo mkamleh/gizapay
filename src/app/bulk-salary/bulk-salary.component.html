@@ -1,0 +1,159 @@
+<div class="row" style="padding-bottom: 22px;">
+  <div class="col-md-12 mb-30">
+    <div class="card card-statistics h-100">
+      <div class="card-body">
+        <div class="input-group mb-3">
+          <div
+            class="row justify-content-md-center"
+            style="width: 100%; text-align: center; display: contents;"
+          >
+            <div class="col-md-12" style="padding-bottom: 33px;">
+              <button mat-button (click)="exportTemplate()" class="button2">
+                {{ "export_template" | translate
+                }}<i class="material-icons">file_download</i>
+              </button>
+            </div>
+            <br />
+            <div class="col-md-12">
+              <div
+                ng2FileDrop
+                [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+                (fileOver)="fileOverAnother($event)"
+                [uploader]="uploader"
+                class="well ngb-drop-zone text-center"
+                (click)="fileInput.click()"
+              >
+                <div class="jFiler-input-inner">
+                  <div class="jFiler-input-icon">
+                    <i class="icofont icofont-cloud-upload"></i>
+                  </div>
+                  <div class="jFiler-input-text">
+                    <a
+                      class="jFiler-input-choose-btn btn waves-effect waves-light"
+                      >{{ "Choose_file" | translate }}
+                    </a>
+                    <br />
+                    <span
+                      style="
+                        display: inline-block;
+                        margin: 15px 0;
+                        font-size: large;
+                      "
+                      >{{ "or" | translate }}</span
+                    >
+                  </div>
+                  <h3>{{ "file_drag" | translate }}</h3>
+                </div>
+              </div>
+
+              <label style="display: none;" class="custom-file">
+                <input
+                  #fileInput
+                  type="file"
+                  ng2FileSelect
+                  [uploader]="uploader"
+                  class="custom-file-input"
+                  (change)="onFileChange($event)"
+                />
+                <span class="custom-file-control"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-statistics h-100">
+      <div class="col-md-12" style="padding: 0;">
+        <div class="table-responsive">
+          <table class="table">
+            <thead
+              style="
+                background: linear-gradient(58deg, #ebca88, #f1ac1e);
+                color: white;
+              "
+            >
+              <tr>
+                <th>{{ "file_name" | translate }}</th>
+                <th>{{ "file_size" | translate }}</th>
+                <th>{{ "file_status" | translate }}</th>
+                <th>{{ "file_error" | translate }}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngIf="noFiles" class="text-center" style="font-size: large;">
+                <td colspan="5">{{ "no-uploaded-files" | translate }}</td>
+              </tr> -->
+              <tr *ngFor="let item of uploader.queue">
+                <td>
+                  <strong>{{ item?.file?.name }}</strong>
+                </td>
+                <td nowrap>
+                  {{ item?.file?.size / 1024 / 1024 | number: ".2" }} MB
+                </td>
+
+                <td class="text-center">
+                  <!-- <div class="progress" style="margin-bottom: 0;">
+                      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div> -->
+                  <span
+                    class="success_file"
+                    *ngIf="
+                      item.file.name.split('.').pop() == 'xlsx' ||
+                      item.file.name.split('.').pop() == 'xlsm'
+                    "
+                    >{{ "ready_upload" | translate }}</span
+                  >
+                  <span
+                    class="error_file"
+                    *ngIf="
+                      item.file.name.split('.').pop() != 'xlsx' &&
+                      item.file.name.split('.').pop() != 'xlsm'
+                    "
+                    >{{ "not_ready_upload" | translate }}</span
+                  >
+                </td>
+
+                <td>
+                  <span class="error_file">---</span>
+                </td>
+                <td nowrap>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    (click)="uploadFile(item)"
+                    [disabled]="
+                      item.file.name.split('.').pop() != 'xlsx' &&
+                      item.file.name.split('.').pop() != 'xlsm'
+                    "
+                  >
+                    <span class="fa fa-upload"></span>
+                    {{ "Upload" | translate }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="removeItem(item)"
+                  >
+                    <span class="fa fa-trash"></span>
+                    {{ "Remove" | translate }}
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5" class="text-center" style="font-size: large;">
+                  <span>{{ "Your_Uploaded_Files" | translate }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

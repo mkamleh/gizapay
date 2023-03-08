@@ -1,0 +1,45 @@
+.mat-card .mat-card-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  line-height: 1;
+  font-size: 1rem;
+  background: #f1ac1e;
+  font-weight: normal;
+  padding: 1rem;
+  text-align: start;
+}
+.mat-form-field {
+  margin-bottom: 20px;
+}
+
+#sadad > :first-child {
+  border-radius: 2px 2px 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+#sadad {
+  max-width: 540px;
+  & > :first-child {
+    border-radius: 2px 2px 0 0;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+button {
+  outline: none !important;
+}
+.grad-mal {
+  background: linear-gradient(58deg, #ebca88, #f1ac1e);
+  color: #fff;
+  width: 90%;
+  border-radius: 20px;
+  margin-top: 20px;
+  &:disabled {
+    cursor: not-allowed;
+    pointer-events: all !important;
+    background-color: #eeeeee;
+  }
+  margin: 25px;
+}

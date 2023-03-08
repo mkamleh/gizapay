@@ -1,0 +1,260 @@
+<mat-card id="sadad">
+  <mat-card-title>
+    <h5>{{ "sell-airtime-top-up" | translate }}</h5>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div *ngIf="!modal && !showOTPForm">
+      <div>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <form
+            [formGroup]="airtimeForm"
+            #myForm="ngForm"
+            style="width: 100%; padding: 1.2rem"
+          >
+            <mat-form-field
+              class="ml-xs mr-xs"
+              style="width: 100%; direction: ltr"
+            >
+              <input
+                matInput
+                placeholder="{{ 'Mobile_number' | translate }}"
+                required="required"
+                [formControl]="airtimeForm.controls['mobile']"
+                maxlength="10"
+              />
+              <span matPrefix>+251 &nbsp;</span>
+            </mat-form-field>
+            <small
+              *ngIf="
+                (airtimeForm.controls['mobile'].hasError('required') &&
+                  airtimeForm.controls['mobile'].touched) ||
+                (airtimeForm.controls['mobile'].hasError('required') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "include_phone" | translate }}</small
+            >
+            <small
+              *ngIf="
+                (airtimeForm.controls['mobile'].hasError('pattern') &&
+                  airtimeForm.controls['mobile'].touched) ||
+                (airtimeForm.controls['mobile'].hasError('pattern') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "valid_phone" | translate }}</small
+            >
+            <small
+              *ngIf="
+                (airtimeForm.controls['mobile'].hasError('minlength') &&
+                  airtimeForm.controls['mobile'].touched) ||
+                (airtimeForm.controls['mobile'].hasError('minlength') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "phone_number_min" | translate }}</small
+            >
+            <small
+              *ngIf="
+                (airtimeForm.controls['mobile'].hasError('maxlength') &&
+                  airtimeForm.controls['mobile'].touched) ||
+                (airtimeForm.controls['mobile'].hasError('maxlength') &&
+                  myForm.submitted)
+              "
+              class="mat-text-warn"
+              >{{ "phone_number_max" | translate }}</small
+            >
+
+            <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+              <input
+                matInput
+                placeholder="{{ 'Amount' | translate }}"
+                required="required"
+                [formControl]="airtimeForm.controls['amount']"
+              />
+              <span matSuffix>&nbsp; ETB &nbsp;</span>
+            </mat-form-field>
+
+            <div class="warn">
+              <small
+                *ngIf="
+                  airtimeForm.controls['amount'].hasError('required') &&
+                  airtimeForm.controls['amount'].touched
+                "
+                class="mat-text-warn"
+                >{{ "desired_amount" | translate }} <br
+              /></small>
+              <small
+                *ngIf="
+                  airtimeForm.controls['amount'].hasError('min') &&
+                  airtimeForm.controls['amount'].touched
+                "
+                class="mat-text-warn"
+                >{{ "desired_amount_min" | translate }}
+                <br />
+              </small>
+              <small
+                *ngIf="
+                  airtimeForm.controls['amount'].hasError('max') &&
+                  airtimeForm.controls['amount'].touched
+                "
+                class="mat-text-warn"
+                >{{ "desired_amount_max" | translate }} <br
+              /></small>
+              <small
+                *ngIf="
+                  airtimeForm.controls['amount'].hasError('pattern') &&
+                  airtimeForm.controls['amount'].touched
+                "
+                class="mat-text-warn"
+                >{{ "desired_amount_pattern" | translate }} <br
+              /></small>
+            </div>
+          </form>
+        </div>
+        <button
+          style="padding: 0.8rem"
+          (click)="showFeesForm()"
+          type="button"
+          id="loadMoneySubmitButton"
+          class="btn grad-mal"
+        >
+          {{ "load" | translate }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="modal && !showOTPForm">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <h5 style="padding-bottom: 28px; font-family: monospace">
+        <strong
+          >{{ transferFees.sourceAmountWfees }}
+          {{ transferFees.initiationOperationCurrencyCaption }}
+          {{ "total_amount_top_up1" | translate }}
+          <b style="direction: ltr">{{ walletNumber }}</b>
+          {{ "total_amount_top_up2" | translate }}
+          <b style="direction: ltr">{{ mobileNumber }}</b>
+          {{ "total_amount_top_up3" | translate }}
+        </strong>
+      </h5>
+      <button
+        style="padding: 0.8rem; width: 24%; margin: 9px"
+        class="grad-mal"
+        id="paySubmitButton"
+        (click)="createOTP()"
+        [disabled]="disableButton"
+      >
+        {{ "confirm" | translate }}
+      </button>
+      <button
+        style="padding: 0.8rem; width: 24%; margin: 9px"
+        class="grad-mal"
+        id="paySubmitButton"
+        (click)="modal = false"
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+    <div *ngIf="showOTPForm">
+      <div
+        *ngIf="showAlert"
+        class="alert alert-danger"
+        style="text-align: center"
+        role="alert"
+      >
+        <strong>
+          {{ "Please wait" | translate }}
+          {{ timeLeft2 }}
+          {{ "seconds before trying again" | translate }}
+        </strong>
+      </div>
+      <form [formGroup]="airtimeForm" (ngSubmit)="load()">
+        <h5>{{ "Please_enter_the_recived_code" | translate }}</h5>
+
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <input
+            matInput
+            [formControl]="airtimeForm.controls['otpCode']"
+            autocomplete="off"
+          />
+          <span matSuffix>
+            <i
+              class="fa fa-refresh"
+              style="cursor: pointer; font-size: x-large"
+              title="{{ 'resend-otp' | translate }}"
+              (click)="createOTP()"
+            ></i
+          ></span>
+        </mat-form-field>
+
+        <small
+          *ngIf="
+            airtimeForm.controls['otpCode'].hasError('required') &&
+            airtimeForm.controls['otpCode'].touched
+          "
+          class="mat-text-warn"
+          >{{ "include_confirmOtp" | translate }}
+          <br />
+        </small>
+        <small
+          *ngIf="
+            airtimeForm.controls['otpCode'].hasError('minlength') &&
+            airtimeForm.controls['otpCode'].touched
+          "
+          class="mat-text-warn"
+          >{{ "confirmOtp_min" | translate }}
+          <br />
+        </small>
+        <small
+          *ngIf="
+            airtimeForm.controls['otpCode'].hasError('maxlength') &&
+            airtimeForm.controls['otpCode'].touched
+          "
+          class="mat-text-warn"
+          >{{ "confirmOtp_max" | translate }}
+          <br />
+        </small>
+        <small
+          *ngIf="
+            airtimeForm.controls['otpCode'].hasError('pattern') &&
+            airtimeForm.controls['otpCode'].touched
+          "
+          class="mat-text-warn"
+          >{{ "confirmOtp_pattern" | translate }}
+          <br />
+        </small>
+        <p>{{ "time_left" | translate }} {{ timeLeft }}</p>
+
+        <button
+          type="submit"
+          *ngIf="showOTPForm"
+          style="padding: 0.8rem; width: 24%; margin: 9px"
+          class="grad-mal"
+          id="paySubmitButton"
+          [disabled]="disableButton"
+        >
+          {{ "confirm" | translate }}
+        </button>
+        <button
+          style="padding: 0.8rem; width: 24%; margin: 9px"
+          class="grad-mal"
+          id="paySubmitButton"
+          (click)="cancelOTP()"
+        >
+          {{ "cancel" | translate }}
+        </button>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

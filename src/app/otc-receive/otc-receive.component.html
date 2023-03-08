@@ -1,0 +1,182 @@
+<mat-card id="card_1" *ngIf="!showForm">
+  <mat-card-title>
+    <h5>{{ "inquire" | translate }}</h5>
+  </mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="searchForm">
+      <div id="serchBeneficiary" fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field class="ml-xs mr-xs" style="width: 100%">
+          <input
+            matInput
+            placeholder=" {{ 'reference' | translate }} "
+            formControlName="reference"
+            required
+          />
+          <mat-error
+            *ngIf="
+              searchForm.controls['reference'].hasError('required') &&
+              searchForm.controls['reference'].touched
+            "
+          >
+            {{ "required" | translate }}</mat-error
+          > </mat-form-field
+        ><button
+          style="padding: 0.8rem; margin: 9px; width: 24%"
+          class="grad-mal"
+          id="submitButton"
+          (click)="OTC_get()"
+        >
+          {{ "search" | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div id="otc" *ngIf="showForm">
+  <div
+    *ngIf="isApproved"
+    class="alert alert-success"
+    role="alert"
+    style="font-weight: 400"
+  >
+    {{ "This Transaction has been approved." | translate }}
+    <i class="material-icons" style="color: green; font-size: large"
+      >check_circle</i
+    >
+  </div>
+  <mat-card>
+    <mat-card-title>
+      <h6>{{ "sender" | translate }}</h6>
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'Full_name' | translate }} "
+                formControlName="senderFullName"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'identification_num' | translate }} "
+                formControlName="senderIdentityNo"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'Mobile_number' | translate }} "
+                formControlName="senderMobileNo"
+                maxlength="10"
+              />
+              <span matPrefix>+251 &nbsp;</span>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-title>
+      <h6>{{ "receiver" | translate }}</h6>
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'Full_name' | translate }} "
+                formControlName="receiverFullName"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'identification_num' | translate }} "
+                formControlName="receiverIdentityNo"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'Mobile_number' | translate }} "
+                formControlName="receiverMobileNo"
+                maxlength="10"
+              />
+              <span matPrefix>+251 &nbsp;</span>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <!-- <mat-card-title>
+      <h6>{{ "otc-send" | translate }}</h6>
+    </mat-card-title> -->
+    <mat-card-content>
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                readonly
+                placeholder=" {{ 'amount' | translate }} "
+                formControlName="amount"
+              />
+              <span matSuffix>&nbsp; ETB &nbsp;</span>
+            </mat-form-field>
+          </div>
+          <!-- <div class="col-md-4">
+            <mat-form-field class="ml-xs mr-xs" style="width: 95%">
+              <input
+                matInput
+                placeholder=" {{ 'description' | translate }} "
+                formControlName="description"
+              />
+            </mat-form-field>
+          </div> -->
+          <div style="text-align-last: end">
+            <button
+              [disabled]="isApproved"
+              btn
+              mat-button
+              class="next"
+              (click)="OTC_receive()"
+            >
+              {{ "approve" | translate }}
+            </button>
+          </div>
+          <div style="text-align-last: end">
+            <button btn mat-button class="next" (click)="showForm = false">
+              {{ "close" | translate }}
+            </button>
+          </div>
+        </div>
+        <hr />
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
