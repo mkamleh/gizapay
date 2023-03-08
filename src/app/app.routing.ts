@@ -37,12 +37,12 @@ export const AppRoutes: Routes = [
     children: [
       {
         path: "home",
-        loadChildren: "./dashboard/dashboard.module#DashboardModule",
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
       },
       {
         path: "customer",
         loadChildren:
-          "./customer-management-new/customer-management-new.module#CustomerManagementNewModule",
+          () => import('./customer-management-new/customer-management-new.module').then(m => m.CustomerManagementNewModule),
       },
       {
         path: "change-password-master",
@@ -94,19 +94,19 @@ export const AppRoutes: Routes = [
       },
       {
         path: "finance",
-        loadChildren: "./finance/finance.module#FinanceModule",
+        loadChildren: () => import('./finance/finance.module').then(m => m.FinanceModule),
       },
       {
         path: "",
-        loadChildren: "./bank/bank.module#BankModule",
+        loadChildren: () => import('./bank/bank.module').then(m => m.BankModule),
       },
       {
         path: "otc",
-        loadChildren: "./otc/otc.module#OtcModule",
+        loadChildren: () => import('./otc/otc.module').then(m => m.OtcModule),
       },
       {
         path: "reports",
-        loadChildren: "./reports/reports.module#ReportsModule",
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
       },
 
       {
@@ -128,16 +128,16 @@ export const AppRoutes: Routes = [
       {
         path: "managment",
         loadChildren:
-          "./user-managment/user-managment.module#UserManagmentModule",
+          () => import('./user-managment/user-managment.module').then(m => m.UserManagmentModule),
       },
       {
         path: "customer/customer-managment",
         loadChildren:
-          "./customermanagment/customermanagment.module#CustomermanagmentModule",
+          () => import('./customermanagment/customermanagment.module').then(m => m.CustomermanagmentModule),
       },
       {
         path: "branch",
-        loadChildren: "./branch-pages/branch.module#BranchModule",
+        loadChildren: () => import('./branch-pages/branch.module').then(m => m.BranchModule),
       },
       // {
       //   path: "pay-school-bill",
@@ -151,24 +151,24 @@ export const AppRoutes: Routes = [
 
       {
         path: "user-pages-master",
-        loadChildren: "./usermaster-pages/usersmaster.module#UserMasterModule",
+        loadChildren: () => import('./usermaster-pages/usersmaster.module').then(m => m.UserMasterModule),
       },
       {
         path: "user-pages",
-        loadChildren: "./user-pages/users.module#UsersModule",
+        loadChildren: () => import('./user-pages/users.module').then(m => m.UsersModule),
       },
 
       {
         path: "branch",
-        loadChildren: "./branch-pages/branch.module#BranchModule",
+        loadChildren: () => import('./branch-pages/branch.module').then(m => m.BranchModule),
       },
       {
         path: "pages",
-        loadChildren: "./custom-pages/pages.module#PagesDemoModule",
+        loadChildren: () => import('./custom-pages/pages.module').then(m => m.PagesDemoModule),
       },
       {
         path: "session",
-        loadChildren: "./error/error.module#ErrorModule",
+        loadChildren: () => import('./error/error.module').then(m => m.ErrorModule),
       },
     ],
   },
@@ -178,11 +178,11 @@ export const AppRoutes: Routes = [
     children: [
       {
         path: "authentication",
-        loadChildren: "./session/session.module#SessionModule",
+        loadChildren: () => import('./session/session.module').then(m => m.SessionModule),
       },
       {
         path: "error",
-        loadChildren: "./error/error.module#ErrorModule",
+        loadChildren: () => import('./error/error.module').then(m => m.ErrorModule),
       },
     ],
   },
