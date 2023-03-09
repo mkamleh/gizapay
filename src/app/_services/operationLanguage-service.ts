@@ -1,8 +1,6 @@
 /** @format */
 
 import { Injectable } from "@angular/core";
-import { environment } from "environments/environment";
-import { Http } from "@angular/http";
 import { toasterService } from "./toaster-service";
 import { TranslateService } from "@ngx-translate/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -15,7 +13,6 @@ export class operationLanguage {
   languages: Array<string> = [];
 
   constructor(
-    private http: HttpClient,
     private toster: toasterService,
     public translate: TranslateService,
     public encryption: Encryption,

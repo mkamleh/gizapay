@@ -188,14 +188,13 @@ export class BoaComponent implements OnInit {
   }
 
   //not this
-  async getWalletId() {   
+  getWalletId() {   
     this.httpClientService.httpClientMainRouter("WRMAL_046",`null`,"GET")
       .subscribe( res=>{
         let agentBalance = this._sharedService.decrypt(res).body;
         this.walletId = agentBalance[0].id;
       },err =>{
       });
-   
   }
   parseDate(date) {
     let dayOfMonth = date.dayOfMonth.toString();

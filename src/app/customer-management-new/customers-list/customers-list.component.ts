@@ -61,10 +61,10 @@ export class CustomersListComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadForm();
     await this.getAllCustomers(0);
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   loadForm() {
     this.form = this._formBuilder.group({

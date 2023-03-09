@@ -66,10 +66,10 @@ export class OtcSendComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadForm();
     this.getWalletId();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   loadForm() {

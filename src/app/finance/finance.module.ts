@@ -24,7 +24,6 @@ import { CashInComponent } from "./cash-in/cash-in.component";
 import { CashOutComponent } from "./cash-out/cash-out.component";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DemoMaterialModule } from "app/shared/demo.module";
-import { HttpModule } from "@angular/http";
 import { GenerateQrComponent } from "./generate-qr/generate-qr.component";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 import { NgProgressModule } from "ngx-progressbar";
@@ -40,7 +39,6 @@ import { NgProgressModule } from "ngx-progressbar";
     MatDatepickerModule,
     FlexLayoutModule,
     ChartsModule,
-    HttpModule,
     FormsModule,
     ReactiveFormsModule,
     DemoMaterialModule,

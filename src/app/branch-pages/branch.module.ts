@@ -24,7 +24,6 @@ import {
 import { BranchRoutes } from "./branch.routing";
 import { SharedModule } from "app/shared/shared.module";
 import { ChartsModule } from "angular-bootstrap-md";
-import { HttpModule } from "@angular/http";
 import { DemoMaterialModule } from "app/shared/demo.module";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
@@ -39,7 +38,6 @@ import { NgProgressModule } from "ngx-progressbar";
     SharedModule,
     FlexLayoutModule,
     ChartsModule,
-    HttpModule,
     FormsModule,
     ReactiveFormsModule,
     DemoMaterialModule,

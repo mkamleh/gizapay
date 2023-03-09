@@ -187,7 +187,7 @@ export class CashOutComponent implements OnInit {
 
   getTransactionOtp() {
     this.stopTimer();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.markFormGroupTouched(this.cashOutForm.controls);
    
    
@@ -209,7 +209,7 @@ export class CashOutComponent implements OnInit {
           this.startTimer();
           this.showConfirm = false;
           this.showOtpField = true;
-          this.ngProgress.done();
+         // this.ngProgress.done();;
           this.cashOutForm
             .get("otp")
             .setValidators([
@@ -231,7 +231,7 @@ export class CashOutComponent implements OnInit {
 
   cashOutOtp() {
     this.stopTimer();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.markFormGroupTouched(this.cashOutForm.controls);
     if (this.cashOutForm.valid) {
       let token = this.cookieService.get("agt_token");
@@ -278,7 +278,7 @@ export class CashOutComponent implements OnInit {
   }
   cashOut() {
     this.markFormGroupTouched(this.cashOutForm.controls);
-    this.ngProgress.start();
+    // this.ngProgress.start();
     // this.openDialog2();
     if (this.cashOutForm.valid) {
       // confirming cash in
@@ -385,7 +385,7 @@ export class CashOutComponent implements OnInit {
     this.cashOutForm.value.moneyAmount +
     "&source=WEB&type=CASHOUT_AGENT&walletId=0";
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET")
       .subscribe( res => {
         this.feesObject = this.encryption.decrypt(res).body;

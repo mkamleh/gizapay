@@ -58,7 +58,7 @@ export class BulkAirTimeTopupComponent implements OnInit {
     descriptionEn: null,
   };
 
-  @ViewChild("fileInput") fileInput: ElementRef;
+  @ViewChild("fileInput",{static: false}) fileInput: ElementRef;
   showFailedData: any;
   successTransaction: any;
   failedTransaction: any;
@@ -93,7 +93,7 @@ export class BulkAirTimeTopupComponent implements OnInit {
   }
 
   async uploadFile(item) {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let reader = new FileReader();
     reader.readAsDataURL(item.file.rawFile);
     reader.onload = () => {

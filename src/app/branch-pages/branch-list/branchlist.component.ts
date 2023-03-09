@@ -26,6 +26,7 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { environment } from "environments/environment";
 import { CookieService } from "ngx-cookie-service";
 import { Encryption } from "app/_services/Encryption";
+import { HttpClientService } from "app/_services/HttpClientService";
 export interface DialogData {
   id: any;
   name: any;
@@ -104,10 +105,10 @@ export class BranchListComponent implements OnInit {
     body: "",
   };
 
-  @ViewChild("userModal") userModal: ModalDirective;
-  @ViewChild("resetModal") resetModal: ModalDirective;
-  @ViewChild("printModal") printModal: ModalDirective;
-  @ViewChild("deleteModal") deleteModal: ModalDirective;
+  @ViewChild('userModal', {static: false}) userModal : ModalDirective;
+  @ViewChild('resetModal', {static: false}) resetModal : ModalDirective;
+  @ViewChild('printModal', {static: false}) printModal : ModalDirective;
+  @ViewChild('deleteModal', {static: false}) deleteModal : ModalDirective;
   editEnable: boolean;
   pageTitle: any = "branch_management";
   showErrorMsg: boolean;
@@ -140,7 +141,8 @@ export class BranchListComponent implements OnInit {
     public findAllLanguagesService: FindAllLanguagesService,
     public ngProgress: NgProgress,
     public dialog: MatDialog,
-    private encryption: Encryption
+    private encryption: Encryption,
+    private httpClientService: HttpClientService
   ) {
     this._sharedService.emitChange(this.pageTitle);
     this.operationLanguage.removeAllLanguage();
@@ -258,23 +260,19 @@ export class BranchListComponent implements OnInit {
     this.langs.push(selectedLanguage);
   }
 
-  async getLanguages() {
-    this.request_options.method = "GET";
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_118");
-    // this.request_options.path = `operationlanguage/findAll`;
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.langs = response.body;
-    }
+  getLanguages() {
+    this.httpClientService.httpClientMainRouter("WRMAL_118",`null`,"GET")
+    .subscribe( res=>{
+        this.langs = this._sharedService.decrypt(res).body;
+    },err =>{
+    });
   }
-  async getAllLanguages() {
-    this.request_options.method = "GET";
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_118");
-    // this.request_options.path = `operationlanguage/findAll`;
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.allLangs = response.body;
-    }
+  getAllLanguages() {
+    this.httpClientService.httpClientMainRouter("WRMAL_118",`null`,"GET")
+    .subscribe( res=>{
+        this.allLangs = this._sharedService.decrypt(res).body;
+    },err =>{
+    });
   }
 
   async saveBranch() {
@@ -308,99 +306,60 @@ export class BranchListComponent implements OnInit {
       return;
     }
     if (this.addBranchForm.valid && this.captions.length > 0) {
-      this.request_optionsAdd.path = "";
-      this.request_optionsAdd.method = "POST";
-      this.request_optionsAdd.body = {
+      let body = {
         longitude: this.addBranchForm.value.longitude.toString(),
         latitude: this.addBranchForm.value.latitude.toString(),
         captionResources: this.captions,
       };
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_062");
-
-      let response = await this.httpService.http_request(
-        this.request_optionsAdd
+      this.httpClientService.httpClientMainRouter("WRMAL_062",`null`,"POST",body)
+    .subscribe( async res=>{
+      await this.getAllBranchs();
+      this.visible = false;
+      this.visible1 = true;
+      this.title = "Branch_List";
+      this.addBranchForm.reset();
+      this.toaster.showSuccess(
+        this.operationLanguage.getTranslate("operation_done")
       );
-      console.log("service");
-
-      if (response.status == 201) {
-        console.log(response.body);
-        await this.getAllBranchs();
-        this.visible = false;
-        this.visible1 = true;
-        this.title = "Branch_List";
-        this.addBranchForm.reset();
-        this.toaster.showSuccess(
-          this.operationLanguage.getTranslate("operation_done")
-        );
-        this.lngs = this.operationLanguage.languages;
-        this.captions = [];
-        this.getLanguages();
-      } else if (response.status == 401) {
-        this.authService.logoutUser();
-      } else if (response.status == 500) {
-        this.showErrorMsg = true;
-        let tecErr = await this.findAllLanguagesService.getTranslate(
-          "tech_issue"
-        );
-        this.toaster.showError(tecErr);
-
-        this.errorMsg = tecErr;
-      } else {
-        this.toaster.showError(response.msgWithLanguage);
-        this.lngs = this.operationLanguage.languages;
-      }
+      this.lngs = this.operationLanguage.languages;
+      this.captions = [];
+      this.getLanguages();
+    },err =>{
+    });
     }
   }
-  async getbyId(id) {
-    this.request_options.method = "GET";
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_068");
-    this.httpService.setHeader("SERVICE_PARAM", "branchId=" + id);
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
+
+  getbyId(id) {
+    this.httpClientService.httpClientMainRouter("WRMAL_068","branchId=" + id,"GET")
+    .subscribe( res=>{
+      let response = this._sharedService.decrypt(res)
       this.configId = id;
       this.isUpdate = true;
       this.cardTitle = "Update Branch";
-      console.log("res", response.body);
-
       this.changeState1();
-
       this.addBranchForm.get("longitude").setValue(response.body.longitude);
       this.addBranchForm.get("latitude").setValue(response.body.latitude);
-
       this.captions = response.body.captionResources;
       this.captions.forEach((q) => {
         let lang = this.langs.find((x) => x.id === q.operationLanguageId);
         this.langs.splice(this.langs.indexOf(lang), 1);
       });
-    } else if (response.status == 401) {
-      this.authService.logoutUser();
-      this.ngProgress.done();
-    } else if (response.status == 500) {
-      this.toaster.showError(
-        await this.findAllLanguagesService.getTranslate("tech_issue")
-      );
-      this.ngProgress.done();
-    } else {
-      this.toaster.showError(response.msgWithLanguage);
-    }
-    this.ngProgress.done();
+        
+    },err =>{
+    });
   }
 
   async updateBranch() {
     this.addBranchForm.get("name").setErrors;
-
     this.addBranchForm.get("name").setErrors(null);
     this.addBranchForm.get("language").setErrors(null);
     this.addBranchForm.get("address").setErrors(null);
-
     this.addBranchForm.get("name").reset();
     this.addBranchForm.get("language").reset();
     this.addBranchForm.get("address").reset();
-
     // this.addBranchForm.get("name").clearValidators();
     this.addBranchForm.get("language").clearValidators();
     this.addBranchForm.get("address").clearValidators();
-
     this.addBranchForm.get("name").updateValueAndValidity();
     this.addBranchForm.get("language").updateValueAndValidity();
     this.addBranchForm.get("address").updateValueAndValidity();
@@ -419,23 +378,15 @@ export class BranchListComponent implements OnInit {
       return;
     }
     if (this.addBranchForm.valid && this.captions.length > 0) {
-      this.request_optionsAdd.path = "";
-      this.request_optionsAdd.method = "POST";
-      this.request_optionsAdd.body = {
+      let body = {
         id: this.configId,
         longitude: this.addBranchForm.value.longitude.toString(),
         latitude: this.addBranchForm.value.latitude.toString(),
         captionResources: this.captions,
       };
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_408");
 
-      let response = await this.httpService.http_request(
-        this.request_optionsAdd
-      );
-      console.log("service");
-
-      if (response.status == 200) {
-        console.log(response.body);
+      this.httpClientService.httpClientMainRouter("WRMAL_408",`null`,"POST",body)
+      .subscribe( async res=>{
         await this.getAllBranchs();
         this.visible = false;
         this.visible1 = true;
@@ -448,22 +399,9 @@ export class BranchListComponent implements OnInit {
         this.captions = [];
         this.getLanguages();
         this.addBranchForm.reset();
-
         this.isUpdate = false;
-      } else if (response.status == 401) {
-        this.authService.logoutUser();
-      } else if (response.status == 500) {
-        this.showErrorMsg = true;
-        let tecErr = await this.findAllLanguagesService.getTranslate(
-          "tech_issue"
-        );
-        this.toaster.showError(tecErr);
-
-        this.errorMsg = tecErr;
-      } else {
-        this.toaster.showError(response.msgWithLanguage);
-        this.lngs = this.operationLanguage.languages;
-      }
+      },err =>{
+      });
     }
   }
 
@@ -502,21 +440,11 @@ export class BranchListComponent implements OnInit {
   }
 
   async getAllBranchs() {
-    console.log("getAllbranches >>>>>>>");
-
-    let request_options: any = {
-      method: "GET",
-      path: "",
-    };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_061");
-
-    let response = await this.httpService.http_request(request_options);
-
-    this.ngProgress.start();
-    if (response.status == 200) {
-      this.branchs = response.body;
+    this.httpClientService.httpClientMainRouter("WRMAL_061",`null`,"GET")
+    .subscribe( res=>{
+      let response  = this._sharedService.decrypt(res)
+      this.branchs = this._sharedService.decrypt(res).body;
       let detailedRrows = response.body;
-      console.log("response.body", response.body);
       // push our inital complete list
       this.count = this.branchs.length;
       this.rows = detailedRrows.map((item) => {
@@ -535,25 +463,8 @@ export class BranchListComponent implements OnInit {
       });
       // cache our list
       this.temp = [...this.rows];
-
-      console.log("response.body", response.body);
-      this.ngProgress.done();
-    } else if (response.status == 401) {
-      this.authService.logoutUser();
-      this.ngProgress.done();
-    } else if (response.status == 500) {
-      this.showErrorMsg = true;
-      let tecErr = await this.findAllLanguagesService.getTranslate(
-        "tech_issue"
-      );
-      this.toaster.showError(tecErr);
-      this.ngProgress.done();
-
-      this.errorMsg = tecErr;
-    } else {
-      this.ngProgress.done();
-      this.toaster.showError(response.text);
-    }
+    },err =>{
+    })
   }
 
   showUserModal(item) {
@@ -586,7 +497,7 @@ export class BranchListComponent implements OnInit {
 
   //     let response = await this.httpService.http_request(request_options);
 
-  //     this.ngProgress.start();
+  //     // this.ngProgress.start();
   // if (response.status == 201) {
   //       this.visible = false;
   //       this.visible1 = true;
@@ -621,45 +532,15 @@ export class BranchListComponent implements OnInit {
       ),
     }).then(async (result) => {
       if (result.value) {
-        console.log(QRid);
-
-        console.log("onActive >>>>>>>");
-
         let body = { id: QRid };
-
-        let request_options: any = {
-          method: "PUT",
-          path: "",
-          body: body,
-        };
-        this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_063");
-
-        let response = await this.httpService.http_request(request_options);
-        console.log("esponseesponse" + response.body);
-
-        this.ngProgress.start();
-        if (response.status == 200) {
+        this.httpClientService.httpClientMainRouter("WRMAL_063",`null`,"PUT",body)
+        .subscribe( res=>{
           this.toaster.showSuccess(
             this.operationLanguage.getTranslate("operation_done")
           );
-          this.getAllBranchs();
-          this.ngProgress.done();
-        } else if (response.status == 401) {
-          this.authService.logoutUser();
-          this.ngProgress.done();
-        } else if (response.status == 500) {
-          this.showErrorMsg = true;
-          let tecErr = await this.findAllLanguagesService.getTranslate(
-            "tech_issue"
-          );
-          this.toaster.showError(tecErr);
-          this.ngProgress.done();
-
-          this.errorMsg = tecErr;
-        } else {
-          this.ngProgress.done();
-          this.toaster.showError(response.text);
-        }
+        this.getAllBranchs();
+        },err =>{
+        });
       }
     });
   }
@@ -744,7 +625,7 @@ export class BranchListComponent implements OnInit {
 
   //   let response = await this.httpService.http_request(request_options);
 
-  //   this.ngProgress.start();
+  //   // this.ngProgress.start();
   // if (response.status == 200) {
   //     this.deleteModal.hide();
   //     this.toaster.showSuccess(
@@ -824,7 +705,8 @@ export class CreditDialog implements OnInit {
     public ngProgress: NgProgress,
     public dialogRef: MatDialogRef<CreditDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private encryption: Encryption
+    private encryption: Encryption,
+    private httpClientService: HttpClientService
   ) {}
 
   async ngOnInit() {
@@ -863,47 +745,30 @@ export class CreditDialog implements OnInit {
     this.dialogRef.close();
   }
 
-  async getWalletId() {
-    console.log("AgentBalance >>>>>>>");
-    let request_options: any = {
-      method: "GET",
-      path: "",
-    };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_046");
-    let response = await this.httpService.http_request(request_options);
-    let agentBalance = response.body;
-    console.log("agentBalance", response.body);
-    this.walletId = agentBalance[0].id;
+  getWalletId() {
+    this.httpClientService.httpClientMainRouter("WRMAL_046",`null`,"GET")
+    .subscribe( res=>{
+      let agentBalance = this._sharedService.decrypt(res).body;
+      this.walletId = agentBalance[0].id;
+    },err =>{
+    });
   }
 
   getFees() {
     // Getting fees
     this.form.get("amount").markAsTouched();
     if (this.form.get("amount").valid) {
-      let token = this.cookieService.get("agt_token");
-      let lng = JSON.parse(this.cookieService.get("agtLng"));
-      const headers = new HttpHeaders({
-        lng: lng.code,
-        "x-auth-token": token,
-        SERVICE_WRAPPER: "WRMAL_130",
-        SERVICE_PARAM:
+      let SERVICE_PARAM =
           "amount=" +
           this.form.value.amount +
           "&source=WEB&type=SUBWALLET_CREDIT&walletId=" +
           this.walletId +
-          "&accountType=BUS",
-      });
+          "&accountType=BUS";
 
-      this.ngProgress.start();
-
-      return this.http
-        .get<string>(`${environment.secureUrl}`, {
-          headers,
-          responseType: "text" as "json",
-        })
-        .subscribe(
-          (response) => {
-            let transferObj: any = this.encryption.decrypt(response);
+      // this.ngProgress.start();
+      return this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET")
+      .subscribe( res=>{
+        let transferObj: any = this.encryption.decrypt(res);
             let feesObj: any = transferObj.body;
             this.transferFees = {
               calcFees: feesObj.calcFeesRnd,
@@ -913,29 +778,9 @@ export class CreditDialog implements OnInit {
               sourceCode: feesObj.sourceCode,
               sourceAmountWfees: feesObj.sourceAmountWfees,
             };
-            console.log("transferFees", feesObj);
             this.showFees = !this.showFees;
-
-            // this.ngxSmartModalService.getModal("myBootstrapModal").open();
-            this.ngProgress.done();
-          },
-          async (error) => {
-            let response: any = this.encryption.decrypt(error.error);
-            let response2: any = error;
-
-            this.error = response.msgWithLanguage;
-            if (response.status === 500) {
-              this.error = await this.findAllLanguagesService.getTranslate(
-                "tech_issue"
-              );
-            }
-            this.toaster.showError(this.error);
-            if (response2.status === 401) {
-              this.authService.logoutUser();
-            }
-            this.ngProgress.done();
-          }
-        );
+      },err =>{
+      });
     }
   }
 
@@ -943,18 +788,15 @@ export class CreditDialog implements OnInit {
     this.stopTimer();
     if (selectedTransferedValue) {
       if (this.form.value.amount >= 0) {
-        this.request_options.method = "POST";
-        this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_193");
-        this.request_options.body = {
+        let body = {
           walletId: this.walletId,
           transactionTypeCode: "SUBWALLET_CREDIT",
           transactionSourceCode: "WEB",
           transactionAmount: this.form.value.amount,
         };
-        let response = await this.httpService.http_request(
-          this.request_options
-        );
-        if (response.status == 201) {
+        this.httpClientService.httpClientMainRouter("WRMAL_193",`null`,"POST",body,)
+        .subscribe( res=> {
+          let response = this._sharedService.decrypt(res)
           if (response.body.transactionOTPFlag == "true") {
             this.form
               .get("otpCode")
@@ -967,20 +809,14 @@ export class CreditDialog implements OnInit {
             this.showOTPForm = true;
             this.timeLeft = 60;
             this.startTimer();
-            console.log("otp", response.body.code);
           } else {
             this.form.get("otpCode").setValue(null);
             this.form.get("otpCode").clearValidators();
             this.form.get("otpCode").updateValueAndValidity();
             this.credit(selectedTransferedValue);
           }
-        } else {
-          this.showOTPForm = false;
-          if (response.status === 500) {
-            let error = await this.operationLanguage.getTranslate("tech_issue");
-            this.toaster.showError(error);
-          }
-        }
+        },err =>{
+        });
       }
     }
   }
@@ -992,23 +828,18 @@ export class CreditDialog implements OnInit {
     });
 
     if (this.form.valid) {
-      let request_options: any = {
-        method: "POST",
-        path: "",
-        body: {
-          subWalletId: this.data.subWalletId,
-          sourceCode: "WEB",
-          destinationAmount: this.form.value.amount,
-          feesFlag: selectedTransferedValue,
-          otpCode: this.form.value.otpCode,
-        },
-      };
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_306");
+      let body = {
+        subWalletId: this.data.subWalletId,
+        sourceCode: "WEB",
+        destinationAmount: this.form.value.amount,
+        feesFlag: selectedTransferedValue,
+        otpCode: this.form.value.otpCode,
+      }
 
-      let response = await this.httpService.http_request(request_options);
+      
       if (selectedTransferedValue > 0) {
-        this.ngProgress.start();
-        if (response.status == 200) {
+        this.httpClientService.httpClientMainRouter("WRMAL_306",`null`,"POST",body)
+        .subscribe( res=>{
           this.selectedTransferedValue = 0;
           this.timeLeft2 = 30;
           this.disableButtonStartTimer();
@@ -1020,33 +851,11 @@ export class CreditDialog implements OnInit {
           this.toaster.showSuccess(
             this.operationLanguage.getTranslate("operation_done")
           );
-          this.ngProgress.done();
-        } else if (response.status == 401) {
-          this.authService.logoutUser();
-          this.ngProgress.done();
-        } else if (response.status == 500) {
-          this.timeLeft2 = 30;
-          this.disableButtonStartTimer();
-          let tecErr = await this.findAllLanguagesService.getTranslate(
-            "tech_issue"
-          );
-          this.toaster.showError(tecErr);
-          this.ngProgress.done();
-        } else {
-          this.timeLeft2 = 30;
-          this.disableButtonStartTimer();
-          this.ngProgress.done();
-          this.toaster.showError(response.text);
-        }
-      } else {
-        let msg = await this.findAllLanguagesService.getTranslate(
-          "please-select-detuction-fees"
-        );
-
-        this.toaster.showError(msg);
-      }
+        },err =>{
+        });
     }
   }
+}
   startTimer() {
     this.interval = setInterval(() => {
       if (this.timeLeft > 0) {
@@ -1121,6 +930,7 @@ export class DebitDialog implements OnInit {
     public authService: AuthServiceService,
     public findAllLanguagesService: FindAllLanguagesService,
     public ngProgress: NgProgress,
+    private httpClientService: HttpClientService,
     public dialogRef: MatDialogRef<DebitDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private encryption: Encryption
@@ -1162,17 +972,13 @@ export class DebitDialog implements OnInit {
     this.dialogRef.close();
   }
 
-  async getWalletId() {
-    console.log("AgentBalance >>>>>>>");
-    let request_options: any = {
-      method: "GET",
-      path: "",
-    };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_046");
-    let response = await this.httpService.http_request(request_options);
-    let agentBalance = response.body;
-    console.log("agentBalance", response.body);
-    this.walletId = agentBalance[0].id;
+  getWalletId() {
+    this.httpClientService.httpClientMainRouter("WRMAL_046",`null`,"GET")
+    .subscribe( res=>{
+      let agentBalance = this._sharedService.decrypt(res).body;
+      this.walletId = agentBalance[0].id;
+    },err =>{
+    });
   }
 
   getFees() {
@@ -1180,62 +986,19 @@ export class DebitDialog implements OnInit {
     this.form.get("amount").markAsTouched();
 
     if (this.form.get("amount").valid) {
-      let token = this.cookieService.get("agt_token");
-      let lng = JSON.parse(this.cookieService.get("agtLng"));
-      const headers = new HttpHeaders({
-        lng: lng.code,
-        "x-auth-token": token,
-        SERVICE_WRAPPER: "WRMAL_130",
-        SERVICE_PARAM:
+      let SERVICE_PARAM =
           "amount=" +
           this.form.value.amount +
           "&source=WEB&type=SUBWALLET_DEPIT&walletId=" +
           this.walletId +
-          "&accountType=BUS",
+          "&accountType=BUS";
+
+      return this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET")
+      .subscribe( res=>{
+        let agentBalance = this._sharedService.decrypt(res).body;
+        this.walletId = agentBalance[0].id;
+      },err =>{
       });
-
-      this.ngProgress.start();
-
-      return this.http
-        .get<string>(`${environment.secureUrl}`, {
-          headers,
-          responseType: "text" as "json",
-        })
-        .subscribe(
-          (response) => {
-            let transferObj: any = this.encryption.decrypt(response);
-            let feesObj: any = transferObj.body;
-            this.transferFees = {
-              calcFees: feesObj.calcFeesRnd,
-              destinationAmount: feesObj.destinationAmountRnd,
-              destinationAmountWOfees: feesObj.destinationAmountWOfeesRnd,
-              sourceOperationCurrencyCode: feesObj.sourceOperationCurrencyCode,
-              sourceCode: feesObj.sourceCode,
-              sourceAmountWfees: feesObj.sourceAmountWfees,
-            };
-            console.log("transferFees", feesObj);
-            this.showFees = !this.showFees;
-
-            // this.ngxSmartModalService.getModal("myBootstrapModal").open();
-            this.ngProgress.done();
-          },
-          async (error) => {
-            let response: any = this.encryption.decrypt(error.error);
-            let response2: any = error;
-
-            this.error = response.msgWithLanguage;
-            if (response.status === 500) {
-              this.error = await this.findAllLanguagesService.getTranslate(
-                "tech_issue"
-              );
-            }
-            this.toaster.showError(this.error);
-            if (response2.status === 401) {
-              this.authService.logoutUser();
-            }
-            this.ngProgress.done();
-          }
-        );
     }
   }
 
@@ -1243,18 +1006,15 @@ export class DebitDialog implements OnInit {
     this.stopTimer();
     if (selectedTransferedValue) {
       if (this.form.value.amount >= 0) {
-        this.request_options.method = "POST";
-        this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_193");
-        this.request_options.body = {
+        let body = {
           walletId: this.walletId,
           transactionTypeCode: "SUBWALLET_DEPIT",
           transactionSourceCode: "WEB",
           transactionAmount: this.form.value.amount,
         };
-        let response = await this.httpService.http_request(
-          this.request_options
-        );
-        if (response.status == 201) {
+        this.httpClientService.httpClientMainRouter("WRMAL_193",`null`,"POST",body)
+        .subscribe( res=>{
+          let response = this._sharedService.decrypt(res)
           if (response.body.transactionOTPFlag == "true") {
             this.form
               .get("otpCode")
@@ -1274,13 +1034,8 @@ export class DebitDialog implements OnInit {
             this.form.get("otpCode").updateValueAndValidity();
             this.debit(selectedTransferedValue);
           }
-        } else {
-          this.showOTPForm = false;
-          if (response.status === 500) {
-            let error = await this.operationLanguage.getTranslate("tech_issue");
-            this.toaster.showError(error);
-          }
-        }
+        },err =>{
+        });
       }
     }
   }
@@ -1292,23 +1047,17 @@ export class DebitDialog implements OnInit {
     });
 
     if (this.form.valid) {
-      let request_options: any = {
-        method: "POST",
-        path: "",
-        body: {
-          subWalletId: this.data.subWalletId,
-          sourceCode: "WEB",
-          destinationAmount: this.form.value.amount,
-          feesFlag: selectedTransferedValue,
-          otpCode: this.form.value.otpCode,
-        },
-      };
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_305");
-
-      let response = await this.httpService.http_request(request_options);
+      let body = {
+        subWalletId: this.data.subWalletId,
+        sourceCode: "WEB",
+        destinationAmount: this.form.value.amount,
+        feesFlag: selectedTransferedValue,
+        otpCode: this.form.value.otpCode,
+      }
+      
       if (selectedTransferedValue > 0) {
-        this.ngProgress.start();
-        if (response.status == 200) {
+        this.httpClientService.httpClientMainRouter("WRMAL_305",`null`,"POST",body)
+        .subscribe( res => {
           this.selectedTransferedValue = 0;
           this.timeLeft2 = 30;
           this.disableButtonStartTimer();
@@ -1320,29 +1069,12 @@ export class DebitDialog implements OnInit {
           this.toaster.showSuccess(
             this.operationLanguage.getTranslate("operation_done")
           );
-          this.ngProgress.done();
-        } else if (response.status == 401) {
-          this.authService.logoutUser();
-          this.ngProgress.done();
-        } else if (response.status == 500) {
-          this.timeLeft2 = 30;
-          this.disableButtonStartTimer();
-          let tecErr = await this.findAllLanguagesService.getTranslate(
-            "tech_issue"
-          );
-          this.toaster.showError(tecErr);
-          this.ngProgress.done();
-        } else {
-          this.timeLeft2 = 30;
-          this.disableButtonStartTimer();
-          this.ngProgress.done();
-          this.toaster.showError(response.text);
-        }
+        },err =>{
+        }); 
       } else {
         let msg = await this.findAllLanguagesService.getTranslate(
           "please-select-detuction-fees"
         );
-
         this.toaster.showError(msg);
       }
     }

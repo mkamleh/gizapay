@@ -33,7 +33,7 @@ import { ErrorHandling } from "app/_services/ErrorHandling";
 export class CreateCustomerComponent implements OnInit {
   public loading = false;
 
-  @ViewChild("stepper") private myStepper: MatStepper;
+  @ViewChild("stepper",{static: false}) private myStepper: MatStepper;
   pageTitle: string = "create-customer";
   public personalForm: FormGroup;
   public addressForm: FormGroup;
@@ -97,7 +97,7 @@ export class CreateCustomerComponent implements OnInit {
     this._sharedService.emitChange(this.pageTitle);
   }
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadForm();
     this.getIdentityTypes();
     this.getRegions();
@@ -111,7 +111,7 @@ export class CreateCustomerComponent implements OnInit {
         this.getAccount();
       }
     });
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   loadForm() {

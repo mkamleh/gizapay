@@ -1,20 +1,16 @@
 /** @format */
 
 import { Injectable } from "@angular/core";
-import { environment } from "environments/environment";
-import { Http } from "@angular/http";
 import { TranslateService } from "@ngx-translate/core";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { Encryption } from "./Encryption";
 import { HttpClientService } from "./HttpClientService";
-import { SharedModule } from "app/shared/shared.module";
 import { SharedService } from "./shared-service";
 
 @Injectable({
   providedIn: "root"
 })
 export class FindAllLanguagesService {
-  constructor(private http: HttpClient, 
+  constructor( 
     public translate: TranslateService,
     private httpClientService: HttpClientService,
     private _sharedServices: SharedService,

@@ -114,7 +114,7 @@ export class CustomerManagmentComponent implements OnInit {
       ),
     }).then(async (result) => {
       if (result.value) {
-        this.ngProgress.start();
+        // this.ngProgress.start();
         if (this.accountInfo) {
           this.httpClientService.httpClientMainRouter("WRMAL_176",`mobileNo=${this.walletCode}`,"POST",{ id: this.accountInfo.accountId })
           .subscribe( async res=>{
@@ -127,7 +127,7 @@ export class CustomerManagmentComponent implements OnInit {
             this.toaster.showSuccess(success);
             this.showErrorMsg = false;
             this.showInfo = true;
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           },err =>{
           })
         }
@@ -156,7 +156,7 @@ export class CustomerManagmentComponent implements OnInit {
       ),
     }).then(async (result) => {
       if (result.value) {
-        this.ngProgress.start();
+        // this.ngProgress.start();
         if (this.accountInfo) {
           this.httpClientService.httpClientMainRouter("WRMAL_181",`mobileNo=${this.walletCode}`,"POST",{ id: this.accountInfo.accountId })
           .subscribe( async res=>{

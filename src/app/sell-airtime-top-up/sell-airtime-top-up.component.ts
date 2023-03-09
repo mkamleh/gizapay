@@ -63,7 +63,7 @@ export class SellAirtimeTopUpComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.airtimeForm = this.fb.group({
       mobile: [
         null,
@@ -93,7 +93,7 @@ export class SellAirtimeTopUpComponent implements OnInit {
         ]),
       ],
     });
-    this.ngProgress.done();
+   // this.ngProgress.done();;
     this.getWalletId();
   }
   getWalletId() {  

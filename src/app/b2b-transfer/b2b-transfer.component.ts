@@ -122,7 +122,7 @@ export class B2bTransferComponent implements OnInit {
       });
 
       console.log("walletNumber", walletNumber);
-      this.ngProgress.start();
+      // this.ngProgress.start();
       return this.http
         .get<string>(`${environment.secureUrl}`, {
           headers,
@@ -146,7 +146,7 @@ export class B2bTransferComponent implements OnInit {
               this.isMerchant = true;
               console.log("Merchant");
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
             this.error = "";
           },
           async (error) => {
@@ -265,7 +265,7 @@ export class B2bTransferComponent implements OnInit {
       });
       console.log(" selectedTransferedValue", selectedTransferedValue);
       if (selectedTransferedValue > 0) {
-        this.ngProgress.start();
+        // this.ngProgress.start();
         let requestBody = this.encryption.encrypt(transferInfo);
         return this.http
           .post<string>(`${environment.secureUrl}`, requestBody, {
@@ -294,7 +294,7 @@ export class B2bTransferComponent implements OnInit {
               this.form.reset();
               //  myForm.resetForm();
               // myForm2.resetForm();
-              this.ngProgress.done();
+             // this.ngProgress.done();;
               this.error = "";
             }
 
@@ -312,14 +312,14 @@ export class B2bTransferComponent implements OnInit {
             //   if (response.status === 401) {
             //     this.authService.logoutUser();
             //   }
-            //   this.ngProgress.done();
+            //  // this.ngProgress.done();;
             //   // reset the form on submitting
             //   this.form.reset();
             //   // myForm.resetForm();
             //   //myForm2.resetForm();
             //   this.selectedTransferedValue = 0;
 
-            //   this.ngProgress.done();
+            //  // this.ngProgress.done();;
             // }
           );
       }
@@ -364,7 +364,7 @@ export class B2bTransferComponent implements OnInit {
           this.walletId,
       });
 
-      this.ngProgress.start();
+      // this.ngProgress.start();
 
       return this.http
         .get<string>(`${environment.secureUrl}`, {
@@ -391,7 +391,7 @@ export class B2bTransferComponent implements OnInit {
             }
 
             // this.ngxSmartModalService.getModal("myBootstrapModal").open();
-            this.ngProgress.done();
+           // this.ngProgress.done();;
             this.error = "";
             console.log("this.transferFees", this.transferFees);
 

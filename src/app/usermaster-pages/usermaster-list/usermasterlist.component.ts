@@ -80,10 +80,10 @@ export class UserListMasterComponent implements OnInit {
   currentDate: Date = new Date();
   layoutDir: any;
 
-  @ViewChild("userModal") userModal: ModalDirective;
-  @ViewChild("resetModal") resetModal: ModalDirective;
-  @ViewChild("printModal") printModal: ModalDirective;
-  @ViewChild("deleteModal") deleteModal: ModalDirective;
+  @ViewChild("userModal",{static: false}) userModal: ModalDirective;
+  @ViewChild("resetModal",{static: false}) resetModal: ModalDirective;
+  @ViewChild("printModal",{static: false}) printModal: ModalDirective;
+  @ViewChild("deleteModal",{static: false}) deleteModal: ModalDirective;
   pageTitle: string = "User Managment";
   showErrorMsg: boolean;
   errorMsg: any;
@@ -251,7 +251,7 @@ export class UserListMasterComponent implements OnInit {
     this.phoneFlage = "1";
 
     this.markFormGroupTouched(this.addUserForm.controls);
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.addUserForm.valid) {
       // request_options.body.branchId = this.branchList[0].id;
       this.httpClientService.httpClientMainRouter("WRMAL_053",`null`,"POST",this.addUserForm.value)

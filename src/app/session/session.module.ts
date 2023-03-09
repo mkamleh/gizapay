@@ -27,7 +27,6 @@ import {
 } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
-import { HttpModule, Http } from "@angular/http";
 import { MDBBootstrapModule } from "angular-bootstrap-md";
 import { SharedModule } from "app/shared/shared.module";
 import { LoginSignupComponent } from "./login-signup/login-signup.component";
@@ -69,7 +68,6 @@ export function createTranslateLoader(http: HttpClient) {
     //     deps: [HttpClient]
     //   }
     // }),
-    HttpModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
     NgProgressModule,

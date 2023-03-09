@@ -22,7 +22,6 @@ import { RouterModule } from "@angular/router";
 
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DemoMaterialModule } from "app/shared/demo.module";
-import { HttpModule } from "@angular/http";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 
 import { OtcRoutingModule } from "./otc-routing.module";
@@ -41,7 +40,6 @@ import { OtcComponent } from "./otc.component";
     MatDatepickerModule,
     FlexLayoutModule,
     ChartsModule,
-    HttpModule,
     FormsModule,
     ReactiveFormsModule,
     DemoMaterialModule,

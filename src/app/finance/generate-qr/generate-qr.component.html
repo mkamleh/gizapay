@@ -1,7 +1,7 @@
 <!-- @format -->
-<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="200" [showSpinner]="false"
-  [direction]="'leftToRightIncreased'" [color]="'#ffff'" [trickleSpeed]="100" [thick]="true" [ease]="'linear'">
-</ng-progress>
+<!-- <ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="200" [showSpinner]="false" -->
+  <!-- [direction]="'leftToRightIncreased'" [color]="'#ffff'" [trickleSpeed]="100" [thick]="true" [ease]="'linear'">
+</ng-progress> -->
 <div id="QR">
   <article class="card">
     <div id="thumb">
@@ -163,7 +163,7 @@
                 {{ "download_qr" | translate }}
               </button></a>
             <a>
-              <button *ngIf="qrStr && display" type="button" class="button" [useExistingCss]="true" cdkFocusInitial
+              <button *ngIf="qrStr && display" type="button" class="button" ngxPrint cdkFocusInitial
                 printSectionId="print-section" ngxPrint>
                 {{ "print_qr" | translate }}
               </button>

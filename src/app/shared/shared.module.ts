@@ -10,11 +10,9 @@ import {
   AccordionDirective,
 } from "./accordion";
 import { ToggleFullscreenDirective } from "./fullscreen/toggle-fullscreen.directive";
-import { Http } from "@angular/http";
 import { MatSelectModule } from "@angular/material/select";
 
 import { QRCodeModule } from "angularx-qrcode";
-import { NgxPrintModule } from "ngx-print";
 import {
   MatToolbarModule,
   MatIconModule,
@@ -93,7 +91,6 @@ export function createTranslateLoader(http: HttpClient) {
     ToastrModule.forRoot(),
     MatSelectModule,
     QRCodeModule,
-    NgxPrintModule,
     MatToolbarModule,
     MatIconModule,
     MatCardModule,
@@ -132,7 +129,6 @@ export function createTranslateLoader(http: HttpClient) {
     ToggleFullscreenDirective,
     MatSelectModule,
     QRCodeModule,
-    NgxPrintModule,
     MatToolbarModule,
     MatIconModule,
     MatCardModule,

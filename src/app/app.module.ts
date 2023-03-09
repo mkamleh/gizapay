@@ -1,3 +1,4 @@
+
 /** @format */
 
 import { BrowserModule } from "@angular/platform-browser";
@@ -5,7 +6,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule, Http } from "@angular/http";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorIntercept } from './_services/ErrorIntercept'
@@ -97,7 +97,6 @@ import {
 import { FindAllLanguagesService } from "./_services/find-all-languages.service";
 import { PayComponent } from "./bills/pay/pay.component";
 import { InquiryComponent } from "./bills/inquiry/inquiry.component";
-import { NgxPrintModule } from "ngx-print";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 import { DialogContentDialog2 } from "./user-managment/create-wallet/create-wallet.component";
 import { MatDialogModule, MAT_DIALOG_DATA } from "@angular/material/dialog";
@@ -217,7 +216,6 @@ export function createTranslateLoader(http: HttpClient) {
     RouterModule.forRoot(AppRoutes, { useHash: true }),
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
     MatSidenavModule,
     MatInputModule,
     MatIconModule,
@@ -253,7 +251,6 @@ export function createTranslateLoader(http: HttpClient) {
       apiKey: "YOUR_GOOGLE_MAPS_API_KEY",
     }),
     NgProgressModule,
-    NgxPrintModule,
     NgxQRCodeModule,
     MatDialogModule,
     // DatePipe

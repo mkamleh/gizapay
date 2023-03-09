@@ -22,7 +22,6 @@ import { RouterModule } from "@angular/router";
 import { BankRoutes } from "./bank-routing.module";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DemoMaterialModule } from "app/shared/demo.module";
-import { HttpModule } from "@angular/http";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 import { LinkT24AccountComponent } from "./link-t24-account/link-t24-account";
 import { LoadMoneyComponent } from "./load-money/load-money";
@@ -38,7 +37,6 @@ import { NgProgressModule } from "ngx-progressbar";
     MatDatepickerModule,
     FlexLayoutModule,
     ChartsModule,
-    HttpModule,
     FormsModule,
     ReactiveFormsModule,
     DemoMaterialModule,

@@ -190,7 +190,7 @@ export class B2pTransferComponent implements OnInit {
           "partnerId=1" + "&walletCode=" + walletNumber + "&accountType=CUS",
       });
       console.log("walletNumber", walletNumber);
-      this.ngProgress.start();
+      // this.ngProgress.start();
       return this.http
         .get<string>(`${environment.secureUrl}`, {
           headers,
@@ -203,7 +203,7 @@ export class B2pTransferComponent implements OnInit {
             this.beneficiary = benfObj.body;
             this.isBenfExist = true;
             // this.showMalForm = true;
-            this.ngProgress.done();
+           // this.ngProgress.done();;
             this.error = "";
           },
           async (error) => {
@@ -222,7 +222,7 @@ export class B2pTransferComponent implements OnInit {
               }
               console.log("im first try");
 
-              this.ngProgress.done();
+             // this.ngProgress.done();;
             } catch {
               let response2: any = error;
               console.log(response2, "response2");
@@ -239,7 +239,7 @@ export class B2pTransferComponent implements OnInit {
                 this.authService.logoutUser();
                 this.toaster.showError("Session Time out");
               }
-              this.ngProgress.done();
+             // this.ngProgress.done();;
               console.log("im first catch");
             }
           }
@@ -271,7 +271,7 @@ export class B2pTransferComponent implements OnInit {
           this.walletId,
       });
 
-      this.ngProgress.start();
+      // this.ngProgress.start();
 
       return this.http
         .get<string>(`${environment.secureUrl}`, {
@@ -298,7 +298,7 @@ export class B2pTransferComponent implements OnInit {
             }
 
             // this.ngxSmartModalService.getModal("myBootstrapModal").open();
-            this.ngProgress.done();
+           // this.ngProgress.done();;
             this.error = "";
             console.log("this.transferFees", this.transferFees);
 
@@ -318,7 +318,7 @@ export class B2pTransferComponent implements OnInit {
               if (response.status === 401) {
                 this.authService.logoutUser();
               }
-              this.ngProgress.done();
+             // this.ngProgress.done();;
             } catch {
               let response2: any = error;
 
@@ -335,7 +335,7 @@ export class B2pTransferComponent implements OnInit {
 
                 this.authService.logoutUser();
               }
-              this.ngProgress.done();
+             // this.ngProgress.done();;
             }
           }
         );
@@ -419,7 +419,7 @@ export class B2pTransferComponent implements OnInit {
       if (selectedTransferedValue > 0) {
         let requestBody = this.encryption.encrypt(transferInfo);
 
-        this.ngProgress.start();
+        // this.ngProgress.start();
         return this.http
           .post<string>(`${environment.secureUrl}`, requestBody, {
             headers,
@@ -448,7 +448,7 @@ export class B2pTransferComponent implements OnInit {
               this.amountForm.reset();
               //  myForm.resetForm();
               // myForm2.resetForm();
-              this.ngProgress.done();
+             // this.ngProgress.done();;
               this.error = "";
             },
             async (error) => {
@@ -467,7 +467,7 @@ export class B2pTransferComponent implements OnInit {
               if (response2.status === 401) {
                 this.authService.logoutUser();
               }
-              this.ngProgress.done();
+             // this.ngProgress.done();;
               // reset the form on submitting
               this.walletForm.reset();
               this.amountForm.reset();

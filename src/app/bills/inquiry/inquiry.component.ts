@@ -94,7 +94,7 @@ export class InquiryComponent implements OnInit {
       SERVICE_WRAPPER: WrapperURLs.bills.inquiry.getCategories,
     });
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
     return this.http
       .get<string>(`${environment.secureUrl}`, {
         headers,
@@ -105,7 +105,7 @@ export class InquiryComponent implements OnInit {
           let categoriesObj: any = this.encryption.decrypt(response);
           this.categories = categoriesObj.body;
           console.log("getCategories", categoriesObj);
-          this.ngProgress.done();
+         // this.ngProgress.done();;
           this.error = "";
         },
         async (error) => {
@@ -122,7 +122,7 @@ export class InquiryComponent implements OnInit {
             if (response.status === 401) {
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           } catch {
             let response2: any = error;
 
@@ -138,7 +138,7 @@ export class InquiryComponent implements OnInit {
               this.toaster.showError("Session Time out");
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           }
         }
       );
@@ -153,7 +153,7 @@ export class InquiryComponent implements OnInit {
       SERVICE_PARAM: `categoryId=${categoryId}`,
     });
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
     return this.http
       .get<string>(`${environment.secureUrl}`, {
         headers,
@@ -172,7 +172,7 @@ export class InquiryComponent implements OnInit {
             console.log("bbbb", selectedBiller);
           }
 
-          this.ngProgress.done();
+         // this.ngProgress.done();;
           this.error = "";
         },
         async (error) => {
@@ -189,7 +189,7 @@ export class InquiryComponent implements OnInit {
             if (response.status === 401) {
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           } catch {
             let response2: any = error;
 
@@ -203,7 +203,7 @@ export class InquiryComponent implements OnInit {
             if (response2.status === 401) {
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           }
         }
       );
@@ -225,7 +225,7 @@ export class InquiryComponent implements OnInit {
       SERVICE_PARAM: `billerNo=${billerNo}&billNo=${billNo}`,
     });
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
     return this.http
       .get<string>(`${environment.secureUrl}`, {
         headers,
@@ -266,7 +266,7 @@ export class InquiryComponent implements OnInit {
 
           this.billInfo.billNo = this.payBillForm.controls["billNo"].value;
           console.log("billInfoObj", billInfoObj);
-          this.ngProgress.done();
+         // this.ngProgress.done();;
           this.error = "";
         },
         async (error) => {
@@ -283,7 +283,7 @@ export class InquiryComponent implements OnInit {
             if (response.status === 401) {
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           } catch {
             let response2: any = error;
 
@@ -297,7 +297,7 @@ export class InquiryComponent implements OnInit {
             if (response2.status === 401) {
               this.authService.logoutUser();
             }
-            this.ngProgress.done();
+           // this.ngProgress.done();;
           }
         }
       );
@@ -362,7 +362,7 @@ export class InquiryComponent implements OnInit {
   }
   async getTransactionOtp() {
     this.stopTimer();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let token = this.cookieService.get("agt_token");
     this.request_options.method = "POST";
     this.httpService.setHeader(
@@ -399,23 +399,23 @@ export class InquiryComponent implements OnInit {
         ]);
 
       otp.updateValueAndValidity();
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     } else if (response.status == 401) {
       this.authService.logoutUser();
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     } else if (response.status == 500) {
       this.showErrorMsg = true;
       let tecErr = await this.findAllLanguagesService.getTranslate(
         "tech_issue"
       );
       this.toaster.showError(tecErr);
-      this.ngProgress.done();
+     // this.ngProgress.done();;
 
       this.errorMsg = tecErr;
     } else {
       console.log("response: ", response);
       this.toaster.showError(response.msgWithLanguage);
-      this.ngProgress.done();
+     // this.ngProgress.done();;
       this.payBillForm.reset();
     }
   }
@@ -438,7 +438,7 @@ export class InquiryComponent implements OnInit {
       });
       let requestBody = this.encryption.encrypt(data);
 
-      this.ngProgress.start();
+      // this.ngProgress.start();
       return this.http
         .post<string>(`${environment.secureUrl}`, requestBody, {
           headers,
@@ -453,7 +453,7 @@ export class InquiryComponent implements OnInit {
               "operation_done"
             );
             this.toaster.showSuccess(doneMessage);
-            this.ngProgress.done();
+           // this.ngProgress.done();;
             this.error = "";
             this.payBillForm.reset();
             // this.payBillForm.get("category").setValue("");
@@ -466,13 +466,13 @@ export class InquiryComponent implements OnInit {
           async (error) => {
             if (error.status === 401) {
               this.authService.logoutUser();
-              this.ngProgress.done();
+             // this.ngProgress.done();;
             } else if (error.status == 500) {
               let tecErr = await this.findAllLanguagesService.getTranslate(
                 "tech_issue"
               );
               this.toaster.showError(tecErr);
-              this.ngProgress.done();
+             // this.ngProgress.done();;
 
               this.showErrorMsg = true;
               this.errorMsg = tecErr;
@@ -488,7 +488,7 @@ export class InquiryComponent implements OnInit {
               if (response.status === 401) {
                 this.authService.logoutUser();
               }
-              this.ngProgress.done();
+             // this.ngProgress.done();;
             }
           }
         );

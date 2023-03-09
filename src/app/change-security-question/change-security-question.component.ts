@@ -49,7 +49,7 @@ export class ChangeSecurityQuestionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
 
     this.getSecurityQuestions();
 
@@ -61,7 +61,7 @@ export class ChangeSecurityQuestionComponent implements OnInit {
       securityQuestionsId: [null, Validators.compose([Validators.required])],
       answer: [null, Validators.compose([Validators.required])],
     });
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   getSecurityQuestions() {

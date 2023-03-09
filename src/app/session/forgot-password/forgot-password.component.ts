@@ -142,7 +142,7 @@ export class ForgotPasswordComponent implements OnInit {
         let data: any = this.encryption.decrypt(res);
         this.showUserNameCard = !this.showUserNameCard;
         this.showOTPCard = !this.showOTPCard;
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         this.error = "";
       },err =>{
         console.log(err)

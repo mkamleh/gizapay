@@ -11,7 +11,6 @@ import { UserListComponent } from './user-list/userlist.component';
 import { UsersRoutes } from './users.routing';
 import { SharedModule } from 'app/shared/shared.module';
 import { ChartsModule } from 'angular-bootstrap-md';
-import { HttpModule } from '@angular/http';
 import { DemoMaterialModule } from 'app/shared/demo.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -25,7 +24,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     SharedModule,
     FlexLayoutModule,
     ChartsModule,
-    HttpModule,
     FormsModule,
     ReactiveFormsModule,
     DemoMaterialModule,

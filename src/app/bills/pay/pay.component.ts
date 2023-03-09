@@ -180,7 +180,7 @@ export class PayComponent implements OnInit {
               Validators.pattern("^[0-9]*$"),
             ]);
           otp.updateValueAndValidity();
-          this.ngProgress.done();
+         // this.ngProgress.done();;
         } else {
           this.payBillForm.get("otp").setValue(null);
           this.payBillForm.get("otp").clearValidators();

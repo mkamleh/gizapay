@@ -167,13 +167,13 @@ export class CashInComponent implements OnInit {
   getIdentityTypes() {
     this.httpClientService.httpClientMainRouter("WRMAL_095",`null`,"GET")
       .subscribe( res => {
-        let idTypes: any = this.encryption.decrypt(res).body;
+        this.idTypes = this.encryption.decrypt(res).body;
       },err =>{
       });
   }
 
   getWalletInfo() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.cashInForm.controls["walletCode"].valid) {
       let walletToSearch = this.cashInForm.controls["walletCode"].value;
       this.httpClientService.httpClientMainRouter("WRMAL_039",`code=${walletToSearch}`,"GET")
@@ -216,7 +216,7 @@ export class CashInComponent implements OnInit {
           this.startTimer();
           this.showConfirm = false;
           this.showOtp = true;
-          this.ngProgress.done();
+         // this.ngProgress.done();;
           this.cashInForm
             .get("otp")
             .setValidators([
@@ -261,7 +261,7 @@ export class CashInComponent implements OnInit {
   }
 
   async cashInService() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let token = this.cookieService.get("agt_token");
     let lng = JSON.parse(this.cookieService.get("agtLng"));
     let data: any = {
@@ -288,7 +288,7 @@ export class CashInComponent implements OnInit {
     if (this.wallet) {
       this.receiptInfo.holderName = this.wallet.holderName;
     }
-    this.httpClientService.httpClientMainRouter("WRMAL_040",`null`,"GET",data)
+    this.httpClientService.httpClientMainRouter("WRMAL_040",`null`,"POST",data)
       .subscribe( async res =>{
         let cashInCardObj: any = this.encryption.decrypt(res);
         let doneMessage = await this.findAllLanguagesService.getTranslate(
@@ -305,7 +305,7 @@ export class CashInComponent implements OnInit {
         setTimeout(() => this.openDialog(), 1500);
         this.showConfirm = false;
         this.cashInForm.reset();
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         this.wallet = null;
         this.showInfo = false;
         this.error = "";

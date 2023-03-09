@@ -65,7 +65,7 @@ export class LoadMoneyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadMoneyForm = this.fb.group({
       amount: [
         null,
@@ -83,7 +83,7 @@ export class LoadMoneyComponent implements OnInit {
 
     this.getTransactionTypes();
     this.getTransactionSources();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   async getWalletId() {
     console.log("AgentBalance >>>>>>>");
@@ -104,7 +104,7 @@ export class LoadMoneyComponent implements OnInit {
   }
 
   async getTransactionTypes() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let token = this.cookieService.get("agt_token");
     this.request_options.method = "GET";
     this.httpService.setHeader(
@@ -119,13 +119,13 @@ export class LoadMoneyComponent implements OnInit {
       this.transactionType = transactionTypes.find(
         (e) => e.transactionTypeId == 14
       );
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     } else {
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     }
   }
   async getTransactionSources() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let token = this.cookieService.get("agt_token");
     this.request_options.method = "GET";
     this.httpService.setHeader(
@@ -141,27 +141,27 @@ export class LoadMoneyComponent implements OnInit {
         (e) => e.transactionSourceId == 2
       );
       console.log("transactionSources", transactionSources);
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     } else if (response.status == 401) {
       this.authService.logoutUser();
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     } else if (response.status == 500) {
       this.showErrorMsg = true;
       let tecErr = await this.findAllLanguagesService.getTranslate(
         "tech_issue"
       );
       this.toaster.showError(tecErr);
-      this.ngProgress.done();
+     // this.ngProgress.done();;
       this.errorMsg = tecErr;
     } else {
-      this.ngProgress.done();
+     // this.ngProgress.done();;
     }
   }
 
   async getTransactionOtp() {
     this.disableLoadMoney = true;
     this.stopTimer();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let token = this.cookieService.get("agt_token");
     this.request_options.method = "POST";
     this.httpService.setHeader(
@@ -198,12 +198,12 @@ export class LoadMoneyComponent implements OnInit {
         this.loadMoneyForm.get("otp").updateValueAndValidity();
         // otp.updateValueAndValidity();
 
-        this.ngProgress.done();
+       // this.ngProgress.done();;
       } else {
         this.loadMoney();
       }
     } else {
-      this.ngProgress.done();
+     // this.ngProgress.done();;
       this.toaster.showError(response.msgWithLanguage);
       this.loadMoneyForm.get("otpCode").setValue(null);
       this.loadMoneyForm.get("otpCode").clearValidators();
@@ -243,7 +243,7 @@ export class LoadMoneyComponent implements OnInit {
     }
   }
   async loadMoney() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.loadMoneyForm.valid) {
       let token = this.cookieService.get("agt_token");
       this.request_options.method = "POST";
@@ -271,24 +271,24 @@ export class LoadMoneyComponent implements OnInit {
         this.loadMoneyForm.reset();
         this.showOtp = false;
         this.showConfirm = false;
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         this.loadMoneyForm.get("otp").setValidators(null);
         this.loadMoneyForm.get("otp").clearValidators();
         this.loadMoneyForm.get("otp").updateValueAndValidity();
       } else if (response.status == 401) {
         this.authService.logoutUser();
-        this.ngProgress.done();
+       // this.ngProgress.done();;
       } else if (response.status == 500) {
         this.showErrorMsg = true;
         let tecErr = await this.findAllLanguagesService.getTranslate(
           "tech_issue"
         );
         this.toaster.showError(tecErr);
-        this.ngProgress.done();
+       // this.ngProgress.done();;
 
         this.errorMsg = tecErr;
       } else {
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         this.toaster.showError(response.msgWithLanguage);
         this.showOtp = false;
         this.showConfirm = false;

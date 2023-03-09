@@ -20,7 +20,6 @@ import {
   PerfectScrollbarComponent,
   PerfectScrollbarDirective,
 } from "ngx-perfect-scrollbar";
-import { Http } from "@angular/http";
 import { environment } from "../../../environments/environment";
 import "rxjs/add/operator/map";
 import { CookieService } from "ngx-cookie-service";
@@ -89,14 +88,13 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   public now: Date = new Date();
 
-  @ViewChild("sidemenu") sidemenu;
+  @ViewChild("sidemenu",{static: false}) sidemenu;
   public config: PerfectScrollbarConfigInterface = {};
   constructor(
     private router: Router,
     public menuItems: MenuItems,
     public horizontalMenuItems: HorizontalMenuItems,
     public translate: TranslateService,
-    private http: HttpClient,
     private cookieService: CookieService,
     private fb: FormBuilder,
     public authService: AuthServiceService,
@@ -179,7 +177,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         body.map((lngs) => {
           this.languages.push(lngs);
         });
-        this.ngProgress.done();
+       // this.ngProgress.done();;
       },err =>{
     });
     await this.refresh();
@@ -374,7 +372,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
   signOut() {
     this.authService.logoutUser();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   toChangeSecurityQuestion() {

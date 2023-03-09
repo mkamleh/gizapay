@@ -76,6 +76,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatSelectModule,
   ],
   providers: [TranslateService],
-  entryComponents: [DialogContentDialog2],
+  entryComponents: [DialogContentDialog2
+  ],
 })
 export class CustomerManagementNewModule {}

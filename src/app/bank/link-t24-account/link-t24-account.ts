@@ -55,7 +55,7 @@ export class LinkT24AccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.linkAccount = this.fb.group({
       accountNumber: [
         null,
@@ -68,7 +68,7 @@ export class LinkT24AccountComponent implements OnInit {
       ],
       otpCode: [""],
     });
-    this.ngProgress.done();
+   // this.ngProgress.done();;
     this.getWalletId();
   }
   async getWalletId() {
@@ -98,7 +98,7 @@ export class LinkT24AccountComponent implements OnInit {
   }
   async getOtp() {
     this.linkAccount.controls.accountNumber.markAsTouched();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.linkAccount.valid) {
       this.request_options.method = "POST";
       this.httpService.setHeader(
@@ -128,9 +128,9 @@ export class LinkT24AccountComponent implements OnInit {
 
         this.showConfirm = false;
         this.showOtp = true;
-        this.ngProgress.done();
+       // this.ngProgress.done();;
       } else {
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         let errorMsg = response.msgWithLanguage;
         this.toaster.showError(errorMsg);
       }
@@ -138,7 +138,7 @@ export class LinkT24AccountComponent implements OnInit {
   }
   async confirm() {
     this.linkAccount.controls.accountNumber.markAsTouched();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.linkAccount.valid) {
       this.request_options.method = "POST";
       this.httpService.setHeader(
@@ -160,9 +160,9 @@ export class LinkT24AccountComponent implements OnInit {
           await this.findAllLanguagesService.getTranslate("operation_done")
         );
         this.linkAccount.reset();
-        this.ngProgress.done();
+       // this.ngProgress.done();;
       } else {
-        this.ngProgress.done();
+       // this.ngProgress.done();;
         let errorMsg = response.msgWithLanguage;
         this.toaster.showError(errorMsg);
       }

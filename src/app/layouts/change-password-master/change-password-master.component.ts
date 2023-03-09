@@ -95,7 +95,7 @@ export class ChangePasswordMasterComponent implements OnInit {
   ngOnInit() {}
 
   async changePassword() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     console.log(this.changePasswordForm.value);
     let data = {
       newPassword: this.changePasswordForm.value.newPassword,

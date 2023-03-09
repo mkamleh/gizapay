@@ -53,9 +53,9 @@ export class OtcReceiveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadForm();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   loadForm() {
     this.searchForm = this.fb.group({

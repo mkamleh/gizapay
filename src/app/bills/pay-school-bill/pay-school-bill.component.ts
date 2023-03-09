@@ -16,6 +16,7 @@ import { HttpService } from "app/_services/HttpService";
 import { SharedService } from "app/_services/shared-service";
 import { toasterService } from "app/_services/toaster-service";
 import { CustomValidators } from "ng2-validation";
+import { HttpClientService } from "app/_services/HttpClientService";
 
 @Component({
   selector: "app-school-pay-bill",
@@ -119,7 +120,8 @@ export class PaySchoolBillComponent implements OnInit {
     public adminLayout: AdminLayoutComponent,
     public findAllLanguagesService: FindAllLanguagesService,
     public findLanguages: FindAllLanguagesService,
-    private encryption: Encryption
+    private encryption: Encryption,
+    private httpClientService: HttpClientService
   ) {
     this._sharedService.emitChange(this.pageTitle);
   }
@@ -129,12 +131,12 @@ export class PaySchoolBillComponent implements OnInit {
       "Bill Payment School feature in maintenance... it will work soon!"
     );
     this.loadForm();
-    this.ngProgress.start();
+    // this.ngProgress.start();
     // this.getCategories();
     this.getBillers("");
     // this.getDerachServiceProviders();
     // this.getPackages();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   loadForm() {
@@ -213,209 +215,88 @@ export class PaySchoolBillComponent implements OnInit {
   }
 
   getBillers(code) {
-    // Getting the billers
-    let lng = JSON.parse(this.cookieService.get("agtLng"));
-    let token = this.cookieService.get("agt_token");
-
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-      lng: lng.code,
-      "x-auth-token": token,
-      SERVICE_WRAPPER: "WRMAL_456",
-      SERVICE_PARAM: "categoryId=" + code,
+    // Getting the billers 
+    this.httpClientService.httpClientMainRouter("WRMAL_456","categoryId=" + code,"GET")
+    .subscribe( res=>{
+      let billersObj: any = this.encryption.decrypt(res);
+      this.billers = billersObj.body;
+      this.orginalBillers = billersObj.body;
+      this.error = "";
+    },err =>{
     });
-    console.log("categoryId=" + code);
-
-    return this.http
-      .get<string>(`${environment.secureUrl}/`, {
-        headers,
-        responseType: "text" as "json",
-      })
-      .subscribe(
-        (response) => {
-          console.log("biller response=" + response);
-          let billersObj: any = this.encryption.decrypt(response);
-          this.billers = billersObj.body;
-          this.orginalBillers = billersObj.body;
-          console.log("getting Billers", this.billers);
-          this.error = "";
-        },
-        async (error) => {
-          console.log("error=" + error);
-          let response: any = this.encryption.decrypt(error.error);
-          let response2: any = error;
-
-          this.error = response.msgWithLanguage;
-          if (response.status === 500) {
-            this.error = await this.findLanguages.getTranslate("tech_issue");
-          }
-          this.toaster.showError(this.error);
-          if (response2.status === 401) {
-            this.authService.logoutUser();
-          }
-        }
-      );
   }
 
   async getBillInfo() {
     this.payBillForm.get("otpCode").clearValidators();
     this.payBillForm.get("otpCode").updateValueAndValidity();
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.toaster.showWarning(
       "Bill Payment School feature in maintenance... it will work soon!"
     );
-    this.ngProgress.done();
+   // this.ngProgress.done();;
 
     // Getting the bill info
     console.log("getBillInfo", this.payBillForm.value);
-
-    // if (this.payBillForm.valid) {
-    //   console.log("valid");
-
-    //   this.request_options.method = "GET";
-    //   this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_451");
-    //   this.httpService.setHeader(
-    //     "SERVICE_PARAM",
-    //     `subscriptionCode=${this.payBillForm.value.subscriptionCode}`
-    //   );
-    //   this.request_options.body = {};
-    //   console.log("body >>>>>>", this.request_options.body);
-
-    //   let response = await this.httpService.http_request(this.request_options);
-    //   if (response.status == 200) {
-    //     this.schoolBills = response.body;
-    //     console.log("this.schoolBills", this.schoolBills);
-    //     this.showBillInfo = true;
-    //     this.showSchoolCard1 = true;
-    //     this.showSingleSchoolBills = false;
-    //     this.showFirstCard = false;
-    //   } else {
-    //     let error = response.msgWithLanguage;
-    //     if (response.status === 500) {
-    //       error = await this.findLanguages.getTranslate("tech_issue");
-    //     }
-    //     this.toaster.showError(error);
-    //     if (response.status === 401) {
-    //       this.authService.logoutUser();
-    //     }
-    //   }
-    // } else {
-    //   console.log("not valid >>>>", this.payBillForm.controls);
-    // }
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   async payBillFees() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (this.isOffline) {
       // Getting the billers
       let lng = JSON.parse(this.cookieService.get("agtLang"));
       let token = this.cookieService.get("agt_token");
       let WalletResourcesArray = this.adminLayout.getWalletId();
       this.walletId = WalletResourcesArray[0].id;
-      console.log("this.walletId", this.walletId);
-
-      const headers = new HttpHeaders({
-        "Content-Type": "application/json",
-        lng: lng.code,
-        "x-auth-token": token,
-        SERVICE_WRAPPER: "WRMAL_130",
-        SERVICE_PARAM:
-          "amount=" +
-          this.billInfo.amountDue +
-          "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
-          this.walletId,
-      });
-
-      return this.http
-        .get<string>(`${environment.secureUrl}/`, {
-          headers,
-          responseType: "text" as "json",
-        })
-        .subscribe(
-          (response) => {
-            let paymentFeesObj: any = this.encryption.decrypt(response);
-            let feesObj = paymentFeesObj.body;
-            this.paymentFees = {
-              calcFees: feesObj.calcFeesRnd,
-              destinationAmount: feesObj.destinationAmountRnd,
-              destinationAmountWOfees: feesObj.destinationAmountWOfeesRnd,
-              sourceOperationCurrencyCode: feesObj.sourceOperationCurrencyCode,
-              sourceCode: feesObj.sourceCode,
-              sourceAmountWfees: feesObj.sourceAmountWfees,
-              initiationOperationCurrencyCaption:
-                feesObj.initiationOperationCurrencyCaption,
-            };
-            this.showFees = !this.showFees;
-            // this.ngxSmartModalService.getModal("myBootstrapModal").open();
-
-            console.log("payBillConfirmation", this.paymentFees);
-            this.error = "";
-            this.ngProgress.done();
-          },
-          async (error) => {
-            let response: any = this.encryption.decrypt(error.error);
-            let response2: any = error;
-
-            this.error = response.msgWithLanguage;
-            if (response.status === 500) {
-              this.error = await this.findLanguages.getTranslate("tech_issue");
-            }
-            this.toaster.showError(this.error);
-            if (response2.status === 401) {
-              this.authService.logoutUser();
-            }
-            this.ngProgress.done();
-          }
-        );
-    } else if (this.isOnline) {
-      let amount = this.getAmountFromOnline();
-
-      console.log("online");
-      let WalletResourcesArray = this.adminLayout.getWalletId();
-      this.walletId = WalletResourcesArray[0].id;
-      console.log("this.walletId", this.walletId);
-      this.request_options.method = "GET";
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_130");
-      this.httpService.setHeader(
-        "SERVICE_PARAM",
+      let SERVICE_PARAM =
         "amount=" +
-          amount +
-          "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
-          this.walletId
-      );
-      this.request_options.body = {};
-      console.log("body >>>>>>", this.request_options.body);
-
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
-        let feesObj = response.body;
-        console.log("feesObj >>>", feesObj);
-
+        this.billInfo.amountDue +
+        "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
+        this.walletId;
+      this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET").
+      subscribe( res=>{
+        let paymentFeesObj: any = this.encryption.decrypt(res);
+        let feesObj = paymentFeesObj.body;
         this.paymentFees = {
           calcFees: feesObj.calcFeesRnd,
           destinationAmount: feesObj.destinationAmountRnd,
-          destinationAmountWOfees: amount,
+          destinationAmountWOfees: feesObj.destinationAmountWOfeesRnd,
           sourceOperationCurrencyCode: feesObj.sourceOperationCurrencyCode,
           sourceCode: feesObj.sourceCode,
           sourceAmountWfees: feesObj.sourceAmountWfees,
           initiationOperationCurrencyCaption:
-            feesObj.initiationOperationCurrencyCaption,
+          feesObj.initiationOperationCurrencyCaption,
         };
         this.showFees = !this.showFees;
-        this.showBillInfo = !this.showBillInfo;
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-      }
-
-      this.ngProgress.done();
+        this.error = "";
+      },err =>{
+      });
+    } else if (this.isOnline) {
+      let amount = this.getAmountFromOnline();
+      let WalletResourcesArray = this.adminLayout.getWalletId();
+      this.walletId = WalletResourcesArray[0].id;      
+      let SERVICE_PARAM = 
+        "amount=" +
+        amount +
+        "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
+        this.walletId;  
+      this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET")
+        .subscribe( res=>{
+          let feesObj = this._sharedService.decrypt(res).body;  
+          this.paymentFees = {
+            calcFees: feesObj.calcFeesRnd,
+            destinationAmount: feesObj.destinationAmountRnd,
+            destinationAmountWOfees: amount,
+            sourceOperationCurrencyCode: feesObj.sourceOperationCurrencyCode,
+            sourceCode: feesObj.sourceCode,
+            sourceAmountWfees: feesObj.sourceAmountWfees,
+            initiationOperationCurrencyCaption:
+              feesObj.initiationOperationCurrencyCaption,
+          };
+          this.showFees = !this.showFees;
+          this.showBillInfo = !this.showBillInfo;
+    },err =>{
+    });
     }
   }
 
@@ -432,32 +313,20 @@ export class PaySchoolBillComponent implements OnInit {
       valid = true;
     }
     if (valid) {
-      this.ngProgress.start();
-      console.log("school");
       let WalletResourcesArray = this.adminLayout.getWalletId();
       this.walletId = WalletResourcesArray;
-      console.log("this.walletIdsss", this.walletId);
-      this.request_options.method = "GET";
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_130");
-      this.httpService.setHeader(
-        "SERVICE_PARAM",
+      let SERVICE_PARAM = 
         "amount=" +
-          amount +
-          "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
-          this.walletId
-      );
-      this.request_options.body = {};
+        amount +
+        "&source=WEB&type=PAY_BILL_AGENT&walletId=" +
+        this.walletId;
       this.schoolAmount = amount;
       if (id) {
         this.schoolBillId = id;
       }
-      console.log("body >>>>>>", this.request_options.body);
-
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
-        this.feesObj = response.body;
-        console.log("feesObj >>>", this.feesObj);
-
+      this.httpClientService.httpClientMainRouter("WRMAL_130",SERVICE_PARAM,"GET")
+      .subscribe( res=>{
+        this.feesObj = this._sharedService.decrypt(res).body;
         this.paymentFees = {
           calcFees: this.feesObj.calcFeesRnd,
           destinationAmount: this.feesObj.destinationAmountRnd,
@@ -471,17 +340,8 @@ export class PaySchoolBillComponent implements OnInit {
         this.showFees = !this.showFees;
         this.showBillInfo = !this.showBillInfo;
         this.showEnterPayerInfo = false;
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-      }
-      this.ngProgress.done();
+      },err =>{
+      });
     }
   }
 
@@ -499,53 +359,39 @@ export class PaySchoolBillComponent implements OnInit {
     }
     console.log("amount: ", amount);
     if (amount >= 0) {
-      console.log("otpss", this.request_options.body);
-      let token = this.cookieService.get("agt_token");
-      this.request_options.method = "POST";
-      this.httpService.removeHeader("SERVICE_WRAPPER");
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_183");
-
-      this.request_options.body = {
+      let body = {
         walletId: this.walletId,
         transactionTypeCode: "PAY_BILL_AGENT",
         transactionSourceCode: "WEB",
         transactionAmount: amount,
       };
 
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 201) {
-        if (response.body.transactionOTPFlag == "true") {
-          this.payBillForm
-            .get("otpCode")
-            .setValidators([
-              Validators.required,
-              Validators.minLength(6),
-              Validators.maxLength(6),
-              Validators.pattern(/^-?(0|[0-9]\d*)?$/),
-            ]);
-          this.showOTPForm = true;
-          this.timeLeft = 60;
-          this.startTimer();
-
-          console.log("otp", response.body.code);
-        } else {
-          this.payBillForm.get("otpCode").setValue(null);
-          this.payBillForm.get("otpCode").clearValidators();
-          this.payBillForm.get("otpCode").updateValueAndValidity();
-
-          this.payBill(myForm);
-        }
-      } else {
-        this.showOTPForm = false;
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-      }
+      this.httpClientService.httpClientMainRouter("WRMAL_183","null","POST",body)
+        .subscribe( res=>{
+          let response = this._sharedService.decrypt(res)
+          if (response.body.transactionOTPFlag == "true") {
+            this.payBillForm
+              .get("otpCode")
+              .setValidators([
+                Validators.required,
+                Validators.minLength(6),
+                Validators.maxLength(6),
+                Validators.pattern(/^-?(0|[0-9]\d*)?$/),
+              ]);
+            this.showOTPForm = true;
+            this.timeLeft = 60;
+            this.startTimer();
+  
+            console.log("otp", response.body.code);
+          } else {
+            this.payBillForm.get("otpCode").setValue(null);
+            this.payBillForm.get("otpCode").clearValidators();
+            this.payBillForm.get("otpCode").updateValueAndValidity();
+  
+            this.payBill(myForm);
+          }
+        },err =>{
+        });
     }
   }
 
@@ -554,91 +400,44 @@ export class PaySchoolBillComponent implements OnInit {
       this.payBulkSchoolBills();
     } else {
       this.payBillForm.controls.otpCode.markAsTouched();
-      // Getting the billers
-      // let lng = JSON.parse(this.cookieService.get("agtLang"));
-      let token = this.cookieService.get("agt_token");
-
-      const headers = new HttpHeaders({
-        "Content-Type": "application/json",
-        lng: this.cookieService.get("agtLang"),
-        "x-auth-token": token,
-        SERVICE_WRAPPER: "WRMAL_461",
-      });
-
       let data = {
         billId: this.schoolBillId,
-        // sourceCode: "WEB",
-        // otpCode: this.payBillForm.value.otpCode,
-
         destinationAmount: this.paymentFees.destinationAmount,
         sourceCode: "WEB",
         otpCode: this.payBillForm.value.otpCode,
       };
 
-      console.log("daataa>>>", data);
 
       if (this.payBillForm.valid) {
-        let requestBody = this.encryption.encrypt(data);
-
-        this.ngProgress.start();
-
-        console.log("payBill", data);
-
-        return this.http
-          .post<string>(`${environment.secureUrl}/`, requestBody, {
-            headers,
-            responseType: "text" as "json",
-          })
-          .subscribe(
-            async (response) => {
-              this.stopTimer();
-              this.showOTPForm = false;
-              let payBillObj: any = this.encryption.decrypt(response);
-              this.payedBill = payBillObj.body;
-              let doneMessage = await this.findAllLanguagesService.getTranslate(
-                "operation_done"
-              );
-              this.toaster.showSuccess(doneMessage); // reset values on success
-              this.showBillInfo = false;
-              this.showFees = false;
-
-              // reset the form on submitting
-              this.payBillForm.reset();
-              Object.keys(this.payBillForm.controls).forEach((key) => {
-                this.payBillForm.get(key).setErrors(null);
-              });
-              // myForm.resetForm();
-
-              // this.markFormGroupTouched(this.payBillForm.controls);
-              this.error = "";
-              console.log("payBill", payBillObj);
-              this.error = "";
-              this.showFirstCard = true;
-
-              this.ngProgress.done();
-            },
-            async (error) => {
-              let response: any = this.encryption.decrypt(error.error);
-              let response2: any = error;
-
-              this.error = response.msgWithLanguage;
-              if (response.status === 500) {
-                this.error = await this.findLanguages.getTranslate(
-                  "tech_issue"
-                );
-              }
-              this.toaster.showError(this.error);
-              // reset the form on submitting
-              // myForm.resetForm();
-              Object.keys(this.payBillForm.controls).forEach((key) => {
-                this.payBillForm.get(key).setErrors(null);
-              });
-              if (response2.status === 401) {
-                this.authService.logoutUser();
-              }
-              this.ngProgress.done();
-            }
+        this.httpClientService.httpClientMainRouter("WRMAL_461","null","GET",data)
+        .subscribe( async res=> {
+          this.stopTimer();
+          this.showOTPForm = false;
+          let payBillObj: any = this.encryption.decrypt(res);
+          this.payedBill = payBillObj.body;
+          let doneMessage = await this.findAllLanguagesService.getTranslate(
+            "operation_done"
           );
+          this.toaster.showSuccess(doneMessage); // reset values on success
+          this.showBillInfo = false;
+          this.showFees = false;
+
+          // reset the form on submitting
+          this.payBillForm.reset();
+          Object.keys(this.payBillForm.controls).forEach((key) => {
+            this.payBillForm.get(key).setErrors(null);
+          });
+          // myForm.resetForm();
+
+          // this.markFormGroupTouched(this.payBillForm.controls);
+          this.error = "";
+          console.log("payBill", payBillObj);
+          this.error = "";
+          this.showFirstCard = true;
+
+         // this.ngProgress.done();;
+        },err =>{
+        });
       }
     }
   }
@@ -700,14 +499,13 @@ export class PaySchoolBillComponent implements OnInit {
     }
   }
 
-  async getPackages() {
-    this.request_options.method = "GET";
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_448");
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.packages = response.body;
-      console.log(" this.packages ", this.packages);
-    }
+  getPackages() {
+    this.httpClientService.httpClientMainRouter("WRMAL_448","null","GET")
+    .subscribe( res=>{
+      this.packages = this._sharedService.decrypt(res).body;
+      this.error = "";
+    },err =>{
+    });
   }
 
   disableDstvForm() {
@@ -850,26 +648,15 @@ export class PaySchoolBillComponent implements OnInit {
       /// get products
 
       let billerId = this.payBillForm.value.biller.id;
-      this.request_options.method = "GET";
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_454");
-      this.httpService.setHeader("SERVICE_PARAM", `billerId=${billerId}`);
       let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
-        this.schoolProducts = response.body;
-        console.log(" this.schoolProducts ", this.schoolProducts);
+      this.httpClientService.httpClientMainRouter("WRMAL_455",`billerId=${billerId}`,"GET")
+      .subscribe( res=>{
+        this.schoolProducts = this._sharedService.decrypt(res).body;
         this.showSchoolCard1 = false;
         this.showSingleSchoolBills = false;
         this.showSchoolProducts = true;
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-      }
+      },err =>{
+      });
     }
   }
   rowSelected(product) {
@@ -908,38 +695,26 @@ export class PaySchoolBillComponent implements OnInit {
     }
   }
 
-  async getBulkSchoolBills() {
+  getBulkSchoolBills() {
     if (this.schoolProductsArray.length == 0) {
       this.toaster.showError(" Please Select Product!");
       return;
     }
     let billerId = this.payBillForm.value.biller.id;
-    this.request_options.method = "POST";
-    this.request_options.body = {
+    let body = {
       subscriptionCode: this.payBillForm.value.subscriptionCode,
       billerId: billerId,
       productList: this.schoolProductsArray,
     };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_453");
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.bulkSchoolBillsObj = response.body;
-      this.bulkSchoolBills = response.body.schoolInvoiceResourceList;
-      console.log(" this.bulkSchoolBillsObj ", this.bulkSchoolBillsObj);
+    this.httpClientService.httpClientMainRouter("WRMAL_453","null","POST",body)
+    .subscribe( res=>{
+      this.bulkSchoolBills = this._sharedService.decrypt(res).body.schoolInvoiceResourceList;
       this.showSchoolCard1 = false;
       this.showSingleSchoolBills = false;
       this.showSchoolProducts = false;
       this.showBulkSchoolBills = true;
-    } else {
-      let error = response.msgWithLanguage;
-      if (response.status === 500) {
-        error = await this.findLanguages.getTranslate("tech_issue");
-      }
-      this.toaster.showError(error);
-      if (response.status === 401) {
-        this.authService.logoutUser();
-      }
-    }
+    },err =>{
+    });
   }
 
   async enterPayerInfo() {
@@ -966,8 +741,7 @@ export class PaySchoolBillComponent implements OnInit {
   async payBulkSchoolBills() {
     this.payBillForm.controls.otpCode.markAsTouched();
     let billerId = this.payBillForm.value.biller.id;
-    this.request_options.method = "POST";
-    this.request_options.body = {
+    let body = {
       subscriptionCode: this.payBillForm.value.subscriptionCode,
       billerId: billerId,
       sourceCode: "WEB",
@@ -981,15 +755,10 @@ export class PaySchoolBillComponent implements OnInit {
       billerCode: this.schoolBillerCode,
       destinationAmount: this.feesObj.destinationAmount,
     };
-    console.log(" this.request_options.body ", this.request_options.body);
     if (this.payBillForm.valid) {
-      this.ngProgress.start();
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_459");
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
+      this.httpClientService.httpClientMainRouter("WRMAL_459","null","POST",body)
+      .subscribe( async res=> {
         this.stopTimer();
-
-        console.log("response.body ", response.body);
         this.showSchoolCard1 = false;
         this.showSingleSchoolBills = false;
         this.showSchoolProducts = false;
@@ -1000,7 +769,6 @@ export class PaySchoolBillComponent implements OnInit {
         this.showFirstCard = true;
         this.showBillInfo = false;
         this.showFees = false;
-
         this.payBillForm.reset();
         this.form.reset();
         this.form.clearValidators();
@@ -1010,23 +778,12 @@ export class PaySchoolBillComponent implements OnInit {
           "operation_done"
         );
         this.toaster.showSuccess(doneMessage); // reset values on success
-
         // reset the form on submitting
         Object.keys(this.payBillForm.controls).forEach((key) => {
           this.payBillForm.get(key).setErrors(null);
         });
-        this.ngProgress.done();
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-        this.ngProgress.done();
-      }
+    },err =>{
+    });
     }
   }
   close() {
@@ -1053,45 +810,11 @@ export class PaySchoolBillComponent implements OnInit {
   }
   getDerachServiceProviders() {
     // Getting the billers
-    let lng = JSON.parse(this.cookieService.get("agtLang"));
-    let token = this.cookieService.get("agt_token");
-
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-      lng: lng.code,
-      "x-auth-token": token,
-      SERVICE_WRAPPER: "WRMAL_455",
+    return this.httpClientService.httpClientMainRouter("WRMAL_455","null","GET")
+    .subscribe( res=> {
+      this.derachServiceProviders = this.encryption.decrypt(res).body;
+      this.error = "";
+    },err =>{
     });
-
-    return this.http
-      .get<string>(`${environment.secureUrl}/`, {
-        headers,
-        responseType: "text" as "json",
-      })
-      .subscribe(
-        (response) => {
-          let serviceProviders: any = this.encryption.decrypt(response);
-          this.derachServiceProviders = serviceProviders.body;
-          console.log(
-            " this.derachServiceProviders",
-            this.derachServiceProviders
-          );
-          this.error = "";
-        },
-        async (error) => {
-          console.log("error=" + error);
-          let response: any = this.encryption.decrypt(error.error);
-          let response2: any = error;
-
-          this.error = response.msgWithLanguage;
-          if (response.status === 500) {
-            this.error = await this.findLanguages.getTranslate("tech_issue");
-          }
-          this.toaster.showError(this.error);
-          if (response2.status === 401) {
-            this.authService.logoutUser();
-          }
-        }
-      );
   }
 }

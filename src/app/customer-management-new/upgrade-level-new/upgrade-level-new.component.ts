@@ -30,7 +30,7 @@ export class UpgradeLevelNewComponent implements OnInit {
   public loading = false;
 
   pageTitle: string = "upgrade-customer";
-  @ViewChild("stepper") private myStepper: MatStepper;
+  @ViewChild("stepper",{static: false}) private myStepper: MatStepper;
   public searchForm: FormGroup;
   public personalForm: FormGroup;
   public addressForm: FormGroup;
@@ -99,7 +99,7 @@ export class UpgradeLevelNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.loadForm();
     this.getIdentityTypes();
     this.getRegions();
@@ -113,7 +113,7 @@ export class UpgradeLevelNewComponent implements OnInit {
         // this.getAccount();
       }
     });
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   loadForm() {
     this.personalForm = this.fb.group({

@@ -23,23 +23,18 @@ import {
   TranslateLoader,
   TranslateService,
 } from "@ngx-translate/core";
-import { Http, RequestOptions, Headers, URLSearchParams } from "@angular/http";
 import { environment } from "environments/environment";
 import { operationLanguage } from "app/_services/operationLanguage-service";
 import { toasterService } from "app/_services/toaster-service";
 import { SweetAlertToastService } from "app/_services/sweet-alert-toast.service";
-import { HttpService } from "app/_services/HttpService";
 import { NgxSmartModalService } from "ngx-smart-modal";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import * as $ from "jquery";
+import { HttpClient } from "@angular/common/http";
 import { NgProgress } from "ngx-progressbar";
 import { CustomValidation } from "app/_services/custom-validator.service";
 import { NgxUiLoaderDemoService } from "app/_services/ngx-ui-loader-demo.service";
 import { FindAllLanguagesService } from "app/_services/find-all-languages.service";
 import { SharedService } from "app/_services/shared-service";
-import Swal from "sweetalert2";
 import { Observable } from "rxjs";
-import { stringify } from "@angular/core/src/util";
 import { HttpClientService } from "app/_services/HttpClientService";
 
 // const reCaptcha = new FormControl(null, Validators.required);
@@ -85,7 +80,7 @@ export class LoginSignupComponent implements OnInit {
   robotCheck: any;
   showRecaptcha: boolean = false;
   recaptcha_isValid: boolean = true;
-  @ViewChild("myDiv") myDiv: ElementRef;
+  @ViewChild("myDiv",{static: false}) myDiv: ElementRef;
   code: any;
   canv_: any;
 
@@ -103,12 +98,10 @@ export class LoginSignupComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthServiceService,
     private cookieService: CookieService,
-    private http: HttpClient,
     public translate: TranslateService,
     private operationLang: operationLanguage,
     private toaster1: toasterService,
     private toaster: SweetAlertToastService,
-    private httpService: HttpService,
     public ngxSmartModalService: NgxSmartModalService,
     private customValidation: CustomValidation,
     public ngProgress: NgProgress,
@@ -118,6 +111,7 @@ export class LoginSignupComponent implements OnInit {
     private _sharedService: SharedService,
     private httpClientService: HttpClientService,
     private _sharedServices: SharedService,
+    private httpClient: HttpClient
   ) {
     this.operationLang.removeAllLanguage();
     this.operationLang.getAllLanguage();
@@ -348,7 +342,7 @@ export class LoginSignupComponent implements OnInit {
   }
 
   public getJSON(): Observable<any> {
-    return this.http.get("assets/config/config.json");
+    return this.httpClient.get("assets/config/config.json");
   }
 
   changeLang() {
@@ -421,9 +415,11 @@ export class LoginSignupComponent implements OnInit {
       ,body
       ,"Basic " + authHeader)
         .subscribe((response:any)=> {
+          console.log("hiii")
           this.onSuccessfullLogin(response)
         },
         (err) =>{
+          console.log(err)
         });     
     } else {
       console.log("error: ", this.loginForm);
@@ -457,6 +453,7 @@ export class LoginSignupComponent implements OnInit {
       );
       this.router.navigate(["/authentication/security-questions"]);
     } else {
+      console.log("loool")
       this.router.navigate([this.authService.homeUrl]);
     }
     this.userIdle.startWatching();
@@ -467,7 +464,7 @@ export class LoginSignupComponent implements OnInit {
     // Start watch when time is up.
     this.userIdle.onTimeout().subscribe(() => {
       this.authService.logoutUser();
-      this.ngProgress.done();
+     // this.ngProgress.done();;
       console.log("Time is up!");
     // alert("Time is up! , you need to login again");
   });

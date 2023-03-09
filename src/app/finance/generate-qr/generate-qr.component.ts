@@ -47,9 +47,9 @@ export class GenerateQrComponent implements OnInit {
 
   interval;
   timeLeft: number = 60;
-  @ViewChild("screen") screen: ElementRef;
-  @ViewChild("canvas") canvas: ElementRef;
-  @ViewChild("downloadLink") downloadLink: ElementRef;
+  @ViewChild('screen', {static: false}) screen : ElementRef;
+  @ViewChild('canvas', {static: false}) canvas : ElementRef;
+  @ViewChild('downloadLink', {static: false}) downloadLink : ElementRef;
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
@@ -68,7 +68,7 @@ export class GenerateQrComponent implements OnInit {
 
   ngOnInit() {}
   generateQRCode() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     console.log("this.qrcodename", this.qrcodename);
     var amoutValidation = new RegExp(/^\d*(?:[.,]\d{1,2})?$/);
 
@@ -208,7 +208,7 @@ export class GenerateQrComponent implements OnInit {
       transactionAmount: this.qrcodename,
     };
    
-    this.ngProgress.start();
+    // this.ngProgress.start();
     let requestBody = this.encryption.encrypt(body);
     this.httpClientService.httpClientMainRouter("WRMAL_193",`null`,"POST",body)
       .subscribe( res => {

@@ -18,6 +18,7 @@ import { toasterService } from "app/_services/toaster-service";
 import { CustomValidators } from "ng2-validation";
 import { DatePipe } from "@angular/common";
 import { HttpClientService } from "app/_services/HttpClientService";
+import { ResolveStart } from "@angular/router";
 
 @Component({
   selector: "app-pay-bill",
@@ -126,7 +127,7 @@ export class PayBillComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     this.toaster.showWarning(
       "Bill Payment feature in maintenance... it will work soon!"
     );
@@ -137,7 +138,7 @@ export class PayBillComponent implements OnInit {
     this.getDerachServiceProviders();
     this.getPackages();
     this.getWalletId();
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
 
   loadForm() {
@@ -218,17 +219,17 @@ export class PayBillComponent implements OnInit {
     this.payBillForm.get("otpCode").clearValidators();
     this.payBillForm.get("otpCode").updateValueAndValidity();
 
-    this.ngProgress.start();
+    // this.ngProgress.start();
 
     // Getting the bill info
     console.log("getBillInfo", this.payBillForm.value);
     this.toaster.showWarning(
       "Bill Payment feature in maintenance... it will work soon!"
     );
-    this.ngProgress.done();
+   // this.ngProgress.done();;
   }
   payBillFees() {
-    this.ngProgress.start();
+    // this.ngProgress.start();
     if (!this.isOnline) {     
       var serviceParam = 
           "amount=" +
@@ -393,17 +394,6 @@ export class PayBillComponent implements OnInit {
       }
       } else if (this.isOnline) {
       this.payBillForm.controls.otpCode.markAsTouched();
-      // Getting the billers
-      let lng = JSON.parse(this.cookieService.get("agtLng"));
-      let token = this.cookieService.get("agt_token");
-
-      const headers = new HttpHeaders({
-        "Content-Type": "application/json",
-        lng: lng.code,
-        "x-auth-token": token,
-        SERVICE_WRAPPER: "WRMAL_449",
-      });
-
       let data;
       if (this.isDSTV || this.isTelecom) {
         data = {
@@ -445,69 +435,31 @@ export class PayBillComponent implements OnInit {
         };
       }
 
-      console.log("daataa>>>", data);
 
       if (this.payBillForm.valid) {
-        let requestBody = this.encryption.encrypt(data);
+        return this.httpClientService.httpClientMainRouter("WRMAL_449",`null`,"POST",data)
+        .subscribe( async res=> {
+            this.stopTimer();
+            this.showOTPForm = false;
+            let payBillObj: any = this.encryption.decrypt(res);
+            this.payedBill = payBillObj.body;
+            let doneMessage = await this.findAllLanguagesService.getTranslate(
+              "operation_done"
+            );
+            this.toaster.showSuccess(doneMessage); // reset values on success
+            this.showBillInfo = false;
+            this.showFees = false;
 
-        this.ngProgress.start();
-
-        console.log("payBill", data);
-
-        return this.http
-          .post<string>(`${environment.secureUrl}`, requestBody, {
-            headers,
-            responseType: "text" as "json",
-          })
-          .subscribe(
-            async (response) => {
-              this.stopTimer();
-              this.showOTPForm = false;
-              let payBillObj: any = this.encryption.decrypt(response);
-              this.payedBill = payBillObj.body;
-              let doneMessage = await this.findAllLanguagesService.getTranslate(
-                "operation_done"
-              );
-              this.toaster.showSuccess(doneMessage); // reset values on success
-              this.showBillInfo = false;
-              this.showFees = false;
-
-              // reset the form on submitting
-              this.payBillForm.reset();
-              Object.keys(this.payBillForm.controls).forEach((key) => {
-                this.payBillForm.get(key).setErrors(null);
-              });
-              // myForm.resetForm();
-
-              // this.markFormGroupTouched(this.payBillForm.controls);
-              this.error = "";
-              console.log("payBill", payBillObj);
-              this.error = "";
-              this.showFirstCard = true;
-
-              this.ngProgress.done();
-            },
-            async (error) => {
-              let response: any = this.encryption.decrypt(error.error);
-              let response2: any = error;
-
-              this.error = response.msgWithLanguage;
-              if (response.status === 500) {
-                this.error = await this.findLanguages.getTranslate(
-                  "tech_issue"
-                );
-              }
-              this.toaster.showError(this.error);
-              // myForm.resetForm();
-              Object.keys(this.payBillForm.controls).forEach((key) => {
-                this.payBillForm.get(key).setErrors(null);
-              });
-              if (response2.status === 401) {
-                this.authService.logoutUser();
-              }
-              this.ngProgress.done();
-            }
-          );
+            // reset the form on submitting
+            this.payBillForm.reset();
+            Object.keys(this.payBillForm.controls).forEach((key) => {
+              this.payBillForm.get(key).setErrors(null);
+            });
+            this.error = "";
+            this.error = "";
+            this.showFirstCard = true;
+        },err =>{
+        });
       }
     } else if (this.isSchool) {
       if (this.isBulkSchoolBill) {
@@ -515,15 +467,7 @@ export class PayBillComponent implements OnInit {
       } else {
         this.payBillForm.controls.otpCode.markAsTouched();
         // Getting the billers
-        let lng = JSON.parse(this.cookieService.get("agtLng"));
-        let token = this.cookieService.get("agt_token");
-
-        const headers = new HttpHeaders({
-          "Content-Type": "application/json",
-          lng: lng.code,
-          "x-auth-token": token,
-          SERVICE_WRAPPER: "WRMAL_461",
-        });
+       
 
         let data = {
           id: this.schoolBillId,
@@ -531,25 +475,14 @@ export class PayBillComponent implements OnInit {
           otpCode: this.payBillForm.value.otpCode,
         };
 
-        console.log("daataa>>>", data);
-
         if (this.payBillForm.valid) {
           let requestBody = this.encryption.encrypt(data);
-
-          this.ngProgress.start();
-
-          console.log("payBill", data);
-
-          return this.http
-            .post<string>(`${environment.secureUrl}`, requestBody, {
-              headers,
-              responseType: "text" as "json",
-            })
-            .subscribe(
-              async (response) => {
-                this.stopTimer();
+          
+          this.httpClientService.httpClientMainRouter("WRMAL_461","null","POST",data)
+          .subscribe( async res=>{
+            this.stopTimer();
                 this.showOTPForm = false;
-                let payBillObj: any = this.encryption.decrypt(response);
+                let payBillObj: any = this.encryption.decrypt(res);
                 this.payedBill = payBillObj.body;
                 let doneMessage =
                   await this.findAllLanguagesService.getTranslate(
@@ -568,34 +501,10 @@ export class PayBillComponent implements OnInit {
 
                 // this.markFormGroupTouched(this.payBillForm.controls);
                 this.error = "";
-                console.log("payBill", payBillObj);
                 this.error = "";
                 this.showFirstCard = true;
-
-                this.ngProgress.done();
-              },
-              async (error) => {
-                let response: any = this.encryption.decrypt(error.error);
-                let response2: any = error;
-
-                this.error = response.msgWithLanguage;
-                if (response.status === 500) {
-                  this.error = await this.findLanguages.getTranslate(
-                    "tech_issue"
-                  );
-                }
-                this.toaster.showError(this.error);
-                // reset the form on submitting
-                // myForm.resetForm();
-                Object.keys(this.payBillForm.controls).forEach((key) => {
-                  this.payBillForm.get(key).setErrors(null);
-                });
-                if (response2.status === 401) {
-                  this.authService.logoutUser();
-                }
-                this.ngProgress.done();
-              }
-            );
+          },err =>{ 
+          });
         }
       }
     }
@@ -701,25 +610,20 @@ export class PayBillComponent implements OnInit {
   }
 
   async getPackages() {
-    this.request_options.method = "GET";
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_448");
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.packages = response.body;
-      console.log(" this.packages ", this.packages);
-    }
+    this.httpClientService.httpClientMainRouter("WRMAL_448","null","GET")
+    .subscribe( res=>{
+      this.packages = this._sharedService.decrypt(res).body;
+    },err =>{
+    });
   }
-  async getWalletId() {
-    console.log("AgentBalance >>>>>>>");
-    let request_options: any = {
-      method: "GET",
-      path: "",
-    };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_046");
-    let response = await this.httpService.http_request(request_options);
-    let agentBalance = response.body;
-    console.log("agentBalance", response.body);
-    this.walletId = agentBalance[0].id;
+  getWalletId() {
+    this.httpClientService.httpClientMainRouter("WRMAL_046","null","GET")
+    .subscribe( res=>{
+      this.packages = this._sharedService.decrypt(res).body;
+      let agentBalance = this._sharedService.decrypt(res).body;
+      this.walletId = agentBalance[0].id;
+    },err =>{
+    });    
   }
 
   disableDstvForm() {
@@ -862,26 +766,14 @@ export class PayBillComponent implements OnInit {
       /// get products
 
       let billerId = this.payBillForm.value.biller.id;
-      this.request_options.method = "GET";
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_454");
-      this.httpService.setHeader("SERVICE_PARAM", `billerId=${billerId}`);
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
-        this.schoolProducts = response.body;
-        console.log(" this.schoolProducts ", this.schoolProducts);
-        this.showSchoolCard1 = false;
-        this.showSingleSchoolBills = false;
-        this.showSchoolProducts = true;
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-      }
+      this.httpClientService.httpClientMainRouter("WRMAL_454",`billerId=${billerId}`,"GET")
+        .subscribe( res=>{
+      this.schoolProducts = this._sharedService.decrypt(res);
+      this.showSchoolCard1 = false;
+      this.showSingleSchoolBills = false;
+      this.showSchoolProducts = true;
+    },err =>{
+    });    
     }
   }
   rowSelected(product) {
@@ -920,34 +812,22 @@ export class PayBillComponent implements OnInit {
     }
   }
 
-  async getBulkSchoolBills() {
+  getBulkSchoolBills() {
     let billerId = this.payBillForm.value.biller.id;
-    this.request_options.method = "POST";
-    this.request_options.body = {
+    let body = {
       subscriptionCode: this.payBillForm.value.subscriptionCode,
       billerId: billerId,
       productList: this.schoolProductsArray,
     };
-    this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_453");
-    let response = await this.httpService.http_request(this.request_options);
-    if (response.status == 200) {
-      this.bulkSchoolBillsObj = response.body;
-      this.bulkSchoolBills = response.body.schoolInvoiceResourceList;
-      console.log(" this.bulkSchoolBillsObj ", this.bulkSchoolBillsObj);
-      this.showSchoolCard1 = false;
-      this.showSingleSchoolBills = false;
-      this.showSchoolProducts = false;
-      this.showBulkSchoolBills = true;
-    } else {
-      let error = response.msgWithLanguage;
-      if (response.status === 500) {
-        error = await this.findLanguages.getTranslate("tech_issue");
-      }
-      this.toaster.showError(error);
-      if (response.status === 401) {
-        this.authService.logoutUser();
-      }
-    }
+    this.httpClientService.httpClientMainRouter("WRMAL_453","null","POST",body)
+      .subscribe( res=>{
+        this.bulkSchoolBills = this._sharedService.decrypt(res).body.schoolInvoiceResourceList;
+        this.showSchoolCard1 = false;
+        this.showSingleSchoolBills = false;
+        this.showSchoolProducts = false;
+        this.showBulkSchoolBills = true;
+    },err =>{
+    });    
   }
 
   async enterPayerInfo() {
@@ -967,8 +847,7 @@ export class PayBillComponent implements OnInit {
   async payBulkSchoolBills() {
     this.payBillForm.controls.otpCode.markAsTouched();
     let billerId = this.payBillForm.value.biller.id;
-    this.request_options.method = "POST";
-    this.request_options.body = {
+    let body = {
       subscriptionCode: this.payBillForm.value.subscriptionCode,
       billerId: billerId,
       sourceCode: "WEB",
@@ -980,15 +859,10 @@ export class PayBillComponent implements OnInit {
       productList: this.schoolProductsArray,
       otpCode: this.payBillForm.value.otpCode,
     };
-    console.log(" this.request_options.body ", this.request_options.body);
     if (this.payBillForm.valid) {
-      this.ngProgress.start();
-      this.httpService.setHeader("SERVICE_WRAPPER", "WRMAL_459");
-      let response = await this.httpService.http_request(this.request_options);
-      if (response.status == 200) {
+      this.httpClientService.httpClientMainRouter("WRMAL_459","null","POST",body)
+      .subscribe( async res=>{
         this.stopTimer();
-
-        console.log("response.body ", response.body);
         this.showSchoolCard1 = false;
         this.showSingleSchoolBills = false;
         this.showSchoolProducts = false;
@@ -1014,18 +888,8 @@ export class PayBillComponent implements OnInit {
         Object.keys(this.payBillForm.controls).forEach((key) => {
           this.payBillForm.get(key).setErrors(null);
         });
-        this.ngProgress.done();
-      } else {
-        let error = response.msgWithLanguage;
-        if (response.status === 500) {
-          error = await this.findLanguages.getTranslate("tech_issue");
-        }
-        this.toaster.showError(error);
-        if (response.status === 401) {
-          this.authService.logoutUser();
-        }
-        this.ngProgress.done();
-      }
+    },err =>{
+    });    
     }
   }
   close() {
@@ -1052,45 +916,12 @@ export class PayBillComponent implements OnInit {
   }
   getDerachServiceProviders() {
     // Getting the billers
-    let lng = JSON.parse(this.cookieService.get("agtLng"));
-    let token = this.cookieService.get("agt_token");
-
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-      lng: lng.code,
-      "x-auth-token": token,
-      SERVICE_WRAPPER: "WRMAL_455",
+    this.httpClientService.httpClientMainRouter("WRMAL_455","null","GET")
+    .subscribe( res=>{
+      let serviceProviders: any = this.encryption.decrypt(res);
+      this.derachServiceProviders = serviceProviders.body;
+      this.error = "";
+    },err =>{
     });
-
-    return this.http
-      .get<string>(`${environment.secureUrl}`, {
-        headers,
-        responseType: "text" as "json",
-      })
-      .subscribe(
-        (response) => {
-          let serviceProviders: any = this.encryption.decrypt(response);
-          this.derachServiceProviders = serviceProviders.body;
-          console.log(
-            " this.derachServiceProviders",
-            this.derachServiceProviders
-          );
-          this.error = "";
-        },
-        async (error) => {
-          console.log("error=" + error);
-          let response: any = this.encryption.decrypt(error.error);
-          let response2: any = error;
-
-          this.error = response.msgWithLanguage;
-          if (response.status === 500) {
-            this.error = await this.findLanguages.getTranslate("tech_issue");
-          }
-          this.toaster.showError(this.error);
-          if (response2.status === 401) {
-            this.authService.logoutUser();
-          }
-        }
-      );
   }
 }
