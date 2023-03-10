@@ -23,8 +23,14 @@ import { ReportsComponent } from "./reports/reports.component";
 import { RouterModule } from "@angular/router";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 import { ReactiveFormsModule } from "@angular/forms";
+import { BranchTransactionsComponent } from "./branch-transactions/branch-transactions.component";
 
 @NgModule({
+  declarations: [
+    BranchTransactionsComponent,
+    ReportsComponent,
+    QrReportComponent
+  ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -44,6 +50,5 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  declarations: [ReportsComponent, QrReportComponent],
 })
 export class ReportsModule {}

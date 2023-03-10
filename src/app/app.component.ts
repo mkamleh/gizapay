@@ -29,7 +29,7 @@ export class AppComponent {
     }
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     if (window.sessionStorage.getItem("agt_token_check") == null) {
       window.sessionStorage.removeItem("agt_token_check");
       window.sessionStorage.clear();

@@ -376,7 +376,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   toChangeSecurityQuestion() {
-    this.router.navigate(["/change-security-question"]);
+    this.router.navigate(["user-profile/change-security-question"]);
   }
 
   toChangePassword() {
@@ -384,9 +384,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.authService.loggedInUser &&
       this.authService.loggedInUser.userRoleCode === "MASTER"
     ) {
-      this.router.navigate(["/change-password-master"]);
+      this.router.navigate(["user-profile/change-password-master"]);
     } else {
-      this.router.navigate(["/change-password"]);
+      this.router.navigate(["user-profile/change-password"]);
     }
   }
   getWalletId() {

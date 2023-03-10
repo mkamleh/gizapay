@@ -26,10 +26,15 @@ import { NgxQRCodeModule } from "ngx-qrcode2";
 
 import { OtcRoutingModule } from "./otc-routing.module";
 import { otcRoutes } from "./otc-routing.module";
-import { OtcComponent } from "./otc.component";
+import { OtcComponent } from "./otc(unknown)/otc.component";
+import { OtcSendComponent } from "./otc-send/otc-send.component";
+import { OtcReceiveComponent } from "./otc-receive/otc-receive.component";
 
 @NgModule({
-  declarations: [OtcComponent],
+  declarations: [
+    OtcSendComponent,
+    OtcReceiveComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,

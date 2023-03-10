@@ -282,8 +282,6 @@ export class CashOutComponent implements OnInit {
     // this.openDialog2();
     if (this.cashOutForm.valid) {
       // confirming cash in
-      let token = this.cookieService.get("agt_token");
-      let lng = JSON.parse(this.cookieService.get("agtLng"));
       let data: any = {
         otpCode:
           this.cashOutForm.value.otp == null ? "" : this.cashOutForm.value.otp,
@@ -310,8 +308,7 @@ export class CashOutComponent implements OnInit {
       if (this.wallet) {
         this.receiptInfo.holderName = this.wallet.holderName;
       }
-      let requestBody = this.encryption.encrypt(data);
-      this.httpClientService.httpClientMainRouter("WRMAL_042",`null`,"POST")
+      this.httpClientService.httpClientMainRouter("WRMAL_042",`null`,"POST",data)
       .subscribe( async res =>{
         let cashOutCardObj: any = this.encryption.decrypt(res);
         let doneMessage = await this.findAllLanguagesService.getTranslate(

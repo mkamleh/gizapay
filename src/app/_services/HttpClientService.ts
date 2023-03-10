@@ -9,7 +9,7 @@ import { Encryption } from "./Encryption";
 
 @Injectable()
 export class HttpClientService {
-  private apiUrl = environment.API_URL;
+  private apiUrl = "http://45.79.249.56:8080/web_wrapper/redirect";
   private headers: HttpHeaders = new HttpHeaders();
   constructor(private httpClient:HttpClient,    
   private cookieService: CookieService,

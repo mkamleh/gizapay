@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { ReportsComponent } from "./reports/reports.component";
 import { QrReportComponent } from "./qr-report/qr-report.component";
+import { BranchTransactionsComponent } from "app/reports/branch-transactions/branch-transactions.component";
 
 export const reportsRoutes: Routes = [
   {
@@ -14,13 +15,13 @@ export const reportsRoutes: Routes = [
       {
         path: "qr-report",
         component: QrReportComponent
-      }
+      },
+      {
+        path: "otc-report",
+        component: BranchTransactionsComponent,
+      },
     ]
   }
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(reportsRoutes)],
-  exports: [RouterModule]
-})
 export class ReportsRoutingModule {}

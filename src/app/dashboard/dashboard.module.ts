@@ -15,7 +15,6 @@ import { ChartsModule } from "ng2-charts/ng2-charts";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 
-import { DashboardComponent } from "./dashboard.component";
 import { DashboardRoutes } from "./dashboard.routing";
 import { SharedModule } from "app/shared/shared.module";
 // import { TablePinningModule } from "app/tables/table-pinning/table-pinning.module";
@@ -37,6 +36,6 @@ import { SharedModule } from "app/shared/shared.module";
     FlexLayoutModule,
     SharedModule
   ],
-  declarations: [DashboardComponent]
+  declarations: []
 })
 export class DashboardModule { }

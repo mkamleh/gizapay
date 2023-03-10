@@ -86,12 +86,12 @@ export class DashboardComponent implements OnInit {
     this.ETB = "ETB";
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.AgentBalance();
     this.refresh();
     this.getTxn();
     console.log("now", this.now);
-    await this.getCurrentTime();
+    //await this.getCurrentTime();
   }
   async getCurrentTime() {
     let currentTime = this.now.getHours();

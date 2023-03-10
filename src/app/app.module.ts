@@ -31,16 +31,16 @@ import { MatCardModule } from "@angular/material/card";
 import {
   
   DialogContentDialogBulkSU,
-} from "./bulk-salary/bulk-salary.component";
+} from "./transfer/bulk-salary/bulk-salary.component";
 import {
   
   DialogContentDialogBulkATT,
-} from "./bulk-air-time-topup/bulk-air-time-topup.component";
+} from "./air-time-top-up/bulk-air-time-topup/bulk-air-time-topup.component";
 
 import { AppRoutes } from "./app.routing";
 import { AppComponent } from "./app.component";
 import { AdminLayoutComponent } from "./layouts/admin/admin-layout.component";
-import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
+import { AuthLayoutComponent } from "./auth/auth-layout.component";
 import { SharedModule } from "./shared/shared.module";
 import { CookieService } from "ngx-cookie-service";
 import { RecaptchaModule } from "ng-recaptcha";
@@ -83,8 +83,8 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { AgmCoreModule } from "@agm/core";
 import { NgProgressModule } from "ngx-progressbar";
 import { CustomValidation } from "./_services/custom-validator.service";
-import { ChangePasswordComponent } from "./layouts/change-password/change-password.component";
-import { ChangePasswordMasterComponent } from "./layouts/change-password-master/change-password-master.component";
+import { ChangePasswordComponent } from "./user-profile/change-password/change-password.component";
+import { ChangePasswordMasterComponent } from "./user-profile/change-password-master/change-password-master.component";
 import {
   CashInComponent,
   DialogContentDialog,
@@ -98,29 +98,20 @@ import { FindAllLanguagesService } from "./_services/find-all-languages.service"
 import { PayComponent } from "./bills/pay/pay.component";
 import { InquiryComponent } from "./bills/inquiry/inquiry.component";
 import { NgxQRCodeModule } from "ngx-qrcode2";
-import { DialogContentDialog2 } from "./user-managment/create-wallet/create-wallet.component";
 import { MatDialogModule, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { DialogContentDialog3 } from "./otc/otc.component";
+import { DialogContentDialog3 } from "./otc/otc(unknown)/otc.component";
 // import { DatePipe } from "@angular/common";
 import { SweetAlertToastService } from "./_services/sweet-alert-toast.service";
 import { SharedService } from "./_services/shared-service";
 import { Encryption } from "./_services/Encryption";
 
-import { UserProfileComponent } from "./layouts/user-profile/user-profile.component";
+import { UserProfileComponent } from "./user-profile/user-profile/user-profile.component";
 import { UserIdleModule } from "angular-user-idle";
-import { BulkAirTimeTopupComponent } from "./bulk-air-time-topup/bulk-air-time-topup.component";
+import { BulkAirTimeTopupComponent } from "./air-time-top-up/bulk-air-time-topup/bulk-air-time-topup.component";
 import { FileUploadModule } from "ng2-file-upload";
-import { BoaComponent } from "./boa/boa.component";
-import { BulkSalaryComponent } from "./bulk-salary/bulk-salary.component";
-import { CreditDialog } from "./branch-pages/branch-list/branchlist.component";
-import { B2pTransferComponent } from "./b2p-transfer/b2p-transfer.component";
-import { B2bTransferComponent } from "./b2b-transfer/b2b-transfer.component";
-import { SellAirtimeTopUpComponent } from "./sell-airtime-top-up/sell-airtime-top-up.component";
-import { ChangeSecurityQuestionComponent } from "./change-security-question/change-security-question.component";
+import { SellAirtimeTopUpComponent } from "./air-time-top-up/sell-airtime-top-up/sell-airtime-top-up.component";
 import { DatePipe } from "@angular/common";
-import { OtcSendComponent } from "./otc-send/otc-send.component";
-import { OtcReceiveComponent } from "./otc-receive/otc-receive.component";
-import { BranchTransactionsComponent } from "./branch-transactions/branch-transactions.component";
+import { BranchTransactionsComponent } from "./reports/branch-transactions/branch-transactions.component";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from "ngx-loading";
 import { PayBillComponent } from "./bills/pay-bill/pay-bill.component";
@@ -128,6 +119,10 @@ import { PaySchoolBillComponent } from "./bills/pay-school-bill/pay-school-bill.
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { HttpClientService } from "./_services/HttpClientService";
 import { ErrorHandling } from "./_services/ErrorHandling";
+import { DashboardModule } from "./dashboard/dashboard.module";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { LoginSignupComponent } from "./auth/login-signup/login-signup.component";
+import { ForgotPasswordComponent } from "./auth/forgot-password/forgot-password.component";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -173,30 +168,9 @@ export function createTranslateLoader(http: HttpClient) {
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    DialogContentDialogBulkATT,
-    ChangePasswordComponent,
-    ChangePasswordMasterComponent,
-    InquiryComponent,
-    PayComponent,
-    DialogContentDialog,
-    DialogContentDialog1,
-    DialogContentDialog2,
-    DialogContentDialog3,
-    DialogContentDialogBulkSU,
-    UserProfileComponent,
-
-    BulkAirTimeTopupComponent,
-    BoaComponent,
-    BulkSalaryComponent,
-    B2pTransferComponent,
-    B2bTransferComponent,
-    SellAirtimeTopUpComponent,
-    ChangeSecurityQuestionComponent,
-    OtcSendComponent,
-    OtcReceiveComponent,
-    BranchTransactionsComponent,
-    PayBillComponent,
-    PaySchoolBillComponent
+    ForgotPasswordComponent,
+    DashboardComponent,
+    LoginSignupComponent,
   ],
   imports: [
     NgxLoadingModule.forRoot({
@@ -292,12 +266,7 @@ export function createTranslateLoader(http: HttpClient) {
     SharedService,
   ],
   entryComponents: [
-    DialogContentDialog,
-    DialogContentDialog1,
-    DialogContentDialog2,
-    DialogContentDialog3,
-    DialogContentDialogBulkSU,
-    DialogContentDialogBulkATT
+    
   ],
   bootstrap: [AppComponent],
 })
